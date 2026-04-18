@@ -1,151 +1,342 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmacuraPet - Cadastro Integrado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Farmacura Pet Web</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; color: #333; background-color: #f4f9ff; }
-        header { background-color: #2D9CDB; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .container { max-width: 550px; margin: 40px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
-        .tabs { display: flex; margin-bottom: 25px; background: #eee; border-radius: 30px; padding: 5px; }
-        .tab-btn { flex: 1; border: none; padding: 12px; cursor: pointer; border-radius: 25px; font-weight: bold; background: none; color: #666; transition: 0.3s; }
-        .tab-btn.active { background: #2D9CDB; color: white; }
-        .tab-btn.active.doar { background: #27AE60; }
-        h2 { text-align: center; color: #2D9CDB; margin-top: 0; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 0.9rem; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
-        input:focus { border-color: #2D9CDB; outline: none; }
-        .btn-submit { width: 100%; padding: 15px; border: none; border-radius: 25px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 15px; color: white; }
-        .bg-azul { background-color: #2D9CDB; }
-        .bg-verde { background-color: #27AE60; }
-        .hidden { display: none; }
+        :root {
+            --primary: #1e3c72;
+            --secondary: #2a5298;
+            --accent: #28a745;
+            --danger: #d32f2f;
+            --light: #f8f9fa;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        
+        body { 
+            background-color: #0d1b2a; 
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .bg-wallpaper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?auto=format&fit=crop&w=800&q=80');
+            background-size: cover; background-position: center; z-index: -1;
+        }
+
+        .main-container { display: flex; flex-direction: row; height: 100vh; width: 100%; }
+
+        /* MENU SIDEBAR */
+        .sidebar {
+            width: 260px; background: white; display: flex; flex-direction: column;
+            padding: 20px; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-title { font-size: 22px; font-weight: 800; color: var(--primary); text-align: center; margin-bottom: 30px; }
+
+        .nav-group { flex-grow: 1; }
+        .btn-nav {
+            display: flex; align-items: center; width: 100%; padding: 12px 15px; margin-bottom: 8px;
+            border-radius: 10px; border: none; background: var(--light); color: #555;
+            font-weight: 600; cursor: pointer; transition: 0.2s; text-align: left;
+        }
+        .btn-nav i { width: 25px; font-size: 18px; color: var(--primary); }
+        .btn-nav:hover { background: #eef2f7; color: var(--primary); }
+        .hidden { display: none !important; }
+
+        /* AREA DE CONTEUDO */
+        .content-area { 
+            flex-grow: 1; display: flex; justify-content: center; align-items: center; 
+            padding: 15px; overflow-y: auto; padding-bottom: 80px; 
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.96); padding: 25px; border-radius: 20px; 
+            width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            display: none; backdrop-filter: blur(10px);
+            max-height: 90vh; overflow-y: auto;
+        }
+        .active-card { display: block; animation: fadeIn 0.3s ease; }
+
+        /* ESTILO LOGO NO LOGIN */
+        .brand-login { text-align: center; margin-bottom: 25px; }
+        .brand-login i { font-size: 50px; color: var(--primary); margin-bottom: 10px; }
+        .brand-login h1 { font-size: 28px; color: var(--primary); font-weight: 800; }
+
+        /* INPUTS */
+        .input-group { position: relative; margin-bottom: 15px; }
+        input, select, textarea { 
+            width: 100%; padding: 12px 15px; border-radius: 10px; 
+            border: 1px solid #ddd; font-size: 16px; outline: none; background: white;
+        }
+        .pass-toggle { position: absolute; right: 12px; top: 12px; color: #999; cursor: pointer; z-index: 5; }
+
+        .btn-primary { 
+            background: var(--primary); color: white; width: 100%; padding: 14px; 
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px;
+        }
+
+        .hosp-card {
+            background: #f0f7ff; padding: 12px; border-radius: 15px; margin-bottom: 12px;
+            border-left: 5px solid var(--primary);
+        }
+
+        /* MOBILE FIX */
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
+            .sidebar {
+                position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+                flex-direction: row; padding: 5px; justify-content: space-around;
+                border-top: 1px solid #ddd; border-right: none;
+            }
+            .logo-title, .btn-nav span { display: none; }
+            .btn-nav { width: auto; background: transparent; margin-bottom: 0; flex-direction: column; padding: 8px; }
+            .btn-nav i { margin-right: 0; font-size: 22px; }
+            .sidebar-footer { display: flex; align-items: center; }
+            .social-icons { gap: 12px; display: flex; }
+            .content-area { padding-bottom: 100px; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo"><strong>FarmacuraPet</strong></div>
-    <nav>Início | Sobre | Login</nav>
-</header>
+    <div class="bg-wallpaper"></div>
 
-<div class="container">
-    <div class="tabs">
-        <button id="btnTabDoar" class="tab-btn active doar" onclick="mudarTipo('DOADOR')">Quero Doar</button>
-        <button id="btnTabReceber" class="tab-btn" onclick="mudarTipo('RECEBEDOR')">Preciso de Ajuda</button>
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="logo-title">Farmacura Pet Web</div>
+            <nav class="nav-group">
+                <button class="btn-nav" onclick="showTab('loginTab')"><i class="fas fa-home"></i> <span>Início</span></button>
+                <button id="navEstoque" class="btn-nav hidden" onclick="showTab('estoqueTab')"><i class="fas fa-box-open"></i> <span>Estoque</span></button>
+                <button id="navAnunciar" class="btn-nav hidden" onclick="showTab('anunciarTab')"><i class="fas fa-plus-circle"></i> <span>Doar</span></button>
+                <button id="navHospital" class="btn-nav hidden" onclick="showTab('hospitalTab')"><i class="fas fa-map-marked-alt"></i> <span>Hospitais</span></button>
+                <button id="navFeedback" class="btn-nav hidden" onclick="showTab('feedbackTab')"><i class="fas fa-comment-alt"></i> <span>Feedback</span></button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="social-icons">
+                    <a href="#" style="color:#e1306c; font-size: 20px;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color:#4267B2; font-size: 20px;"><i class="fab fa-facebook"></i></a>
+                    <a href="#" style="color:#FF0000; font-size: 20px;"><i class="fab fa-youtube"></i></a>
+                    <button id="navSair" class="btn-nav hidden" onclick="logout()" style="color:red; background:none; border:none; padding:0;"><i class="fas fa-power-off"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            
+            <div id="loginTab" class="app-card active-card">
+                <div class="brand-login">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <h1>Farmacura Pet Web</h1>
+                    <p style="color: #666; font-size: 14px;">Doação de Medicamentos Veterinários</p>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="lEmail" placeholder="E-mail">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="lPass" placeholder="Senha">
+                    <i class="fas fa-eye pass-toggle" onclick="togglePass('lPass')"></i>
+                </div>
+                <button class="btn-primary" onclick="fazerLogin()">ENTRAR NO SISTEMA</button>
+                
+                <div style="text-align:center; margin-top:12px;">
+                    <a href="#" onclick="esqueciSenha()" style="font-size:13px; color:var(--danger); text-decoration:none;">Esqueci minha senha</a>
+                </div>
+                <p style="text-align:center; margin-top:18px; font-size:14px; border-top: 1px solid #eee; padding-top: 15px;">
+                    Não tem uma conta? <a href="#" onclick="showTab('regTab')" style="color:var(--primary); font-weight:bold; text-decoration:none;">Cadastre-se</a>
+                </p>
+            </div>
+
+            <div id="regTab" class="app-card">
+                <h3 style="color:var(--primary); text-align:center;">Criar Conta</h3><br>
+                <input type="text" id="rNome" placeholder="Nome Completo">
+                <input type="tel" id="rTel" placeholder="WhatsApp (Ex: 81900000000)">
+                <input type="email" id="rEmail" placeholder="E-mail">
+                <div class="input-group">
+                    <input type="password" id="rPass" placeholder="Criar Senha">
+                    <i class="fas fa-eye pass-toggle" onclick="togglePass('rPass')"></i>
+                </div>
+                <select id="rTipo">
+                    <option value="Doador">Quero Doar</option>
+                    <option value="Receptor">Preciso de Doação</option>
+                </select>
+                <button class="btn-primary" style="background:var(--accent); margin-top:10px;" onclick="registrar()">CADASTRAR</button>
+                <button onclick="showTab('loginTab')" style="background:none; border:none; width:100%; margin-top:15px; color:#666; cursor:pointer;">Voltar</button>
+            </div>
+
+            <div id="estoqueTab" class="app-card">
+                <h3 style="color:var(--primary)">Remédios para Doação</h3>
+                <input type="text" id="inputBusca" onkeyup="renderEstoque()" placeholder="🔍 O que você procura?">
+                <div id="listaMed" style="margin-top:15px;"></div>
+            </div>
+
+            <div id="feedbackTab" class="app-card">
+                <h3 style="color:var(--primary)">Feedback / Suporte</h3><br>
+                <p style="font-size:13px; color:#666; margin-bottom:15px;">Envie para: edsonoliveira27@hotmail.com</p>
+                <input type="email" id="fEmail" placeholder="Seu e-mail de resposta">
+                <select id="fAssunto">
+                    <option value="Sugestão">Sugestão</option>
+                    <option value="Problema">Relatar Problema</option>
+                    <option value="Elogio">Elogio</option>
+                </select>
+                <textarea id="fMsg" rows="4" placeholder="Sua mensagem..."></textarea>
+                <button class="btn-primary" onclick="enviarFeedback()">ENVIAR FEEDBACK</button>
+            </div>
+
+            <div id="hospitalTab" class="app-card">
+                <h3 style="margin-bottom:20px; text-align:center; color:var(--primary);">Hospitais Veterinários</h3>
+                <div class="hosp-card" style="border-left-color: var(--danger);">
+                    <b>HVR (Cordeiro)</b><br>
+                    <small>Av. Prof. Estevão F. da Costa, S/N</small>
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <a href="tel:8132242361" style="flex:1; text-align:center; background:white; color:var(--danger); padding:8px; border-radius:8px; text-decoration:none; font-size:13px; border:1px solid var(--danger);">Ligar</a>
+                        <a href="https://www.google.com/maps/dir//Hospital+Veterinário+do+Recife" target="_blank" style="flex:1; text-align:center; background:var(--danger); color:white; padding:8px; border-radius:8px; text-decoration:none; font-size:13px;">Rota</a>
+                    </div>
+                </div>
+                <div class="hosp-card">
+                    <b>UFRPE (Dois Irmãos)</b><br>
+                    <small>R. Manuel de Medeiros, S/N</small>
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <a href="tel:8133206410" style="flex:1; text-align:center; background:white; color:var(--primary); padding:8px; border-radius:8px; text-decoration:none; font-size:13px; border:1px solid var(--primary);">Ligar</a>
+                        <a href="https://www.google.com/maps/dir//Hospital+Veterinário+UFRPE" target="_blank" style="flex:1; text-align:center; background:var(--primary); color:white; padding:8px; border-radius:8px; text-decoration:none; font-size:13px;">Rota</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="anunciarTab" class="app-card">
+                <h3 style="color:var(--primary)">Anunciar Doação</h3><br>
+                <input type="text" id="mNome" placeholder="Nome do Remédio">
+                <label style="font-size:12px; font-weight:bold; color:#666;">VALIDADE:</label>
+                <input type="date" id="mData">
+                <button class="btn-primary" onclick="addMed()" style="background:var(--accent); margin-top:15px;">POSTAR AGORA</button>
+            </div>
+
+        </main>
     </div>
 
-    <h2 id="titulo">Cadastro de Doação</h2>
+    <script>
+        const K_U = "farmacura_users_v3";
+        const K_M = "farmacura_meds_v3";
 
-    <form id="formUnico">
-        <div class="form-group">
-            <label for="nome">Nome Completo</label>
-            <input type="text" id="nome" placeholder="Seu nome" required>
-        </div>
+        let usuarios = JSON.parse(localStorage.getItem(K_U)) || [{nome: "Admin", email: "adm@adm.com", pass: "123", tel: "81900000000", tipo: "Doador"}];
+        let estoque = JSON.parse(localStorage.getItem(K_M)) || [];
+        let logado = null;
 
-        <div class="form-group">
-            <label for="contato">Telefone / WhatsApp</label>
-            <input type="tel" id="contato" placeholder="(81) 90000-0000" required>
-        </div>
-
-        <div class="form-group">
-            <label for="medicamento">Medicamento</label>
-            <input type="text" id="medicamento" placeholder="Nome do remédio" required>
-        </div>
-
-        <div class="form-group">
-            <label for="quantidade">Quantidade (Unidades)</label>
-            <input type="number" id="quantidade" placeholder="Ex: 20" required>
-        </div>
-
-        <div class="form-group" id="areaDinamica">
-            <label id="labelDinamico" for="dataDinamica">Validade do Medicamento</label>
-            <input type="date" id="dataDinamica" required>
-        </div>
-
-        <button type="button" id="btnAcao" class="btn-submit bg-verde" onclick="processarCadastro()">Finalizar Cadastro</button>
-    </form>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-    // 2. CONFIGURAÇÃO DE CONEXÃO
-    const SB_URL = "https://tkupfowbgykjjdkwfiyr.supabase.co";
-    const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrdXBmb3diZ3lrampka3dmaXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNjY1OTgsImV4cCI6MjA5MTk0MjU5OH0.yXCbccFrPB9qyVamthjAUdyrK0bqWfbRCG3LR4VAjBY";
-    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
-    let tipoAtual = 'DOADOR';
-
-    // 3. FUNÇÃO PARA MUDAR AS CORES (ESSENCIAL PARA O VISUAL)
-    function mudarTipo(tipo) {
-        tipoAtual = tipo;
-        const btnD = document.getElementById('btnTabDoar');
-        const btnR = document.getElementById('btnTabReceber');
-        const titulo = document.getElementById('titulo');
-        const label = document.getElementById('labelDinamico');
-        const btnAcao = document.getElementById('btnAcao');
-
-        btnD.classList.remove('active', 'doar');
-        btnR.classList.remove('active', 'doar');
-
-        if (tipo === 'DOADOR') {
-            btnD.classList.add('active', 'doar');
-            titulo.innerText = "Cadastro de Doação";
-            label.innerText = "Validade do Medicamento";
-            btnAcao.className = "btn-submit bg-verde";
-            titulo.style.color = "#27AE60";
-        } else {
-            btnR.classList.add('active');
-            titulo.innerText = "Solicitar Medicamento";
-            label.innerText = "Validade da Receita";
-            btnAcao.className = "btn-submit bg-azul";
-            titulo.style.color = "#2D9CDB";
-        }
-    }
-
-    // 4. FUNÇÃO PARA SALVAR NO BANCO
-    async function processarCadastro() {
-        const nomeUsuario = document.getElementById('nome').value;
-        const zap = document.getElementById('contato').value;
-        const remedio = document.getElementById('medicamento').value;
-        const qtd = document.getElementById('quantidade').value;
-        const dataVal = document.getElementById('dataDinamica').value;
-
-        if (!nomeUsuario || !remedio || !dataVal) {
-            alert("Por favor, preencha os campos obrigatórios.");
-            return;
+        function showTab(id) {
+            document.querySelectorAll('.app-card').forEach(c => c.classList.remove('active-card'));
+            document.getElementById(id).classList.add('active-card');
         }
 
-        const btnAcao = document.getElementById('btnAcao');
-        btnAcao.innerText = "Enviando...";
-        btnAcao.disabled = true;
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
 
-        try {
-            const { error } = await supabaseClient
-                .from('registros')
-                .insert([{
-                    perfil: tipoAtual,
-                    nome: nomeUsuario,
-                    whatsapp: zap,
-                    medicamento: remedio,
-                    quantidade: parseInt(qtd),
-                    validade_data: dataVal
-                }]);
+        function fazerLogin() {
+            const e = document.getElementById('lEmail').value.toLowerCase().trim();
+            const p = document.getElementById('lPass').value;
+            const u = usuarios.find(x => x.email === e && x.pass === p);
 
-            if (error) throw error;
+            if(u) {
+                logado = u;
+                document.getElementById('fEmail').value = u.email;
+                document.querySelectorAll('.btn-nav.hidden').forEach(b => b.classList.remove('hidden'));
+                document.getElementById('navSair').classList.remove('hidden');
+                showTab('estoqueTab');
+                renderEstoque();
+            } else { alert("Dados incorretos!"); }
+        }
 
-            alert("✅ Sucesso! O FarmacuraPet salvou seu registro na nuvem.");
-            document.getElementById('formUnico').reset();
+        function esqueciSenha() {
+            const email = prompt("Qual o e-mail da conta?");
+            if (!email) return;
+            const u = usuarios.find(x => x.email === email.toLowerCase().trim());
+            if (u) alert("Sua senha é: " + u.pass);
+            else alert("E-mail não encontrado.");
+        }
+
+        function registrar() {
+            const n = document.getElementById('rNome').value;
+            const e = document.getElementById('rEmail').value.toLowerCase().trim();
+            const p = document.getElementById('rPass').value;
+            const t = document.getElementById('rTel').value;
+            const tipo = document.getElementById('rTipo').value;
+
+            if(!e || !p || !n) return alert("Preencha tudo!");
+            if(usuarios.some(u => u.email === e)) return alert("E-mail já cadastrado!");
+
+            usuarios.push({nome:n, email:e, pass:p, tel:t, tipo:tipo});
+            localStorage.setItem(K_U, JSON.stringify(usuarios));
+            alert("Cadastro realizado!");
+            showTab('loginTab');
+        }
+
+        function addMed() {
+            const n = document.getElementById('mNome').value;
+            const d = document.getElementById('mData').value;
+            if(!n || !d) return alert("Preencha nome e validade.");
             
-        } catch (error) {
-            alert("Erro ao conectar: " + error.message);
-        } finally {
-            btnAcao.innerText = "Finalizar Cadastro";
-            btnAcao.disabled = false;
+            estoque.unshift({id: Date.now(), nome: n, data: d, donoEmail: logado.email, donoTel: logado.tel});
+            localStorage.setItem(K_M, JSON.stringify(estoque));
+            alert("Doação registrada!");
+            showTab('estoqueTab');
+            renderEstoque();
         }
-    }
-</script>
+
+        function renderEstoque() {
+            const lista = document.getElementById('listaMed');
+            const busca = document.getElementById('inputBusca').value.toLowerCase();
+            let filtrados = (logado.tipo === 'Doador' && logado.email !== 'adm@adm.com') ? 
+                            estoque.filter(i => i.donoEmail === logado.email) : estoque;
+            
+            if(busca) filtrados = filtrados.filter(i => i.nome.toLowerCase().includes(busca));
+            
+            lista.innerHTML = filtrados.length ? filtrados.map(i => `
+                <div style="background:white; padding:12px; border-radius:12px; margin-bottom:10px; border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong style="color:var(--primary)">${i.nome}</strong><br>
+                        <small style="color:#666">Val: ${i.data.split('-').reverse().join('/')}</small>
+                    </div>
+                    ${logado.tipo === 'Receptor' ? 
+                        `<a href="https://wa.me/55${i.donoTel.replace(/\D/g,'')}" target="_blank" style="background:#25D366; color:white; padding:10px 15px; border-radius:8px; text-decoration:none;"><i class="fab fa-whatsapp"></i></a>` : 
+                        `<button onclick="removerMed(${i.id})" style="color:red; background:none; border:none; padding:10px; cursor:pointer;"><i class="fas fa-trash"></i></button>`}
+                </div>
+            `).join('') : "<p style='text-align:center; color:#999;'>Nenhum item disponível.</p>";
+        }
+
+        function removerMed(id) {
+            if(confirm("Remover doação?")) {
+                estoque = estoque.filter(i => i.id !== id);
+                localStorage.setItem(K_M, JSON.stringify(estoque));
+                renderEstoque();
+            }
+        }
+
+        function enviarFeedback() {
+            const emailRemetente = document.getElementById('fEmail').value;
+            const assunto = document.getElementById('fAssunto').value;
+            const mensagem = document.getElementById('fMsg').value;
+            if(!mensagem) return alert("Escreva sua mensagem.");
+
+            const mailtoLink = `mailto:edsonoliveira27@hotmail.com?subject=Suporte Farmacura: ${assunto}&body=Usuário: ${emailRemetente}%0D%0AMensagem: ${mensagem}`;
+            window.location.href = mailtoLink;
+            showTab('estoqueTab');
+        }
+
+        function logout() { location.reload(); }
+    </script>
 </body>
 </html>
