@@ -1,184 +1,30 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmacura Pet - Interativo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2a9d8f;
-            --secondary: #e76f51;
-            --dark-blue: #264653;
-        }
+<div class="login-container">
+    <input type="email" placeholder="Usuário">
+    <div class="password-wrapper">
+        <input type="password" id="pass" placeholder="Senha">
+        <span class="eye-icon" onclick="togglePass()">👁️</span>
+    </div>
+    <button class="btn-entrar">Entrar</button>
+    <button class="btn-cadastrar">Cadastrar Usuário</button>
+</div>
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            overflow-x: hidden;
-        }
+<section id="estoque">
+    <h3>Estoque Virtual de Medicamentos</h3>
+    <div class="card-medicamento">
+        <img src="placeholder-remedio.jpg" alt="Foto do Medicamento">
+        <p>Validade: 12/2026</p>
+        <button onclick="removerDoEstoque(this)">Dar Baixa (Doação Recebida)</button>
+    </div>
+</section>
 
-        /* BARRA DE AVISOS DINÂMICA (Estilo Noticiário) */
-        .news-ticker {
-            background: var(--dark-blue);
-            color: white;
-            padding: 10px 0;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            overflow: hidden;
-        }
-        .ticker-wrapper {
-            display: inline-block;
-            white-space: nowrap;
-            padding-left: 100%;
-            animation: ticker 30s linear infinite;
-        }
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-        .news-item { display: inline-block; margin-right: 50px; font-weight: bold; }
-
-        /* TELA DE LOGIN (Fundo Cão) */
-        #login-screen {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1300&q=80');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* TELA LOGADO (Fundo Gato - Inicialmente escondida) */
-        #dashboard-screen {
-            display: none;
-            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=1300&q=80');
-            background-size: cover;
-            background-attachment: fixed;
-            min-height: 100vh;
-            padding-top: 80px;
-        }
-
-        .auth-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        input[type="email"], input[type="password"], input[type="text"], select {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            box-sizing: border-box; /* Garante que o padding não quebre a largura */
-            font-size: 16px;
-            display: block;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        /* Estilo das Rotas e Redes Sociais */
-        .social-icons a { font-size: 30px; margin: 0 15px; color: var(--primary); }
-        .card { background: white; margin: 20px; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
-    </style>
-</head>
-<body>
-
-    <div class="news-ticker">
-        <div class="ticker-wrapper">
-            <span class="news-item">🌤️ Tempo em Recife: Ensolarado, 28°C</span>
-            <span class="news-item">⚽ Futebol: Sport e Náutico jogam neste fim de semana</span>
-            <span class="news-item">🐾 Farmacura: Novos medicamentos disponíveis na UFRPE</span>
-            <span class="news-item">🐶 Dica do Dia: Mantenha a vacinação do seu pet em dia!</span>
-        </div>
+<section class="interacao">
+    <div class="ads-banner">
+        <p id="msg-rotativa">Novidade: Confira as novas parcerias!</p>
+    </div>
+    
+    <div class="links-externos">
+        <a href="https://www.jogos360.com.br" target="_blank">🎮 Abrir Jogos 360</a>
     </div>
 
-    <div id="login-screen">
-        <div class="auth-card">
-            <h2 style="color: var(--primary);">Farmacura Pet 🐾</h2>
-            <p>Faça login ou cadastre-se</p>
-            
-            <input type="email" id="user-email" placeholder="Seu E-mail" required>
-            <input type="password" id="user-pass" placeholder="Sua Senha" required>
-            
-            <button onclick="verificarSenha()">Verificar Senha</button>
-            <button onclick="entrar()" style="background: var(--secondary);">Entrar / Logar</button>
-            
-            <hr style="margin: 20px 0; border: 0.5px solid #eee;">
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-            </div>
-        </div>
-    </div>
-
-    <div id="dashboard-screen">
-        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
-            <div class="card">
-                <h2>Bem-vindo ao Painel Interativo!</h2>
-                <p>O que você deseja fazer hoje?</p>
-                <button onclick="alert('Funcionalidade de Cadastro de Medicamento')">Cadastrar Doação</button>
-            </div>
-
-            <div class="card">
-                <h3>📍 Rotas para Clínicas Públicas</h3>
-                <p><strong>UFRPE (Rural):</strong> Dois Irmãos</p>
-                <a href="https://www.google.com/maps/dir//Hospital+Veterinário+da+UFRPE" target="_blank" style="color: blue;">Traçar Rota no Maps</a>
-            </div>
-            
-            <button onclick="logout()" style="background: grey; width: auto; padding: 10px 20px;">Sair</button>
-        </div>
-    </div>
-
-    <script>
-        function verificarSenha() {
-            const senha = document.getElementById('user-pass').value;
-            if(senha.length < 6) {
-                alert("A senha deve ter pelo menos 6 caracteres.");
-            } else {
-                alert("Senha válida!");
-            }
-        }
-
-        function entrar() {
-            const email = document.getElementById('user-email').value;
-            if(email === "") {
-                alert("Por favor, digite seu e-mail.");
-                return;
-            }
-            // Simula o login trocando as telas e o papel de parede
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('dashboard-screen').style.display = 'block';
-        }
-
-        function logout() {
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('dashboard-screen').style.display = 'none';
-        }
-    </script>
-
-</body>
-</html>
+    <iframe src="https://www.google.com/search?q=pet+care&igu=1" width="100%" height="300px"></iframe>
+</section>
