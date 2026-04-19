@@ -3,242 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmaCuraPet Interativa - Recife/UFRPE</title>
+    <title>FarmaCuraPet Interativa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- Configurações Globais --- */
         :root {
-            --bg-color: #e0e5ec; /* Cor de fundo suave para Neumorfismo */
-            --primary: #6c5ce7; /* Roxo criativo para links */
-            --success: #00b894; /* Verde para ações positivas */
-            --warning: #e17055; /* Laranja para receptores */
+            --bg-color: #e0e5ec;
+            --primary: #6c5ce7;
+            --success: #25d366; /* Cor WhatsApp */
             --shadow: 9px 9px 16px rgb(163,177,198, 0.6), -9px -9px 16px rgba(255,255,255, 0.5);
-            --inner-shadow: inset 1px 1px 3px rgba(0,0,0,0.1), inset -1px -1px 5px rgba(255,255,255,0.7);
+            --inner-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Fonte mais criativa/desenhada */
             background-color: var(--bg-color);
-            /* --- PAPEL DE PAREDE COM DESENHOS (Doodles) --- */
-            /* Usando uma imagem SVG de padrão repetitivo para leveza e criatividade */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23a3b1c6' fill-opacity='0.15'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43 0c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 56c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-7-17c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66 10c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-33 27c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-14-18c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236c5ce7' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7z'/%3E%3C/svg%3E");
+            display: flex; flex-direction: column; align-items: center; padding: 20px;
         }
 
-        header {
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        header h1 {
-            color: var(--primary);
-            margin: 0;
-            font-size: 2.5em;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        /* --- Estilo dos Cartões Interativos (Neumorfismo) --- */
-        .glass-panel {
+        .card {
             background: var(--bg-color);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 25px;
-            width: 90%;
-            max-width: 450px;
-            margin-bottom: 25px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 30px;
             box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
-        }
-
-        .glass-panel:hover {
-            transform: translateY(-5px); /* Efeito flutuante */
-        }
-
-        h3 {
-            border-bottom: 2px dashed #a3b1c6;
-            padding-bottom: 10px;
-            color: #555;
-            margin-top: 0;
-        }
-
-        /* --- Inputs e Botões Interativos --- */
-        input[type="text"], input[type="password"], input[type="tel"], textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 10px;
-            background: var(--bg-color);
-            box-shadow: var(--inner-shadow);
-            box-sizing: border-box; /* Garante padding correto */
-        }
-
-        button, .btn {
-            display: inline-block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
             text-align: center;
-            transition: all 0.2s ease;
-            box-shadow: 3px 3px 6px rgb(163,177,198, 0.4), -3px -3px 6px rgba(255,255,255, 0.4);
-            box-sizing: border-box;
         }
 
-        button:active, .btn:active {
-            box-shadow: var(--inner-shadow);
-            transform: scale(0.98);
+        /* --- Campo de Senha com Olhinho --- */
+        .password-container {
+            position: relative;
+            width: 100%;
         }
-
-        /* Cores de Botões */
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-game { background: #ff9f43; color: white; animation: pulse 2s infinite; } /* Botão que pulsa */
-
-        /* Redes Sociais */
-        .grid-social { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .btn-fb { background: #3b5998; color: white; }
-        .btn-ig { background: #e1306c; color: white; }
-        .btn-yt { background: #ff0000; color: white; }
-
-        /* Clínicas e Mapas */
-        .clinica-info {
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .map-icon { font-size: 1.2em; margin-right: 5px; }
-
-        /* Foto do Medicamento */
-        .med-photo-frame {
-            width: 120px;
-            height: 120px;
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 12px;
             background: var(--bg-color);
-            border-radius: 60px; /* Redondo */
-            margin: 10px auto;
             box-shadow: var(--inner-shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #a3b1c6;
-            overflow: hidden;
-            border: 2px dashed #a3b1c6;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
         }
 
-        /* Auxiliares */
-        .links-auxiliares { font-size: 0.9em; margin-top: 5px; }
-        .links-auxiliares a { color: #7f8c8d; text-decoration: none; margin: 0 5px; }
-        hr { border: 0; border-top: 1px solid #a3b1c6; margin: 15px 0; }
-
-        /* Animação para o botão de Jogos */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 159, 67, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
+        /* --- Botões Interativos --- */
+        .btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; width: 100%; padding: 15px; margin: 10px 0;
+            border: none; border-radius: 15px;
+            font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none; color: #333;
+            box-shadow: var(--shadow);
         }
+        .btn:active { box-shadow: var(--inner-shadow); transform: scale(0.98); }
+        
+        .btn-social { color: white; border-radius: 50px; width: 60px; height: 60px; padding: 0; }
+        .yt { background: #ff0000; } .ig { background: #e1306c; } .fb { background: #3b5998; }
+        .wa { background: var(--success); color: white; }
+        .btn-game { background: #f1c40f; color: #000; animation: bounce 2s infinite; }
 
+        @keyframes bounce { 0%, 100% {transform: scale(1);} 50% {transform: scale(1.05);} }
+
+        .clinica {
+            background: rgba(255,255,255,0.2);
+            padding: 15px; border-radius: 15px; margin-top: 10px;
+            border: 1px dashed var(--primary);
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>FarmaCuraPet</h1>
-    <p>Sua rede interativa de apoio veterinário em Pernambuco</p>
-</header>
+    <h1 style="color: var(--primary);">🐾 FarmaCuraPet</h1>
 
-<div class="glass-panel">
-    <h3>🔐 Acesso ao Portal</h3>
-    <input type="text" placeholder="Seu E-mail ou CPF">
-    <input type="password" placeholder="Sua Senha Mágica">
-    <button class="btn-primary">Entrar no Sistema</button>
-    <div class="links-auxiliares">
-        <a href="#">Esqueci a senha?</a> • <a href="#">Criar Nova Conta</a>
-    </div>
-</div>
-
-<div class="glass-panel">
-    <h3>🎮 Hub Interativo & Social</h3>
-    <p>Conecte-se e divirta-se enquanto ajuda.</p>
-    <div class="grid-social">
-        <a href="#" class="btn btn-fb">Face</a>
-        <a href="#" class="btn btn-ig">Insta</a>
-        <a href="#" class="btn btn-yt">YT</a>
-    </div>
-    <a href="#" class="btn btn-game">🕹️ ACESSAR JOGOS 360°</a>
-</div>
-
-<div class="glass-panel">
-    <h3>💊 Medicamento Solidário</h3>
-    <p>Doador ou Receptor? Identifique-se.</p>
-    <div class="med-photo-frame">
-        <img src="" alt="Foto Med" id="preview" style="display:none; width:100%; height:100%; object-fit:cover;">
-        <span id="placeholder-text">Foto</span>
-    </div>
-    <input type="file" id="foto" accept="image/*" style="font-size: 0.8em; margin: 10px 0;">
-    
-    <div style="display: flex; gap: 10px;">
-        <button class="btn-success">Sou Doador</button>
-        <button class="btn-warning">Sou Receptor</button>
-    </div>
-</div>
-
-<div class="glass-panel">
-    <h3>🏥 Rede de Apoio (PE)</h3>
-    
-    <div class="clinica-info">
-        <strong>UFRPE - Rural Federal</strong>
-        <p style="font-size:0.9em; margin: 5px 0;">Dois Irmãos, Recife</p>
-        <a href="tel:8133206000" class="btn" style="background: #bdc3c7; color:#333; font-size:0.9em; padding: 8px;">📞 Ligar: (81) 3320-6000</a>
-        <a href="https://www.google.com/maps/dir/?api=1&destination=UFRPE+Hospital+Veterinario" target="_blank" class="btn btn-primary" style="font-size:0.9em; padding: 8px;"><span class="map-icon">📍</span>Traçar Rota p/ Rural</a>
+    <div class="card">
+        <h3>Acesso</h3>
+        <input type="text" placeholder="E-mail ou Usuário">
+        <div class="password-container">
+            <input type="password" id="senha" placeholder="Senha">
+            <i class="fa-solid fa-eye toggle-password" id="toggleEye"></i>
+        </div>
+        <button class="btn" style="background: var(--primary); color: white;" onclick="alert('Login realizado!')">Entrar</button>
+        <div style="font-size: 0.8em; margin-top: 10px;">
+            <a href="#" onclick="alert('Email enviado para recuperação!')">Esqueci a senha</a> | <a href="#">Cadastrar Cliente</a>
+        </div>
     </div>
 
-    <hr>
-
-    <div class="clinica-info">
-        <strong>Clínica Veterinária do Recife</strong>
-        <p style="font-size:0.9em; margin: 5px 0;">Cordeiro, Recife</p>
-        <a href="tel:8133558000" class="btn" style="background: #bdc3c7; color:#333; font-size:0.9em; padding: 8px;">📞 Ligar: (81) 3355-8000</a>
-        <a href="https://www.google.com/maps/dir/?api=1&destination=Clinica+Veterinaria+do+Recife+Cordeiro" target="_blank" class="btn btn-primary" style="font-size:0.9em; padding: 8px;"><span class="map-icon">📍</span>Traçar Rota p/ Cordeiro</a>
+    <div class="card">
+        <h3>Diversão e Redes</h3>
+        <div style="display: flex; justify-content: space-around; margin-bottom: 15px;">
+            <a href="https://youtube.com" class="btn btn-social yt"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://instagram.com" class="btn btn-social ig"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://facebook.com" class="btn btn-social fb"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+        <button class="btn btn-game" onclick="window.open('https://www.google.com/search?q=jogos+360', '_blank')">
+            🎮 JOGOS 360°
+        </button>
     </div>
-</div>
 
-<div class="glass-panel">
-    <h3>📝 Feedback & Cadastro</h3>
-    <input type="tel" placeholder="Seu WhatsApp (para cadastro)">
-    <textarea placeholder="Deixe seu feedback criativo ou dúvida..." rows="3"></textarea>
-    <button class="btn-success">Enviar e Atualizar Conta</button>
-</div>
+    <div class="card">
+        <h3>Medicamento</h3>
+        <input type="file" id="fotoMed" accept="image/*">
+        <div style="display: flex; gap: 10px;">
+            <button class="btn" style="background:#8e44ad; color:white;" onclick="alert('Registrado como Doador!')">Doador</button>
+            <button class="btn" style="background:#e67e22; color:white;" onclick="alert('Registrado como Receptor!')">Receptor</button>
+        </div>
+    </div>
 
-<script>
-    // Script simples para mostrar o preview da foto do medicamento
-    document.getElementById('foto').addEventListener('change', function(e) {
-        const reader = new FileReader();
-        const preview = document.getElementById('preview');
-        const placeholder = document.getElementById('placeholder-text');
+    <div class="card">
+        <h3>🏥 Clínicas em Pernambuco</h3>
         
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-            placeholder.style.display = 'none';
-        }
-        
-        if (e.target.files[0]) {
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    });
-</script>
+        <div class="clinica">
+            <strong>UFRPE (Rural Federal)</strong>
+            <button class="btn" onclick="window.location.href='tel:8133206000'"><i class="fa-solid fa-phone"></i> Ligar</button>
+            <button class="btn" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=UFRPE+Medicina+Veterinaria', '_blank')"><i class="fa-solid fa-map-location-dot"></i> Rota para UFRPE</button>
+        </div>
 
+        <div class="clinica">
+            <strong>Clínica Veterinária do Recife</strong>
+            <button class="btn" onclick="window.location.href='tel:8133558000'"><i class="fa-solid fa-phone"></i> Ligar</button>
+            <button class="btn" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=Clinica+Veterinaria+do+Recife+Cordeiro', '_blank')"><i class="fa-solid fa-map-location-dot"></i> Rota para Cordeiro</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Contato Direto</h3>
+        <input type="tel" id="whatsapp" placeholder="Seu WhatsApp">
+        <textarea id="feedback" placeholder="Deixe seu feedback..." style="width:100%; padding:10px; border-radius:12px; background:var(--bg-color); box-shadow:var(--inner-shadow); border:none; margin-bottom:10px;"></textarea>
+        <button class="btn wa" onclick="enviarWhats()"><i class="fa-brands fa-whatsapp"></i> Enviar p/ WhatsApp</button>
+    </div>
+
+    <script>
+        // Função do Olhinho da Senha
+        const toggleEye = document.querySelector('#toggleEye');
+        const senhaInput = document.querySelector('#senha');
+
+        toggleEye.addEventListener('click', function () {
+            const type = senhaInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            senhaInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Função para simular envio de WhatsApp
+        function enviarWhats() {
+            const num = document.getElementById('whatsapp').value;
+            const msg = document.getElementById('feedback').value;
+            if(!num) { alert('Digite seu número!'); return; }
+            window.open(`https://wa.me/5581999999999?text=Oi, meu numero e ${num}. Feedback: ${msg}`, '_blank');
+        }
+    </script>
 </body>
 </html>
