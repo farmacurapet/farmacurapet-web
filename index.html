@@ -3,226 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmaCuraPet Pro - Dashboard</title>
+    <title>FarmaCuraPet - Sistema Oficial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --bg: #e0e5ec;
-            --shadow: 7px 7px 15px #b8b9be, -7px -7px 15px #ffffff;
-            --inner-shadow: inset 4px 4px 8px #b8b9be, inset -4px -4px 8px #ffffff;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* --- Telas --- */
-        .page { display: none; width: 100%; max-width: 500px; padding: 20px; animation: fadeIn 0.5s; }
+        :root { --p: #6c5ce7; --bg: #e0e5ec; --sh: 7px 7px 15px #b8b9be, -7px -7px 15px #ffffff; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; }
+        .page { display: none; width: 100%; max-width: 450px; padding: 20px; box-sizing: border-box; }
         .active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* --- Estilo Neumórfico --- */
-        .card {
-            background: var(--bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        input, textarea, select {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border: none; border-radius: 10px;
-            background: var(--bg); box-shadow: var(--inner-shadow);
-            outline: none; box-sizing: border-box;
-        }
-
-        .btn {
-            width: 100%; padding: 15px; border: none; border-radius: 12px;
-            box-shadow: var(--shadow); cursor: pointer; font-weight: bold;
-            transition: 0.2s; margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn:active { box-shadow: var(--inner-shadow); transform: scale(0.98); }
-        .btn-main { background: var(--primary); color: white; }
-
-        /* --- Barra de Navegação Inferior --- */
-        nav {
-            position: fixed; bottom: 0; width: 100%; max-width: 500px;
-            background: var(--bg); box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-            display: flex; justify-content: space-around; padding: 10px 0;
-            border-radius: 20px 20px 0 0;
-        }
-        nav button { background: none; border: none; color: #777; cursor: pointer; font-size: 1.2rem; }
-        nav button.active-nav { color: var(--primary); }
-
-        /* --- Olhinho --- */
-        .pass-group { position: relative; }
-        .pass-group i { position: absolute; right: 15px; top: 25px; cursor: pointer; }
-
-        /* --- Lista de Medicamentos --- */
-        #listaMed { text-align: left; }
-        .item-med { border-left: 5px solid var(--primary); padding: 10px; margin: 5px 0; background: #f0f0f0; border-radius: 5px; }
+        .card { background: var(--bg); border-radius: 20px; padding: 20px; box-shadow: var(--sh); margin-bottom: 20px; text-align: center; position: relative; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 10px; background: var(--bg); box-shadow: inset 3px 3px 6px #b8b9be, inset -3px -3px 6px #ffffff; outline: none; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; box-shadow: var(--sh); cursor: pointer; font-weight: bold; margin: 8px 0; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; color: #333; }
+        .btn:active { box-shadow: inset 2px 2px 5px #b8b9be; transform: scale(0.98); }
+        .btn-p { background: var(--p); color: white; }
+        .pass-container { position: relative; }
+        .pass-container i { position: absolute; right: 15px; top: 20px; cursor: pointer; color: #777; }
+        nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: var(--bg); display: none; justify-content: space-around; padding: 10px 0; box-shadow: 0 -5px 10px rgba(0,0,0,0.05); border-radius: 20px 20px 0 0; }
+        .item-med { background: white; padding: 10px; border-radius: 10px; margin: 10px 0; text-align: left; border-left: 5px solid var(--p); }
     </style>
 </head>
 <body>
 
-<div id="telaLogin" class="page active">
+<div id="pageLogin" class="page active">
     <div class="card">
-        <h1 style="color: var(--primary);">🐾 FarmaCuraPet</h1>
-        <h3>Entrar</h3>
-        <input type="text" placeholder="E-mail">
-        <div class="pass-group">
-            <input type="password" id="passLogin" placeholder="Senha">
-            <i class="fa-solid fa-eye" onclick="togglePass('passLogin')"></i>
+        <h1 style="color:var(--p)">🐾 FarmaCuraPet</h1>
+        <p>Login do Usuário</p>
+        <input type="text" id="loginUser" placeholder="Usuário (use o que cadastrar)">
+        <div class="pass-container">
+            <input type="password" id="loginPass" placeholder="Senha">
+            <i class="fa-solid fa-eye" onclick="togglePass('loginPass')"></i>
         </div>
-        <button class="btn btn-main" onclick="irPara('telaHome')">Entrar</button>
-        <p onclick="alert('Link de recuperação enviado!')" style="cursor:pointer; font-size: 0.8em;">Esqueci a senha</p>
-        <hr>
-        <button class="btn" onclick="irPara('telaCadastro')">Criar Conta</button>
+        <button class="btn btn-p" onclick="fazerLogin()">ENTRAR</button>
+        <a href="#" onclick="alert('Funcionalidade em breve!')" style="font-size: 12px;">Esqueci a senha</a>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+        <button class="btn" onclick="show('pageCadastro')">NÃO TENHO CONTA (CADASTRAR)</button>
     </div>
 </div>
 
-<div id="telaCadastro" class="page">
+<div id="pageCadastro" class="page">
     <div class="card">
-        <h3>Novo Cadastro</h3>
-        <input type="text" placeholder="Nome Completo">
-        <input type="tel" placeholder="WhatsApp (DDD+Número)">
-        <div class="pass-group">
-            <input type="password" id="passCad" placeholder="Crie uma Senha">
-            <i class="fa-solid fa-eye" onclick="togglePass('passCad')"></i>
+        <h3>📝 Cadastro de Usuário</h3>
+        <input type="text" id="cadNome" placeholder="Nome Completo">
+        <input type="tel" id="cadWhats" placeholder="WhatsApp">
+        <div class="pass-container">
+            <input type="password" id="cadPass" placeholder="Crie uma Senha">
+            <i class="fa-solid fa-eye" onclick="togglePass('cadPass')"></i>
         </div>
-        <button class="btn btn-main" onclick="irPara('telaLogin')">Finalizar Cadastro</button>
-        <button class="btn" onclick="irPara('telaLogin')">Voltar</button>
+        <button class="btn btn-p" onclick="salvarCadastro()">CADASTRAR E SALVAR</button>
+        <button class="btn" onclick="show('pageLogin')">VOLTAR AO LOGIN</button>
     </div>
 </div>
 
-<div id="telaHome" class="page">
-    <header style="text-align: center;">
-        <h2>Farmácia Virtual</h2>
-    </header>
-
+<div id="pageHome" class="page">
     <div class="card">
-        <h3>Redes Sociais & Jogos</h3>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <button class="btn" onclick="window.open('https://instagram.com')"><i class="fa-brands fa-instagram" style="color:#e1306c"></i></button>
-            <button class="btn" onclick="window.open('https://facebook.com')"><i class="fa-brands fa-facebook" style="color:#3b5998"></i></button>
-            <button class="btn" onclick="window.open('https://youtube.com')"><i class="fa-brands fa-youtube" style="color:red"></i></button>
-            <button class="btn" onclick="window.open('https://wa.me/5581999999999')"><i class="fa-brands fa-whatsapp" style="color:green"></i></button>
+        <h2>🏠 Farmácia Virtual</h2>
+        <p>Estoque e Redes Sociais</p>
+        <div style="display:flex; gap:5px;">
+            <a href="https://instagram.com" target="_blank" class="btn"><i class="fa-brands fa-instagram" style="color:#e1306c"></i></a>
+            <a href="https://facebook.com" target="_blank" class="btn"><i class="fa-brands fa-facebook" style="color:#3b5998"></i></a>
+            <a href="https://youtube.com" target="_blank" class="btn"><i class="fa-brands fa-youtube" style="color:red"></i></a>
+            <a href="https://wa.me/5581999999999" target="_blank" class="btn"><i class="fa-brands fa-whatsapp" style="color:green"></i></a>
         </div>
-        <button class="btn" style="background: #f1c40f;" onclick="window.open('https://www.google.com/search?q=jogos+360')">🕹️ JOGOS 360°</button>
+        <button class="btn" style="background:#f1c40f" onclick="window.open('https://www.google.com/search?q=jogos+360')">🕹️ JOGOS 360°</button>
     </div>
 
     <div class="card">
-        <h3>Cadastrar Medicamento</h3>
-        <input type="text" id="medNome" placeholder="Nome do Medicamento">
-        <select id="medTipo">
-            <option value="Doador">Quero Doar</option>
-            <option value="Receptor">Preciso Receber</option>
+        <h3>💊 Gerenciar Medicamento</h3>
+        <input type="text" id="nomeRemedio" placeholder="Nome do Medicamento">
+        <select id="tipoRemedio" style="width:100%; padding:10px; border-radius:10px; border:none; background:var(--bg); box-shadow: inset 2px 2px 5px #b8b9be;">
+            <option value="Doador">Sou Doador</option>
+            <option value="Receptor">Sou Receptor</option>
         </select>
-        <input type="file" id="medFoto">
-        <button class="btn btn-main" onclick="armazenarMed()">Salvar no Estoque</button>
-    </div>
-
-    <div class="card">
-        <h3>📦 Estoque Virtual</h3>
-        <div id="listaMed">Nenhum medicamento cadastrado.</div>
+        <label style="font-size: 12px; display:block; margin-top:10px;">Foto do Medicamento:</label>
+        <input type="file">
+        <button class="btn btn-p" onclick="adicionarMed()">ADICIONAR AO ESTOQUE</button>
+        <div id="estoqueLista"></div>
     </div>
     <br><br><br>
 </div>
 
-<div id="telaClinicas" class="page">
-    <h2>🏥 Clínicas Veterinárias (PE)</h2>
-    
+<div id="pageClinicas" class="page">
     <div class="card">
-        <strong>UFRPE (Rural Federal)</strong>
-        <p>Dois Irmãos, Recife</p>
-        <button class="btn" onclick="window.location.href='tel:8133206000'"><i class="fa-solid fa-phone"></i> (81) 3320-6000</button>
-        <button class="btn btn-main" onclick="window.open('https://www.google.com/maps/dir//UFRPE')">📍 Abrir Rota (Google Maps)</button>
-    </div>
-
-    <div class="card">
-        <strong>Hospital Veterinário do Recife</strong>
-        <p>Cordeiro, Recife</p>
-        <button class="btn" onclick="window.location.href='tel:8133558179'"><i class="fa-solid fa-phone"></i> (81) 3355-8179</button>
-        <button class="btn btn-main" onclick="window.open('https://www.google.com/maps/dir//Hospital+Veterinario+do+Recife')">📍 Abrir Rota (Google Maps)</button>
+        <h3>🏥 Clínicas Parceiras (Recife)</h3>
+        <div style="text-align:left; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+            <strong>UFRPE (Rural Federal)</strong>
+            <p>Dois Irmãos, Recife - PE</p>
+            <a href="tel:8133206000" class="btn"><i class="fa-solid fa-phone"></i> Ligar: (81) 3320-6000</a>
+            <a href="https://www.google.com/maps/dir//UFRPE" target="_blank" class="btn btn-p">📍 Ver Rota no Mapa</a>
+        </div>
+        <div style="text-align:left; padding-top: 15px;">
+            <strong>Clínica Veterinária do Recife</strong>
+            <p>Cordeiro, Recife - PE</p>
+            <a href="tel:8133558179" class="btn"><i class="fa-solid fa-phone"></i> Ligar: (81) 3355-8179</a>
+            <a href="https://www.google.com/maps/dir//Hospital+Veterinario+do+Recife" target="_blank" class="btn btn-p">📍 Ver Rota no Mapa</a>
+        </div>
     </div>
     <br><br><br>
 </div>
 
-<div id="telaPerfil" class="page">
+<div id="pagePerfil" class="page">
     <div class="card">
-        <h3>Meu Perfil</h3>
-        <label>Atualizar Telefone:</label>
-        <input type="tel" id="perfilTel" value="(81) 98888-7777">
-        <button class="btn btn-main" onclick="alert('Dados atualizados com sucesso!')">Atualizar Conta</button>
+        <h3>⚙️ Meu Perfil</h3>
+        <p>Atualize seus dados abaixo:</p>
+        <input type="text" id="upNome" placeholder="Novo Nome">
+        <input type="tel" id="upWhats" placeholder="Novo WhatsApp">
+        <button class="btn btn-p" onclick="atualizarPerfil()">ATUALIZAR DADOS</button>
+        <hr>
+        <textarea id="feedback" placeholder="Deixe seu feedback..."></textarea>
+        <button class="btn" onclick="alert('Feedback enviado!')">ENVIAR FEEDBACK</button>
+        <button class="btn" style="background:#ff7675; color:white;" onclick="location.reload()">SAIR / LOGOUT</button>
     </div>
-
-    <div class="card">
-        <h3>Feedback</h3>
-        <textarea placeholder="Como podemos melhorar?"></textarea>
-        <button class="btn">Enviar Comentário</button>
-    </div>
-    
-    <button class="btn" style="background:#ff7675; color:white;" onclick="irPara('telaLogin')">Sair do Sistema</button>
     <br><br><br>
 </div>
 
-<nav id="navbar" style="display: none;">
-    <button onclick="irPara('telaHome')" id="navHome"><i class="fa-solid fa-house"></i></button>
-    <button onclick="irPara('telaClinicas')" id="navClinicas"><i class="fa-solid fa-hospital"></i></button>
-    <button onclick="irPara('telaPerfil')" id="navPerfil"><i class="fa-solid fa-user-gear"></i></button>
+<nav id="menu">
+    <button onclick="show('pageHome')" class="btn" style="box-shadow:none;"><i class="fa-solid fa-capsules"></i></button>
+    <button onclick="show('pageClinicas')" class="btn" style="box-shadow:none;"><i class="fa-solid fa-map-location-dot"></i></button>
+    <button onclick="show('pagePerfil')" class="btn" style="box-shadow:none;"><i class="fa-solid fa-user-pen"></i></button>
 </nav>
 
 <script>
-    // Navegação entre telas
-    function irPara(idTela) {
+    // BANCO DE DADOS LOCAL SIMPLES
+    let dbUsuario = JSON.parse(localStorage.getItem('user')) || null;
+
+    function show(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(idTela).classList.add('active');
+        document.getElementById(id).classList.add('active');
+        document.getElementById('menu').style.display = (id === 'pageLogin' || id === 'pageCadastro') ? 'none' : 'flex';
+    }
+
+    function togglePass(id) {
+        const x = document.getElementById(id);
+        x.type = x.type === "password" ? "text" : "password";
+    }
+
+    // CADASTRO REAL
+    function salvarCadastro() {
+        const nome = document.getElementById('cadNome').value;
+        const whats = document.getElementById('cadWhats').value;
+        const pass = document.getElementById('cadPass').value;
+
+        if(!nome || !whats || !pass) return alert("Preencha todos os campos para cadastrar!");
+
+        dbUsuario = { nome, whats, pass };
+        localStorage.setItem('user', JSON.stringify(dbUsuario));
+        alert("Usuário cadastrado com sucesso! Agora faça login.");
+        show('pageLogin');
+    }
+
+    // LOGIN REAL
+    function fazerLogin() {
+        const user = document.getElementById('loginUser').value;
+        const pass = document.getElementById('loginPass').value;
+
+        if(!dbUsuario) return alert("Nenhum usuário cadastrado no sistema!");
         
-        // Mostrar/Esconder barra de navegação
-        const nav = document.getElementById('navbar');
-        if (idTela === 'telaLogin' || idTela === 'telaCadastro') {
-            nav.style.display = 'none';
+        if(user === dbUsuario.nome && pass === dbUsuario.pass) {
+            document.getElementById('upNome').value = dbUsuario.nome;
+            document.getElementById('upWhats').value = dbUsuario.whats;
+            show('pageHome');
         } else {
-            nav.style.display = 'flex';
+            alert("Usuário ou Senha incorretos!");
         }
     }
 
-    // Olhinho da Senha
-    function togglePass(idInput) {
-        const input = document.getElementById(idInput);
-        input.type = input.type === 'password' ? 'text' : 'password';
+    // ATUALIZAR PERFIL
+    function atualizarPerfil() {
+        dbUsuario.nome = document.getElementById('upNome').value;
+        dbUsuario.whats = document.getElementById('upWhats').value;
+        localStorage.setItem('user', JSON.stringify(dbUsuario));
+        alert("Dados atualizados!");
     }
 
-    // Armazenamento Virtual (Em memória)
-    const estoque = [];
-    function armazenarMed() {
-        const nome = document.getElementById('medNome').value;
-        const tipo = document.getElementById('medTipo').value;
-        
+    // ADICIONAR MEDICAMENTO
+    function adicionarMed() {
+        const nome = document.getElementById('nomeRemedio').value;
+        const tipo = document.getElementById('tipoRemedio').value;
         if(!nome) return alert("Digite o nome do remédio!");
 
-        estoque.push({ nome, tipo });
-        atualizarEstoque();
-        
-        document.getElementById('medNome').value = "";
-        alert("Medicamento adicionado ao estoque virtual!");
-    }
-
-    function atualizarEstoque() {
-        const lista = document.getElementById('listaMed');
-        lista.innerHTML = "";
-        estoque.forEach(item => {
-            lista.innerHTML += `<div class="item-med"><strong>${item.nome}</strong> - ${item.tipo}</div>`;
-        });
+        const lista = document.getElementById('estoqueLista');
+        const div = document.createElement('div');
+        div.className = 'item-med';
+        div.innerHTML = `<strong>${nome}</strong> - <small>${tipo}</small>`;
+        lista.appendChild(div);
+        document.getElementById('nomeRemedio').value = "";
     }
 </script>
 
