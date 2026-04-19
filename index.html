@@ -9,163 +9,176 @@
         :root {
             --primary: #2a9d8f;
             --secondary: #e76f51;
-            --light: #f4f1de;
+            --dark-blue: #264653;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body, html {
             margin: 0;
             padding: 0;
-            /* Fundo com marcas de patinhas (Packs/Patterns) */
-            background-color: var(--light);
-            background-image: url('https://www.transparenttextures.com/patterns/paw-print.png');
-            color: #333;
+            height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow-x: hidden;
         }
 
-        header {
-            background-color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        /* BARRA DE AVISOS DINÂMICA (Estilo Noticiário) */
+        .news-ticker {
+            background: var(--dark-blue);
+            color: white;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            overflow: hidden;
         }
-
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
+        .ticker-wrapper {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: ticker 30s linear infinite;
         }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        .news-item { display: inline-block; margin-right: 50px; font-weight: bold; }
 
-        /* Seção de Redes Sociais */
-        .social-bar {
+        /* TELA DE LOGIN (Fundo Cão) */
+        #login-screen {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1300&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
+            align-items: center;
         }
-        .social-bar a {
-            font-size: 24px;
-            color: var(--primary);
-            transition: transform 0.3s;
-        }
-        .social-bar a:hover { transform: scale(1.2); }
 
-        /* Formulários e Inputs */
-        .form-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        /* TELA LOGADO (Fundo Gato - Inicialmente escondida) */
+        #dashboard-screen {
+            display: none;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=1300&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding-top: 80px;
         }
-        .card {
+
+        .auth-card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 5px solid var(--primary);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
         }
-        input, select, button {
+
+        input[type="email"], input[type="password"], input[type="text"], select {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            box-sizing: border-box; /* Garante que o padding não quebre a largura */
+            font-size: 16px;
+            display: block;
         }
+
         button {
-            background-color: var(--primary);
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
             color: white;
             border: none;
-            cursor: pointer;
+            border-radius: 10px;
+            font-size: 18px;
             font-weight: bold;
-        }
-        button:hover { background-color: #21867a; }
-
-        /* Seção de Clínicas */
-        .clinicas {
-            margin-top: 40px;
-        }
-        .rota-btn {
-            background-color: #4285F4;
-            display: inline-block;
-            text-decoration: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
         }
 
-        .jogos-banner {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 12px;
-            color: #888;
-        }
+        /* Estilo das Rotas e Redes Sociais */
+        .social-icons a { font-size: 30px; margin: 0 15px; color: var(--primary); }
+        .card { background: white; margin: 20px; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Farmacura Pet 🐾</h1>
-    <div class="social-bar">
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-youtube"></i></a>
-    </div>
-</header>
-
-<div class="container">
-    <div class="form-section">
-        <div class="card">
-            <h3><i class="fas fa-user-plus"></i> Cadastro</h3>
-            <select>
-                <option>Tipo de Usuário</option>
-                <option>Usuário Doador</option>
-                <option>Usuário Receptor</option>
-            </select>
-            <input type="email" placeholder="E-mail">
-            <input type="password" placeholder="Senha">
-            <button>Verificar Senha</button>
-            <button>Cadastrar Usuário</button>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-pills"></i> Doar Medicamento</h3>
-            <input type="text" placeholder="Nome do Medicamento">
-            <select>
-                <option>Tipo de Medicamento</option>
-                <option>Antibiótico</option>
-                <option>Anti-inflamatório</option>
-                <option>Vitamina / Suplemento</option>
-            </select>
-            <input type="date" title="Validade">
-            <label>Foto do Medicamento:</label>
-            <input type="file" accept="image/*">
-            <button style="background-color: var(--secondary);">Enviar Doação</button>
+    <div class="news-ticker">
+        <div class="ticker-wrapper">
+            <span class="news-item">🌤️ Tempo em Recife: Ensolarado, 28°C</span>
+            <span class="news-item">⚽ Futebol: Sport e Náutico jogam neste fim de semana</span>
+            <span class="news-item">🐾 Farmacura: Novos medicamentos disponíveis na UFRPE</span>
+            <span class="news-item">🐶 Dica do Dia: Mantenha a vacinação do seu pet em dia!</span>
         </div>
     </div>
 
-    <div class="clinicas">
-        <h3>📍 Clínicas Veterinárias Públicas (Recife)</h3>
-        
-        <div class="card" style="margin-bottom: 15px;">
-            <strong>Hospital Veterinário do Recife (HVR)</strong><br>
-            📍 Av. Professor Estevão Francisco da Costa, S/N - Cordeiro<br>
-            📞 (81) 4042-3034<br>
-            <a href="https://www.google.com/maps/dir/?api=1&destination=-8.0531,-34.9288" target="_blank" class="rota-btn">Ver Rota</a>
-        </div>
-
-        <div class="card" style="margin-bottom: 15px;">
-            <strong>Hospital Veterinário da UFRPE</strong><br>
-            📍 Rua Dom Manuel de Medeiros, s/n - Dois Irmãos<br>
-            📞 (81) 3320-6441<br>
-            <a href="https://www.google.com/maps/dir/?api=1&destination=-8.0163,-34.9515" target="_blank" class="rota-btn">Ver Rota</a>
+    <div id="login-screen">
+        <div class="auth-card">
+            <h2 style="color: var(--primary);">Farmacura Pet 🐾</h2>
+            <p>Faça login ou cadastre-se</p>
+            
+            <input type="email" id="user-email" placeholder="Seu E-mail" required>
+            <input type="password" id="user-pass" placeholder="Sua Senha" required>
+            
+            <button onclick="verificarSenha()">Verificar Senha</button>
+            <button onclick="entrar()" style="background: var(--secondary);">Entrar / Logar</button>
+            
+            <hr style="margin: 20px 0; border: 0.5px solid #eee;">
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
         </div>
     </div>
 
-    <div class="jogos-banner">
-        Suporte: Jogos 360 o tempo todo
+    <div id="dashboard-screen">
+        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+            <div class="card">
+                <h2>Bem-vindo ao Painel Interativo!</h2>
+                <p>O que você deseja fazer hoje?</p>
+                <button onclick="alert('Funcionalidade de Cadastro de Medicamento')">Cadastrar Doação</button>
+            </div>
+
+            <div class="card">
+                <h3>📍 Rotas para Clínicas Públicas</h3>
+                <p><strong>UFRPE (Rural):</strong> Dois Irmãos</p>
+                <a href="https://www.google.com/maps/dir//Hospital+Veterinário+da+UFRPE" target="_blank" style="color: blue;">Traçar Rota no Maps</a>
+            </div>
+            
+            <button onclick="logout()" style="background: grey; width: auto; padding: 10px 20px;">Sair</button>
+        </div>
     </div>
-</div>
+
+    <script>
+        function verificarSenha() {
+            const senha = document.getElementById('user-pass').value;
+            if(senha.length < 6) {
+                alert("A senha deve ter pelo menos 6 caracteres.");
+            } else {
+                alert("Senha válida!");
+            }
+        }
+
+        function entrar() {
+            const email = document.getElementById('user-email').value;
+            if(email === "") {
+                alert("Por favor, digite seu e-mail.");
+                return;
+            }
+            // Simula o login trocando as telas e o papel de parede
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'block';
+        }
+
+        function logout() {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('dashboard-screen').style.display = 'none';
+        }
+    </script>
 
 </body>
 </html>
