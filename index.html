@@ -61,21 +61,21 @@
 
         .search-bar-container input {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
         }
 
-        /* CARD DE LOGIN */
+        /* LOGIN */
         .login-card {
             background: var(--bg-glass);
-            padding: 40px;
+            padding: 30px;
             border-radius: 25px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             width: 100%;
             max-width: 450px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .input-box { position: relative; margin: 15px 0; }
@@ -105,18 +105,21 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-enter { background: var(--secondary); color: white; }
-        .btn-reg { background: #e8f5e9; color: var(--secondary); border: 1px solid var(--secondary); }
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .btn-reg { background: #e8f5e9; color: var(--secondary); border: 1px solid var(--secondary); font-size: 13px; }
+        .btn-call { background: #2980b9; color: white; font-size: 12px; padding: 8px; margin-top: 5px; }
+        .btn-route { background: #e67e22; color: white; font-size: 12px; padding: 8px; }
 
         .info-section {
             width: 100%;
             max-width: 800px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 15px;
         }
 
         .mini-card {
@@ -125,6 +128,21 @@
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+
+        /* REDES SOCIAIS - CORREÇÃO DE VISIBILIDADE */
+        .social-links {
+            margin-top: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 50px;
+        }
+        .social-links a {
+            color: white;
+            margin: 0 15px;
+            font-size: 28px;
+            transition: 0.3s;
+        }
+        .social-links a:hover { color: var(--secondary); }
 
         @media (max-width: 1024px) {
             body { overflow-y: auto; }
@@ -138,8 +156,8 @@
 <div class="main-wrapper">
     <div class="content-side">
         <div class="login-card">
-            <h1 style="color: var(--primary); margin-bottom: 10px;">Farmacura Pet 🐾</h1>
-            <p style="margin-bottom: 20px; color: #666;">Sistema de Doação de Medicamentos</p>
+            <h1 style="color: var(--primary); margin-bottom: 5px;">Farmacura Pet 🐾</h1>
+            <p style="margin-bottom: 15px; color: #666;">Sistema de Doação de Medicamentos</p>
             
             <div class="input-box">
                 <input type="text" id="user" placeholder="E-mail ou Usuário">
@@ -159,68 +177,74 @@
 
         <div class="info-section">
             <div class="mini-card">
-                <h4 style="color: var(--primary);"><i class="fa-solid fa-hospital"></i> Clínicas Recife</h4>
-                <p><small>UFRPE: (81) 3320-6410</small></p>
-                <p><small>HVR: (81) 3355-8179</small></p>
+                <h4 style="color: var(--primary);"><i class="fa-solid fa-university"></i> UFRPE (CSTR)</h4>
+                <p style="font-size: 12px; margin: 5px 0;">R. Dom Manoel de Medeiros, s/n - Dois Irmãos</p>
+                <a href="tel:08133206410" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar: (81) 3320-6410</a>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=Hospital+Veterinario+UFRPE" target="_blank" class="btn-main btn-route"><i class="fa-solid fa-location-arrow"></i> Ver Rota</a>
             </div>
-            <div class="mini-card" style="text-align: center;">
-                <h4 style="color: var(--accent);"><i class="fa-solid fa-gamepad"></i> Diversão</h4>
-                <a href="https://www.jogos360.com.br" target="_blank" style="text-decoration: none; font-weight: bold; color: var(--accent);">Jogos 360 Graus ↗️</a>
+
+            <div class="mini-card">
+                <h4 style="color: var(--primary);"><i class="fa-solid fa-hospital"></i> HVR - Recife</h4>
+                <p style="font-size: 12px; margin: 5px 0;">Av. Prof. Estevão F. da Costa, S/N - Cordeiro</p>
+                <a href="tel:08133558179" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar: (81) 3355-8179</a>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=Hospital+Veterinario+do+Recife" target="_blank" class="btn-main btn-route"><i class="fa-solid fa-location-arrow"></i> Ver Rota</a>
             </div>
         </div>
 
-        <div style="margin-top: 30px;">
-            <a href="#" style="color: white; margin: 10px; font-size: 24px;"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" style="color: white; margin: 10px; font-size: 24px;"><i class="fa-brands fa-facebook"></i></a>
-            <a href="#" style="color: white; margin: 10px; font-size: 24px;"><i class="fa-brands fa-youtube"></i></a>
+        <div class="social-links">
+            <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://youtube.com" target="_blank"><i class="fa-brands fa-youtube"></i></a>
         </div>
     </div>
 
     <div class="browser-side">
         <div class="browser-header">
-            <i class="fa-brands fa-chrome"></i> Navegação Auxiliar
+            <i class="fa-brands fa-google"></i> Pesquisa Rápida Google
         </div>
         <div class="search-bar-container">
-            <input type="text" id="search-input" placeholder="Pesquisar no Google...">
-            <button onclick="googleSearch()" style="padding: 5px 10px; cursor: pointer; background: var(--secondary); color: white; border-radius: 5px; border: none;">Buscar</button>
+            <input type="text" id="search-input" placeholder="O que deseja procurar no Google?">
+            <button onclick="googleSearch()" style="padding: 10px 20px; cursor: pointer; background: var(--secondary); color: white; border-radius: 5px; border: none; font-weight: bold;">BUSCAR</button>
         </div>
-        <iframe id="browser-iframe" src="https://www.bing.com" style="width: 100%; height: 100%; border: none;"></iframe>
+        <iframe id="browser-iframe" src="https://www.bing.com/search?q=saude+pet" style="width: 100%; height: 100%; border: none;"></iframe>
     </div>
 </div>
 
 <script>
-    // 1. CORREÇÃO DA SENHA (OLHO)
+    // 1. CORREÇÃO DO "OLHINHO" DA SENHA
     function togglePass() {
         const passInput = document.getElementById('pass');
         const icon = document.getElementById('toggleEye');
         if (passInput.type === "password") {
             passInput.type = "text";
-            icon.classList.replace('fa-eye', 'fa-eye-slash');
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
         } else {
             passInput.type = "password";
-            icon.classList.replace('fa-eye-slash', 'fa-eye');
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
         }
     }
 
-    // 2. PESQUISA GOOGLE EXTERNA
+    // 2. BUSCA NO GOOGLE (ABRE NOVA ABA PARA EVITAR BLOQUEIO DE IFRAME)
     function googleSearch() {
         const query = document.getElementById('search-input').value;
-        if(query !== "") {
-            window.open(`https://www.google.com/search?q=${query}`, '_blank');
+        if(query.trim() !== "") {
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
         } else {
-            alert("Digite algo para pesquisar!");
+            alert("Por favor, digite um termo para busca!");
         }
     }
 
-    // 3. VALIDAÇÃO DE LOGIN
+    // 3. LOGIN SIMULADO
     function executarLogin() {
         const u = document.getElementById('user').value;
         const p = document.getElementById('pass').value;
 
         if(u === "" || p === "") {
-            alert("⚠️ Erro: Preencha usuário e senha!");
+            alert("⚠️ Atenção: Preencha todos os campos!");
         } else {
-            alert("✅ Conectando ao Farmacura Pet... Aguarde!");
+            alert("🐾 Sucesso! Entrando no sistema Farmacura Pet...");
         }
     }
 </script>
