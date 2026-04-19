@@ -26,7 +26,6 @@
 
         .main-wrapper { display: flex; width: 100%; height: 100%; }
 
-        /* LADO ESQUERDO */
         .content-side {
             flex: 1.2;
             overflow-y: auto;
@@ -36,7 +35,6 @@
             align-items: center;
         }
 
-        /* LADO DIREITO (NAVEGADOR) */
         .browser-side {
             flex: 0.8;
             background: #f4f4f4;
@@ -66,8 +64,8 @@
             border: 1px solid #ccc;
         }
 
-        /* LOGIN */
-        .login-card {
+        /* LOGIN CARD */
+        .login-card, .system-panel {
             background: var(--bg-glass);
             padding: 30px;
             border-radius: 25px;
@@ -77,6 +75,9 @@
             text-align: center;
             margin-bottom: 20px;
         }
+
+        /* ESTADO INICIAL: PAINEL OCULTO */
+        .system-panel { display: none; max-width: 600px; }
 
         .input-box { position: relative; margin: 15px 0; }
         .input-box input {
@@ -114,6 +115,11 @@
         .btn-call { background: #2980b9; color: white; font-size: 12px; padding: 8px; margin-top: 5px; }
         .btn-route { background: #e67e22; color: white; font-size: 12px; padding: 8px; }
 
+        /* TABELA DE ESTOQUE */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #f8f9fa; color: var(--primary); }
+
         .info-section {
             width: 100%;
             max-width: 800px;
@@ -129,7 +135,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* REDES SOCIAIS - CORREÇÃO DE VISIBILIDADE */
         .social-links {
             margin-top: 20px;
             background: rgba(0,0,0,0.5);
@@ -142,7 +147,6 @@
             font-size: 28px;
             transition: 0.3s;
         }
-        .social-links a:hover { color: var(--secondary); }
 
         @media (max-width: 1024px) {
             body { overflow-y: auto; }
@@ -155,7 +159,8 @@
 
 <div class="main-wrapper">
     <div class="content-side">
-        <div class="login-card">
+        
+        <div id="loginSection" class="login-card">
             <h1 style="color: var(--primary); margin-bottom: 5px;">Farmacura Pet 🐾</h1>
             <p style="margin-bottom: 15px; color: #666;">Sistema de Doação de Medicamentos</p>
             
@@ -170,24 +175,57 @@
 
             <button class="btn-main btn-enter" onclick="executarLogin()">ENTRAR NO SISTEMA</button>
             <div style="display: flex; gap: 10px;">
-                <button class="btn-main btn-reg" onclick="alert('Iniciando cadastro de Doador...')">SOU DOADOR</button>
-                <button class="btn-main btn-reg" onclick="alert('Iniciando cadastro de Receptor...')">SOU RECEPTOR</button>
+                <button class="btn-main btn-reg" onclick="alert('Redirecionando para Cadastro...')">SOU DOADOR</button>
+                <button class="btn-main btn-reg" onclick="alert('Redirecionando para Cadastro...')">SOU RECEPTOR</button>
             </div>
+        </div>
+
+        <div id="systemSection" class="system-panel">
+            <h2 style="color: var(--secondary);"><i class="fa-solid fa-boxes-stacked"></i> Estoque de Doações</h2>
+            <p style="font-size: 14px; color: #555;">Bem-vindo ao Inventário Farmacura Pet</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Qtd</th>
+                        <th>Validade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Amoxicilina 500mg</td>
+                        <td>12 un</td>
+                        <td>10/2026</td>
+                    </tr>
+                    <tr>
+                        <td>Simparic (Cães)</td>
+                        <td>05 un</td>
+                        <td>03/2027</td>
+                    </tr>
+                    <tr>
+                        <td>Apoquel 5.4mg</td>
+                        <td>08 un</td>
+                        <td>12/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-main btn-reg" style="margin-top: 15px;" onclick="location.reload()">SAIR DO SISTEMA</button>
         </div>
 
         <div class="info-section">
             <div class="mini-card">
                 <h4 style="color: var(--primary);"><i class="fa-solid fa-university"></i> UFRPE (CSTR)</h4>
-                <p style="font-size: 12px; margin: 5px 0;">R. Dom Manoel de Medeiros, s/n - Dois Irmãos</p>
-                <a href="tel:08133206410" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar: (81) 3320-6410</a>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=Hospital+Veterinario+UFRPE" target="_blank" class="btn-main btn-route"><i class="fa-solid fa-location-arrow"></i> Ver Rota</a>
+                <p style="font-size: 11px;">Dois Irmãos, Recife-PE</p>
+                <a href="tel:08133206410" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar</a>
+                <a href="https://www.google.com/maps/search/UFRPE+Veterinaria" target="_blank" class="btn-main btn-route">Rota</a>
             </div>
 
             <div class="mini-card">
                 <h4 style="color: var(--primary);"><i class="fa-solid fa-hospital"></i> HVR - Recife</h4>
-                <p style="font-size: 12px; margin: 5px 0;">Av. Prof. Estevão F. da Costa, S/N - Cordeiro</p>
-                <a href="tel:08133558179" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar: (81) 3355-8179</a>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=Hospital+Veterinario+do+Recife" target="_blank" class="btn-main btn-route"><i class="fa-solid fa-location-arrow"></i> Ver Rota</a>
+                <p style="font-size: 11px;">Cordeiro, Recife-PE</p>
+                <a href="tel:08133558179" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar</a>
+                <a href="https://www.google.com/maps/search/Hospital+Veterinario+do+Recife" target="_blank" class="btn-main btn-route">Rota</a>
             </div>
         </div>
 
@@ -199,52 +237,48 @@
     </div>
 
     <div class="browser-side">
-        <div class="browser-header">
-            <i class="fa-brands fa-google"></i> Pesquisa Rápida Google
-        </div>
+        <div class="browser-header"><i class="fa-brands fa-google"></i> Pesquisa Google</div>
         <div class="search-bar-container">
-            <input type="text" id="search-input" placeholder="O que deseja procurar no Google?">
-            <button onclick="googleSearch()" style="padding: 10px 20px; cursor: pointer; background: var(--secondary); color: white; border-radius: 5px; border: none; font-weight: bold;">BUSCAR</button>
+            <input type="text" id="search-input" placeholder="Pesquisar...">
+            <button onclick="googleSearch()" style="padding: 10px; background: var(--secondary); color: white; border: none; border-radius: 5px;">BUSCAR</button>
         </div>
-        <iframe id="browser-iframe" src="https://www.bing.com/search?q=saude+pet" style="width: 100%; height: 100%; border: none;"></iframe>
+        <iframe id="browser-iframe" src="https://www.bing.com/search?q=caes+e+gatos" style="width: 100%; height: 100%; border: none;"></iframe>
     </div>
 </div>
 
 <script>
-    // 1. CORREÇÃO DO "OLHINHO" DA SENHA
     function togglePass() {
         const passInput = document.getElementById('pass');
         const icon = document.getElementById('toggleEye');
         if (passInput.type === "password") {
             passInput.type = "text";
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
         } else {
             passInput.type = "password";
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
         }
     }
 
-    // 2. BUSCA NO GOOGLE (ABRE NOVA ABA PARA EVITAR BLOQUEIO DE IFRAME)
     function googleSearch() {
         const query = document.getElementById('search-input').value;
         if(query.trim() !== "") {
             window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-        } else {
-            alert("Por favor, digite um termo para busca!");
         }
     }
 
-    // 3. LOGIN SIMULADO
+    // CORREÇÃO: FUNÇÃO DE LOGIN QUE ABRE O SISTEMA
     function executarLogin() {
         const u = document.getElementById('user').value;
         const p = document.getElementById('pass').value;
 
         if(u === "" || p === "") {
-            alert("⚠️ Atenção: Preencha todos os campos!");
+            alert("⚠️ Por favor, digite seu usuário e senha!");
         } else {
-            alert("🐾 Sucesso! Entrando no sistema Farmacura Pet...");
+            // 1. Esconde a tela de login
+            document.getElementById('loginSection').style.display = 'none';
+            // 2. Mostra o painel com estoque e doações
+            document.getElementById('systemSection').style.display = 'block';
+            alert("✅ Login realizado com sucesso! Acessando estoque...");
         }
     }
 </script>
