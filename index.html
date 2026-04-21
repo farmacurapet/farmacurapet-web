@@ -3,283 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmacuraPet - Painel Integrado</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <title>FarmacuraPet - Login</title>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #27ae60;
-            --accent: #2980b9;
-            --bg-glass: rgba(255, 255, 255, 0.95);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-
+        /* CSS Integrado */
         body {
-            background: url('https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-            background-size: cover;
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .main-wrapper { display: flex; width: 100%; height: 100%; }
-
-        .content-side {
-            flex: 1.2;
-            overflow-y: auto;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        .browser-side {
-            flex: 0.8;
-            background: #f4f4f4;
-            border-left: 4px solid var(--secondary);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .browser-header {
-            padding: 15px;
-            background: var(--primary);
-            color: white;
+        .login-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
+            width: 350px;
         }
 
-        .search-bar-container {
-            padding: 10px;
-            background: #eee;
-            display: flex;
-            gap: 5px;
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
         }
 
-        .search-bar-container input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        /* LOGIN CARD */
-        .login-card, .system-panel {
-            background: var(--bg-glass);
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        input {
+            display: block;
             width: 100%;
-            max-width: 450px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* ESTADO INICIAL: PAINEL OCULTO */
-        .system-panel { display: none; max-width: 600px; }
-
-        .input-box { position: relative; margin: 15px 0; }
-        .input-box input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
             border: 1px solid #ddd;
-            font-size: 16px;
+            box-sizing: border-box; /* Garante que o padding não aumente a largura */
         }
 
-        .eye-btn {
-            position: absolute;
-            right: 15px;
-            top: 18px;
-            cursor: pointer;
-            color: #7f8c8d;
-            z-index: 10;
-        }
-
-        .btn-main {
+        button {
             width: 100%;
-            padding: 15px;
-            margin: 5px 0;
-            border-radius: 12px;
-            border: none;
-            font-weight: bold;
+            padding: 12px;
             cursor: pointer;
-            transition: 0.3s;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #219150;
+        }
+
+        .social-container {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        /* O SEU CÓDIGO CORRIGIDO AQUI */
+        .social-links {
+            color: #2c3e50; /* Cor escura para contrastar com o fundo claro */
+            margin: 0 15px;
+            font-size: 28px;
             text-decoration: none;
+            transition: 0.3s;
             display: inline-block;
         }
 
-        .btn-enter { background: var(--secondary); color: white; }
-        .btn-reg { background: #e8f5e9; color: var(--secondary); border: 1px solid var(--secondary); font-size: 13px; }
-        .btn-call { background: #2980b9; color: white; font-size: 12px; padding: 8px; margin-top: 5px; }
-        .btn-route { background: #e67e22; color: white; font-size: 12px; padding: 8px; }
-
-        /* TABELA DE ESTOQUE */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
-        th { background: #f8f9fa; color: var(--primary); }
-
-        .info-section {
-            width: 100%;
-            max-width: 800px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        .social-links:hover {
+            color: #27ae60;
+            transform: translateY(-3px);
         }
 
-        .mini-card {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .social-links {
-            margin-top: 20px;
-            background: rgba(0,0,0,0.5);
-            padding: 15px;
-            border-radius: 50px;
-        }
-        
-     
-        }
-
-        @media (max-width: 1088px) {
-            body { overflow-y: auto; }
-            .main-wrapper { flex-direction: column; height: auto; }
-            .browser-side { height: 500px; }
-        }
+        /* Se quiser que o link seja branco em um fundo escuro, mude para white */
     </style>
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div class="content-side">
+    <div class="login-card">
+        <h2>FarmacuraPet</h2>
         
-        <div id="loginSection" class="login-card">
-            <h1 style="color: var(--primary); margin-bottom: 5px;">FarmacuraPet 🐾</h1>
-            <p style="margin-bottom: 15px; color: #666;">Sistema de Doação de Medicamentos</p>
+        <div id="login-form">
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="password" id="senha" placeholder="Senha" required>
             
-            <div class="input-box">
-                <input type="text" id="user" placeholder="E-mail ou Usuário">
-            </div>
-            
-            <div class="input-box">
-                <input type="password" id="pass" placeholder="Senha">
-                <i class="fa-solid fa-eye eye-btn" id="toggleEye" onclick="togglePass()"></i>
-            </div>
-
-            <button class="btn-main btn-enter" onclick="executarLogin()">ENTRAR NO SISTEMA</button>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-main btn-reg" onclick="alert('Redirecionando para Cadastro...')">Quero Doar</button>
-                <button class="btn-main btn-reg" onclick="alert('Redirecionando para Cadastro...')">Preciso de Doação</button>
-            </div>
+            <button onclick="autenticar()">Entrar</button>
         </div>
 
-        <div id="systemSection" class="system-panel">
-            <h2 style="color: var(--secondary);"><i class="fa-solid fa-boxes-stacked"></i> Estoque de Doações</h2>
-            <p style="font-size: 14px; color: #555;">Bem-vindo ao Inventário Farmacura Pet</p>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Medicamento</th>
-                        <th>Qtd</th>
-                        <th>Validade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Amoxicilina 500mg</td>
-                        <td>12 un</td>
-                        <td>10/2026</td>
-                    </tr>
-                    <tr>
-                        <td>Simparic (Cães)</td>
-                        <td>05 un</td>
-                        <td>03/2027</td>
-                    </tr>
-                    <tr>
-                        <td>Apoquel 5.4mg</td>
-                        <td>08 un</td>
-                        <td>12/2026</td>
-                    </tr>
-                </tbody>
-            </table>
-            <button class="btn-main btn-reg" style="margin-top: 15px;" onclick="location.reload()">SAIR DO SISTEMA</button>
-        </div>
-
-        <div class="info-section">
-            <div class="mini-card">
-                <h4 style="color: var(--primary);"><i class="fa-solid fa-university"></i> UFRPE (CSTR)</h4>
-                <p style="font-size: 11px;">Dois Irmãos, Recife-PE</p>
-                <a href="tel:08133206410" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar</a>
-                <a href="https://www.google.com/maps/search/UFRPE+Veterinaria" target="_blank" class="btn-main btn-route">Rota</a>
-            </div>
-
-            <div class="mini-card">
-                <h4 style="color: var(--primary);"><i class="fa-solid fa-hospital"></i> HVR - Recife</h4>
-                <p style="font-size: 11px;">Cordeiro, Recife-PE</p>
-                <a href="tel:08133558179" class="btn-main btn-call"><i class="fa-solid fa-phone"></i> Ligar</a>
-                <a href="https://www.google.com/maps/search/Hospital+Veterinario+do+Recife" target="_blank" class="btn-main btn-route">Rota</a>
-            </div>
-        </div>
-
-        <div class="social-links">
-            <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://youtube.com" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-            <a href="https://kwai.com" target="_blank"><i class="fa-brands fa-kwai"></i></a>
+        <div class="social-container">
+            <a href="#" class="social-links">f</a>
+            <a href="#" class="social-links">in</a>
         </div>
     </div>
 
-    <div class="browser-side">
-        <div class="browser-header"><i class="fa-brands fa-google"></i> Pesquisa Google</div>
-        <div class="search-bar-container">
-            <input type="text" id="search-input" placeholder="Pesquisar...">
-            <button onclick="googleSearch()" style="padding: 10px; background: var(--secondary); color: white; border: none; border-radius: 5px;">BUSCAR</button>
-        </div>
-        <iframe id="browser-iframe" src="https://www.bing.com/search?q=caes+e+gatos" style="width: 100%; height: 100%; border: none;"></iframe>
-    </div>
-</div>
+    <script>
+        // JAVASCRIPT Integrado
+        function autenticar() {
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
 
-<script>
-    function togglePass() {
-        const passInput = document.getElementById('pass');
-        const icon = document.getElementById('toggleEye');
-        if (passInput.type === "password") {
-            passInput.type = "text";
-            icon.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-            passInput.type = "password";
-            icon.classList.replace('fa-eye-slash', 'fa-eye');
+            // Lógica de redirecionamento
+            if (email !== "" && senha !== "") {
+                // Aqui você coloca o nome exato do seu arquivo de destino
+                // Se o arquivo for "cadastro.html", mude abaixo:
+                window.location.href = "cadastro-medicamentos.html";
+            } else {
+                alert("Preencha os campos para prosseguir!");
+            }
         }
-    }
-
-    function googleSearch() {
-        const query = document.getElementById('search-input').value;
-        if(query.trim() !== "") {
-            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-        }
-    }
-
-    // CORREÇÃO: FUNÇÃO DE LOGIN QUE ABRE O SISTEMA
-    function executarLogin() {
-        const u = document.getElementById('user').value;
-        const p = document.getElementById('pass').value;
-
-        if(u === "" || p === "") {
-            alert("⚠️ Por favor, digite seu usuário e senha!");
-        } else {
-            // 1. Esconde a tela de login
-            document.getElementById('loginSection').style.display = 'none';
-            // 2. Mostra o painel com estoque e doações
-            document.getElementById('systemSection').style.display = 'block';
-            alert("✅ Login realizado com sucesso! Acessando estoque...");
-        }
-    }
-</script>
+    </script>
 
 </body>
 </html>
