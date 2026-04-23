@@ -1,186 +1,178 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmacura Pet - Sistema</title>
-    <style>
-        /* CSS para evitar a tela branca e organizar as telas */
-        body { font-family: Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        
-        /* Controle de visibilidade */
-        #cadastro, #sistema { display: none; }
-        
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px 0; }
-        button.secondary { background-color: #3498db; }
-        .card { border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 5px; background: #fafafa; }
-        .card img { max-width: 100%; border-radius: 4px; }
-    </style>
+<meta charset="UTF-8">
+<title>Farmacura Pet</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body { font-family: Arial; background:#f0f2f5; display:flex; justify-content:center; padding:20px; }
+.container { background:white; padding:20px; border-radius:10px; width:100%; max-width:400px; }
+input, button { width:100%; padding:10px; margin:5px 0; }
+button { background:#27ae60; color:white; border:none; }
+.secondary { background:#3498db; }
+#cadastro, #sistema { display:none; }
+.card { background:#fafafa; padding:10px; margin-top:10px; }
+img { max-width:100%; }
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <div id="login">
-            <h2>Farmacura Pet - Login</h2>
-            <input type="email" id="loginEmail" placeholder="Email">
-            <input type="password" id="loginSenha" placeholder="Senha">
-            <button onclick="toggleSenha()">Mostrar/Ocultar Senha</button>
-            <button onclick="login()">Entrar</button>
-            <button class="secondary" onclick="mostrarCadastro()">Criar Conta</button>
-            <button onclick="esqueciSenha()" style="background:none; color:#777; font-size:12px;">Esqueci minha senha</button>
-        </div>
+<div class="container">
 
-        <div id="cadastro">
-            <h2>Cadastro</h2>
-            <input type="text" id="nome" placeholder="Nome Completo">
-            <input type="email" id="email" placeholder="Seu melhor Email">
-            <input type="text" id="whatsapp" placeholder="WhatsApp (DDD)">
-            <input type="password" id="senha" placeholder="Crie uma Senha">
-            <button onclick="cadastrar()">Finalizar Cadastro</button>
-            <button class="secondary" onclick="voltarLogin()">Voltar ao Login</button>
-        </div>
+<div id="login">
+<h2>Login</h2>
+<input id="loginEmail" placeholder="Email">
+<input type="password" id="loginSenha" placeholder="Senha">
+<button onclick="toggleSenha()">👁</button>
+<button onclick="login()">Entrar</button>
+<button class="secondary" onclick="mostrarCadastro()">Cadastrar</button>
+</div>
 
-        <div id="sistema">
-            <h2>Painel Farmacura</h2>
-            <p>Cadastrar Medicamento para Doação:</p>
-            <input type="text" id="medNome" placeholder="Nome do Medicamento">
-            <input type="text" id="validade" placeholder="Data de Validade">
-            <input type="file" id="foto" accept="image/*">
-            <button onclick="doar()">Publicar Doação</button>
-            <hr>
-            <h3>Medicamentos Disponíveis</h3>
-            <div id="lista"></div>
-            <button class="secondary" onclick="logout()">Sair do Sistema</button>
-        </div>
-    </div>
+<div id="cadastro">
+<h2>Cadastro</h2>
+<input id="nome" placeholder="Nome">
+<input id="email" placeholder="Email">
+<input id="whatsapp" placeholder="WhatsApp">
+<input type="password" id="senha" placeholder="Senha">
+<button onclick="cadastrar()">Cadastrar</button>
+<button onclick="voltarLogin()">Voltar</button>
+</div>
 
-    <script>
-        // Pegar elementos globais
-        const telaLogin = document.getElementById("login");
-        const telaCadastro = document.getElementById("cadastro");
-        const telaSistema = document.getElementById("sistema");
+<div id="sistema">
+<h2>Painel</h2>
 
-        function toggleSenha() {
-            let campo = document.getElementById("loginSenha");
-            campo.type = campo.type === "password" ? "text" : "password";
-        }
+<input id="medNome" placeholder="Medicamento">
+<input id="validade" placeholder="Validade">
+<input type="file" id="foto">
 
-        function mostrarCadastro() {
-            telaLogin.style.display = "none";
-            telaCadastro.style.display = "block";
-        }
+<button onclick="doar()">Doar</button>
 
-        function voltarLogin() {
-            telaCadastro.style.display = "none";
-            telaLogin.style.display = "block";
-        }
+<div id="lista"></div>
 
-        function cadastrar() {
-            let user = {
-                nome: document.getElementById("nome").value,
-                email: document.getElementById("email").value,
-                whatsapp: document.getElementById("whatsapp").value,
-                senha: document.getElementById("senha").value
-            };
+<button onclick="logout()">Sair</button>
+</div>
 
-            if (!user.nome || !user.email || !user.whatsapp || !user.senha) {
-                alert("Preencha todos os campos!");
-                return;
-            }
+</div>
 
-            localStorage.setItem("user", JSON.stringify(user));
-            alert("Cadastro realizado com sucesso!");
-            voltarLogin();
-        }
+<script>
 
-        function login() {
-            let user = JSON.parse(localStorage.getItem("user"));
-            let email = document.getElementById("loginEmail").value;
-            let senha = document.getElementById("loginSenha").value;
+// 🔗 CONEXÃO SUPABASE
+const supabase = window.supabase.createClient(
+    "https://SEU-PROJETO.supabase.co",
+    "SUA_ANON_KEY"
+);
 
-            if (!user) {
-                alert("Nenhum usuário cadastrado neste navegador!");
-                return;
-            }
+// 👁 SENHA
+function toggleSenha(){
+    let campo = document.getElementById("loginSenha");
+    campo.type = campo.type === "password" ? "text" : "password";
+}
 
-            if (email === user.email && senha === user.senha) {
-                telaLogin.style.display = "none";
-                telaSistema.style.display = "block";
-                carregar();
-            } else {
-                alert("Email ou senha incorretos!");
-            }
-        }
+// TELAS
+function mostrarCadastro(){
+    login.style.display="none";
+    cadastro.style.display="block";
+}
 
-        function esqueciSenha() {
-            let user = JSON.parse(localStorage.getItem("user"));
-            if(user) {
-                alert("Sua senha cadastrada é: " + user.senha);
-            } else {
-                alert("Nenhum usuário encontrado.");
-            }
-        }
+function voltarLogin(){
+    cadastro.style.display="none";
+    login.style.display="block";
+}
 
-        function doar() {
-            let user = JSON.parse(localStorage.getItem("user"));
-            let fileInput = document.getElementById("foto");
-            let medNome = document.getElementById("medNome").value;
-            let validade = document.getElementById("validade").value;
+// CADASTRO
+async function cadastrar(){
+    const user = {
+        nome: nome.value,
+        email: email.value,
+        whatsapp: whatsapp.value,
+        senha: senha.value
+    };
 
-            if (!fileInput.files[0] || !medNome) {
-                alert("Preencha os dados e selecione uma foto!");
-                return;
-            }
+    const { error } = await supabase.from("usuarios").insert([user]);
 
-            let reader = new FileReader();
-            reader.onload = function() {
-                let medicamento = {
-                    nome: medNome,
-                    validade: validade,
-                    foto: reader.result,
-                    doador: user.nome,
-                    whatsapp: user.whatsapp
-                };
+    if(error){
+        alert("Erro: "+error.message);
+    }else{
+        alert("Cadastrado!");
+        voltarLogin();
+    }
+}
 
-                let lista = JSON.parse(localStorage.getItem("medicamentos")) || [];
-                lista.push(medicamento);
-                localStorage.setItem("medicamentos", JSON.stringify(lista));
-                
-                // Limpar campos
-                document.getElementById("medNome").value = "";
-                document.getElementById("validade").value = "";
-                fileInput.value = "";
-                
-                carregar();
-                alert("Medicamento cadastrado com sucesso!");
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
+// LOGIN
+async function login(){
+    const { data, error } = await supabase
+        .from("usuarios")
+        .select("*")
+        .eq("email", loginEmail.value)
+        .eq("senha", loginSenha.value)
+        .single();
 
-        function carregar() {
-            let lista = JSON.parse(localStorage.getItem("medicamentos")) || [];
-            let div = document.getElementById("lista");
-            div.innerHTML = "";
+    if(error || !data){
+        alert("Login inválido!");
+    }else{
+        localStorage.setItem("user", JSON.stringify(data));
+        login.style.display="none";
+        sistema.style.display="block";
+        carregar();
+    }
+}
 
-            lista.forEach(m => {
-                div.innerHTML += `
-                <div class="card">
-                    <h3>${m.nome}</h3>
-                    <p><strong>Validade:</strong> ${m.validade}</p>
-                    <img src="${m.foto}">
-                    <p><strong>Doador:</strong> ${m.doador}</p>
-                    <p><strong>Contato:</strong> ${m.whatsapp}</p>
-                </div>
-                `;
-            });
-        }
+// DOAÇÃO
+async function doar(){
+    let user = JSON.parse(localStorage.getItem("user"));
 
-        function logout(){
-            telaSistema.style.display = "none";
-            telaLogin.style.display = "block";
-        }
-    </script>
+    let file = foto.files[0];
+
+    let reader = new FileReader();
+    reader.onload = async function(){
+
+        let medicamento = {
+            nome: medNome.value,
+            validade: validade.value,
+            foto: reader.result,
+            doador: user.nome,
+            whatsapp: user.whatsapp
+        };
+
+        await supabase.from("medicamentos").insert([medicamento]);
+
+        carregar();
+    }
+
+    reader.readAsDataURL(file);
+}
+
+// CARREGAR
+async function carregar(){
+    const { data } = await supabase
+        .from("medicamentos")
+        .select("*");
+
+    let div = document.getElementById("lista");
+    div.innerHTML="";
+
+    data.forEach(m=>{
+        div.innerHTML+=`
+        <div class="card">
+            <h3>${m.nome}</h3>
+            <p>${m.validade}</p>
+            <img src="${m.foto}">
+            <p>${m.doador}</p>
+            <p>${m.whatsapp}</p>
+        </div>`;
+    });
+}
+
+// LOGOUT
+function logout(){
+    sistema.style.display="none";
+    login.style.display="block";
+}
+
+</script>
+
 </body>
 </html>
