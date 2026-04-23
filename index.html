@@ -3,245 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmacura Pet - Interface Premium</title>
-    <style>
-        * { box-sizing: border-box; }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                        url('https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=2071&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-        }
-
-        .chrome-header {
-            background: #ffffff;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .search-box {
-            background: #f1f3f4;
-            border-radius: 24px;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .search-box input {
-            border: none;
-            background: transparent;
-            width: 100%;
-            outline: none;
-            font-size: 15px;
-            margin-left: 10px;
-        }
-
-        .main-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 0 20px;
-            justify-content: center;
-        }
-
-        .window-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            flex: 1;
-            min-width: 320px;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        h2 { color: #1a73e8; margin-top: 0; font-size: 20px; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; }
-
-        .input-item { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: 0.3s;
-            margin-bottom: 10px;
-        }
-
-        .btn-login { background: #1a73e8; color: white; }
-        .btn-signup { background: #34a853; color: white; }
-        .btn-delete { background: #ea4335; color: white; padding: 5px; font-size: 12px; }
-
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        .inventory-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .med-item { background: #f8f9fa; border: 1px solid #eee; padding: 10px; border-radius: 12px; text-align: center; }
-        .med-item img { width: 40px; margin-bottom: 5px; }
-
-        #status-msg {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            display: none;
-            z-index: 2000;
-        }
-    </style>
+    <title>Farmacura Pet - Conectando Doações</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="chrome-header">
-    <div style="font-weight: bold; color: #1a73e8; font-size: 20px; min-width: 150px;">Farmacura 🐾</div>
-    <div class="search-box">
-        <span>🔍</span>
-        <form action="https://www.google.com/search" method="get" target="_blank" style="width:100%">
-            <input type="text" name="q" placeholder="Pesquisar clínicas ou remédios no Google...">
-        </form>
-    </div>
-</header>
+    <header>
+        <nav>
+            <div class="logo">Farmacura Pet</div>
+        </nav>
+    </header>
 
-<div class="main-container">
-    
-    <div class="window-card">
-        <h2>🔐 Área de Acesso</h2>
-        <input type="text" id="user" class="input-item" placeholder="Usuário">
-        <div style="position: relative;">
-            <input type="password" id="pass" class="input-item" placeholder="Senha">
-            <button onclick="togglePass()" style="position:absolute; right:10px; top:18px; border:none; background:none; cursor:pointer;">👁️</button>
-        </div>
-        <button class="btn btn-login" onclick="fazerLogin()">ENTRAR</button>
-        <button class="btn btn-signup" onclick="fazerCadastro()">CADASTRAR USUÁRIO</button>
-    </div>
-
-    <div class="window-card" style="flex: 2;">
-        <h2>📦 Estoque Virtual</h2>
-        <div class="inventory-list" id="lista-estoque">
-            <div class="med-item">
-                <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
-                <p><b>Cefalexina</b><br><small>Val: 12/2026</small></p>
-                <button class="btn btn-delete" onclick="darBaixa(this)">DAR BAIXA</button>
+    <main>
+        <section id="hero">
+            <h1>Sua doação pode salvar a vida de um pet</h1>
+            <p>Conectamos pessoas que têm medicamentos sobrando com quem precisa de ajuda para tratar seu animal.</p>
+            
+            <div class="acoes">
+                <button id="btn-doar" class="btn-principal">Quero Doar</button>
+                <button id="btn-receber" class="btn-secundario">Preciso de Ajuda</button>
             </div>
-        </div>
-        
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-        
-        <h3>➕ Cadastrar Medicamento</h3>
-        <input type="text" id="med-nome" class="input-item" placeholder="Nome do Remédio">
-        <input type="text" id="med-val" class="input-item" placeholder="Validade (ex: 10/2027)">
-        <button class="btn btn-signup" onclick="adicionarMedicamento()">ADICIONAR AO ESTOQUE</button>
-    </div>
+        </section>
+    </main>
 
-    <div class="window-card">
-        <h2>🏥 Clínicas em Recife</h2>
-        <div style="background:#e8f0fe; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
-            <strong>Hospital Vet. Recife</strong><br>
-            <small>📞 (81) 3355-8179</small>
-            <button class="btn btn-login" style="margin-top:10px; padding: 5px;" onclick="window.open('https://www.google.com/maps/search/Hospital+Veterinário+Recife')">TRAÇAR ROTA</button>
-        </div>
-    </div>
+    <footer>
+        <p>&copy; 2026 Farmacura Pet - 100% Virtual</p>
+    </footer>
 
-</div>
-
-<div id="status-msg">Mensagem de status</div>
-
-<script>
-    // Função para exibir alertas rápidos
-    function notificar(texto) {
-        const box = document.getElementById('status-msg');
-        box.innerText = texto;
-        box.style.display = 'block';
-        setTimeout(() => { box.style.display = 'none'; }, 3000);
-    }
-
-    // 1. LÓGICA DE LOGIN
-    function fazerLogin() {
-        const u = document.getElementById('user').value;
-        const p = document.getElementById('pass').value;
-
-        if(u === "" || p === "") {
-            notificar("❌ Preencha todos os campos!");
-        } else {
-            notificar("✅ Bem-vindo, " + u + "!");
-        }
-    }
-
-    // 2. LÓGICA DE CADASTRO DE USUÁRIO
-    function fazerCadastro() {
-        const u = document.getElementById('user').value;
-        if(u === "") {
-            notificar("❌ Digite um nome de usuário para cadastrar.");
-        } else {
-            notificar("🎉 Usuário " + u + " cadastrado com sucesso!");
-        }
-    }
-
-    // 3. LÓGICA DE CADASTRAR MEDICAMENTO
-    function adicionarMedicamento() {
-        const nome = document.getElementById('med-nome').value;
-        const val = document.getElementById('med-val').value;
-
-        if(nome === "" || val === "") {
-            notificar("❌ Informe o nome e a validade do remédio.");
-            return;
-        }
-
-        const lista = document.getElementById('lista-estoque');
-        
-        // Criar o elemento visual do novo remédio
-        const novoItem = document.createElement('div');
-        novoItem.className = 'med-item';
-        novoItem.innerHTML = `
-            <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
-            <p><b>${nome}</b><br><small>Val: ${val}</small></p>
-            <button class="btn btn-delete" onclick="darBaixa(this)">DAR BAIXA</button>
-        `;
-
-        lista.appendChild(novoItem);
-        notificar("📦 " + nome + " adicionado!");
-        
-        // Limpar campos
-        document.getElementById('med-nome').value = "";
-        document.getElementById('med-val').value = "";
-    }
-
-    function togglePass() {
-        const p = document.getElementById('pass');
-        p.type = p.type === 'password' ? 'text' : 'password';
-    }
-
-    function darBaixa(botao) {
-        const item = botao.closest('.med-item');
-        item.style.transition = "0.5s";
-        item.style.opacity = "0";
-        item.style.transform = "scale(0.8)";
-        
-        setTimeout(() => {
-            item.remove();
-            notificar("Item removido!");
-        }, 500);
-    }
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
