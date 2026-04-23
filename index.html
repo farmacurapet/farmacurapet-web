@@ -1,37 +1,239 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmacura Pet - Conectando Doações</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmácia PET</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f4f4f4;
+}
+
+header {
+    background: #2ecc71;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px;
+    width: 90%;
+}
+
+button {
+    background: #27ae60;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #219150;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+img {
+    max-width: 100%;
+}
+</style>
+
 </head>
 <body>
 
-    <header>
-        <nav class="container">
-            <div class="logo">Farmacura <span>Pet</span></div>
-        </nav>
-    </header>
+<header>
+<h1>🐶 Farmácia PET</h1>
+</header>
 
-    <main class="container">
-        <section id="hero">
-            <h1>Sua doação pode salvar a vida de um pet</h1>
-            <p>Conectamos pessoas que possuem medicamentos sobrando com quem precisa de ajuda para tratar seu animal. Uma plataforma 100% virtual e solidária.</p>
-            
-            <div class="acoes">
-                <button id="btn-doar" class="btn-principal">Quero Doar</button>
-                <button id="btn-receber" class="btn-secundario">Preciso de Ajuda</button>
-            </div>
-        </section>
-    </main>
+<div class="container">
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Farmacura Pet - Tecnologia para o Bem-Estar Animal</p>
+<!-- LOGIN -->
+<div id="login">
+<h2>Login</h2>
+<input type="email" id="loginEmail" placeholder="Email">
+<div>
+<input type="password" id="loginSenha" placeholder="Senha">
+<button onclick="toggleSenha()">👁</button>
+</div>
+<button onclick="login()">Entrar</button>
+<button onclick="mostrarCadastro()">Cadastrar</button>
+<button onclick="esqueciSenha()">Esqueci a senha</button>
+</div>
+
+<!-- CADASTRO -->
+<div id="cadastro" class="hidden">
+<h2>Cadastro</h2>
+<input type="text" id="nome" placeholder="Nome">
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="whatsapp" placeholder="WhatsApp">
+<input type="password" id="senha" placeholder="Senha">
+<button onclick="cadastrar()">Cadastrar</button>
+<button onclick="voltarLogin()">Voltar</button>
+</div>
+
+<!-- SISTEMA -->
+<div id="sistema" class="hidden">
+
+<h2>Doar Medicamento</h2>
+<input type="text" id="medNome" placeholder="Nome do medicamento">
+<input type="date" id="validade">
+<input type="file" id="foto">
+<button onclick="doar()">Cadastrar Doação</button>
+
+<h2>Medicamentos Disponíveis</h2>
+<div id="lista"></div>
+
+<h2>Redes Sociais</h2>
+<button onclick="abrir('https://youtube.com')">YouTube</button>
+<button onclick="abrir('https://instagram.com')">Instagram</button>
+<button onclick="abrir('https://facebook.com')">Facebook</button>
+
+<h2>Jogos 360°</h2>
+<button onclick="abrir('https://poki.com')">Abrir Jogos</button>
+
+<h2>Google</h2>
+<iframe src="https://www.google.com" width="100%" height="300"></iframe>
+
+<button onclick="logout()">Sair</button>
+
+</div>
+
+</div>
+
+<script>
+
+// MOSTRAR/OCULTAR SENHA
+function toggleSenha() {
+    let campo = document.getElementById("loginSenha");
+    campo.type = campo.type === "password" ? "text" : "password";
+}
+
+// TROCAR TELAS
+function mostrarCadastro() {
+    login.style.display = "none";
+    cadastro.style.display = "block";
+}
+
+function voltarLogin() {
+    cadastro.style.display = "none";
+    login.style.display = "block";
+}
+
+// CADASTRO
+function cadastrar() {
+    let user = {
+        nome: nome.value,
+        email: email.value,
+        whatsapp: whatsapp.value,
+        senha: senha.value
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+    alert("Cadastrado com sucesso!");
+    voltarLogin();
+}
+
+// LOGIN
+function login() {
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+        alert("Nenhum usuário cadastrado!");
+        return;
+    }
+
+    if (loginEmail.value === user.email && loginSenha.value === user.senha) {
+        login.style.display = "none";
+        sistema.style.display = "block";
+        carregar();
+    } else {
+        alert("Dados incorretos!");
+    }
+}
+
+// ESQUECI SENHA
+function esqueciSenha() {
+    let user = JSON.parse(localStorage.getItem("user"));
+    if(user){
+        alert("Sua senha é: " + user.senha);
+    } else {
+        alert("Nenhum usuário cadastrado");
+    }
+}
+
+// DOAÇÃO
+function doar() {
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    let reader = new FileReader();
+    reader.onload = function() {
+        let medicamento = {
+            nome: medNome.value,
+            validade: validade.value,
+            foto: reader.result,
+            doador: user.nome,
+            whatsapp: user.whatsapp
+        };
+
+        let lista = JSON.parse(localStorage.getItem("medicamentos")) || [];
+        lista.push(medicamento);
+
+        localStorage.setItem("medicamentos", JSON.stringify(lista));
+        carregar();
+    };
+
+    reader.readAsDataURL(foto.files[0]);
+}
+
+// CARREGAR LISTA
+function carregar() {
+    let lista = JSON.parse(localStorage.getItem("medicamentos")) || [];
+    let div = document.getElementById("lista");
+    div.innerHTML = "";
+
+    lista.forEach(m => {
+        div.innerHTML += `
+        <div class="card">
+            <h3>${m.nome}</h3>
+            <p>Validade: ${m.validade}</p>
+            <img src="${m.foto}">
+            <p>Doador: ${m.doador}</p>
+            <p>WhatsApp: ${m.whatsapp}</p>
         </div>
-    </footer>
+        `;
+    });
+}
 
-    <script src="script.js"></script>
+// LINKS
+function abrir(url){
+    window.open(url, "_blank");
+}
+
+// LOGOUT
+function logout(){
+    sistema.style.display = "none";
+    login.style.display = "block";
+}
+
+</script>
+
 </body>
 </html>
