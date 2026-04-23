@@ -3,183 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmacura Pet - Sistema Ativo</title>
+    <title>Farmacura Pet - Interface Premium</title>
     <style>
-        * { box-sizing: border-box; transition: all 0.3s ease; }
+        * { box-sizing: border-box; }
         
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             padding: 0;
-            /* Fundo com imagem e camada de destaque */
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1544568100-847a948585b9?q=80&w=1974&auto=format&fit=crop') no-repeat center center fixed;
+            /* Papel de parede com overlay para destaque */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=2071&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
-            color: #333;
         }
 
-        /* Barra Estilo Chrome */
+        /* Barra de Busca Superior (Estilo Chrome) */
         .chrome-header {
-            background: #f1f3f4;
-            padding: 10px 20px;
+            background: #ffffff;
+            height: 60px;
             display: flex;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .search-bar {
-            background: white;
-            border-radius: 20px;
-            padding: 8px 20px;
+        .search-box {
+            background: #f1f3f4;
+            border-radius: 24px;
+            padding: 10px 20px;
             display: flex;
-            flex: 1;
-            margin: 0 20px;
-            border: 1px solid #dfe1e5;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .search-bar input {
+        .search-box input {
             border: none;
+            background: transparent;
+            width: 100%;
             outline: none;
-            width: 100%;
-            font-size: 14px;
+            font-size: 15px;
+            margin-left: 10px;
         }
 
-        /* Layout em Cards (Páginas Destacadas) */
-        .container {
-            max-width: 1100px;
-            margin: 30px auto;
-            display: grid;
-            grid-template-columns: 320px 1fr;
+        /* Container de Cartões Flutuantes */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
-            padding: 0 15px;
+            padding: 0 20px;
+            justify-content: center;
         }
 
-        .page-card {
+        .window-card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            border-top: 5px solid #4CAF50;
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            flex: 1;
+            min-width: 320px;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        h3 { margin-top: 0; color: #1a73e8; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        h2 { color: #1a73e8; margin-top: 0; font-size: 20px; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; }
 
-        /* Estilização dos Formulários e Botões */
-        .input-group { margin-bottom: 15px; position: relative; }
-        
-        input[type="text"], input[type="password"], input[type="email"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #dadce0;
-            border-radius: 8px;
-            background: #f8f9fa;
-        }
+        /* Estilo dos Inputs */
+        .input-item { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
 
+        /* Botões */
         .btn {
             width: 100%;
             padding: 12px;
             border: none;
-            border-radius: 25px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-primary { background: #1a73e8; color: white; }
-        .btn-success { background: #34a853; color: white; }
-        .btn-danger { background: #ea4335; color: white; font-size: 11px; padding: 5px; }
-
-        .btn:hover { opacity: 0.8; transform: scale(1.02); }
-        .btn:active { transform: scale(0.98); }
-
-        /* Área de Medicamentos */
-        .grid-estoque {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-        }
-
-        .item-card {
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .item-card img { width: 50px; opacity: 0.8; }
-
-        /* Banner de Avisos */
-        .news-banner {
-            background: #202124;
-            color: #fbbc04;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
             font-weight: bold;
-            margin-bottom: 20px;
-            grid-column: 1 / -1;
+            font-size: 14px;
+            transition: 0.3s;
+            margin-bottom: 10px;
         }
 
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
+        .btn-login { background: #1a73e8; color: white; }
+        .btn-signup { background: #34a853; color: white; }
+        .btn-delete { background: #ea4335; color: white; padding: 5px; font-size: 12px; }
+
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* Estoque */
+        .inventory-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .med-item { background: #f8f9fa; border: 1px solid #eee; padding: 10px; border-radius: 12px; text-align: center; }
+        .med-item img { width: 40px; margin-bottom: 5px; }
+
+        /* Feedback na tela */
+        #status-msg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: none;
+            z-index: 2000;
         }
     </style>
 </head>
 <body>
 
 <header class="chrome-header">
-    <div style="font-weight: bold; color: #1a73e8;">FARMACURA PET</div>
-    <div class="search-bar">
-        <form action="https://www.google.com/search" method="get" target="_blank" style="width: 100%; display: flex;">
-            <input type="text" name="q" placeholder="Pesquise clínicas, remédios ou cuidados...">
-            <button type="submit" style="border:none; background:none; cursor:pointer;">🔍</button>
+    <div style="font-weight: bold; color: #1a73e8; font-size: 20px; min-width: 150px;">Farmacura 🐾</div>
+    <div class="search-box">
+        <span>🔍</span>
+        <form action="https://www.google.com/search" method="get" target="_blank" style="width:100%">
+            <input type="text" name="q" placeholder="Pesquisar clínicas ou remédios no Google...">
         </form>
     </div>
 </header>
 
-<div class="container">
-    <div class="news-banner" id="banner-text">Bem-vindo ao sistema de doação Farmacura Pet!</div>
-
-    <aside>
-        <div class="page-card">
-            <h3>🔐 Login</h3>
-            <div class="input-group">
-                <input type="text" id="user-login" placeholder="Usuário ou E-mail">
-            </div>
-            <div class="input-group">
-                <input type="password" id="user-pass" placeholder="Senha">
-                <span style="position: absolute; right: 10px; top: 12px; cursor: pointer;" onclick="toggleVisualizacao()">👁️</span>
-            </div>
-            <button class="btn btn-primary" onclick="executarLogin()">Entrar</button>
-            <button class="btn btn-success" onclick="abrirCadastro()">Criar Conta</button>
+<div class="main-container">
+    
+    <div class="window-card">
+        <h2>🔐 Área de Acesso</h2>
+        <input type="text" id="user" class="input-item" placeholder="Usuário">
+        <div style="position: relative;">
+            <input type="password" id="pass" class="input-item" placeholder="Senha">
+            <button onclick="togglePass()" style="position:absolute; right:10px; top:18px; border:none; background:none; cursor:pointer;">👁️</button>
         </div>
+        <button class="btn btn-login" onclick="notificar('Acessando conta...')">ENTRAR</button>
+        <button class="btn btn-signup" onclick="notificar('Abrindo formulário de cadastro...')">CADASTRAR</button>
+    </div>
 
-        <div class="page-card" style="margin-top: 20px;">
-            <h3>🏥 Postos de Coleta</h3>
-            <p style="font-size: 13px;"><b>Hosp. Vet. Recife</b><br>📍 Cordeiro<br>📞 3355-8179</p>
-            <button class="btn btn-primary" style="font-size: 12px;" onclick="window.open('https://maps.google.com')">Abrir Rota</button>
+    <div class="window-card" style="flex: 2;">
+        <h2>📦 Estoque Virtual</h2>
+        <div class="inventory-list">
+            <div class="med-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
+                <p><b>Cefalexina</b><br><small>Val: 12/2026</small></p>
+                <button class="btn btn-delete" onclick="darBaixa(this)">DAR BAIXA</button>
+            </div>
+            <div class="med-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
+                <p><b>Meloxicam</b><br><small>Val: 06/2027</small></p>
+                <button class="btn btn-delete" onclick="darBaixa(this)">DAR BAIXA</button>
+            </div>
         </div>
-    </aside>
+    </div>
 
-    <main>
-        <div class="page-card">
-            <h3>📦 Estoque Virtual (Disponível para Doação)</h3>
-            <div class="grid-estoque">
-                <div class="item-card">
-                    <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
-                    <p style="font-size: 12px;"><b>Cefalexina</b><br>Val: 12/26</p>
-                    <button class="btn btn-danger" onclick="darBaixa(this)">DAR BAIXA</button>
-                </div>
-                <div class="item-card">
-                    <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
-                    <p style="font-size: 12px;"><b>Vitamina Pet</b><br>Val: 08/27</p>
-                    <button class="btn btn-danger" onclick="darBaixa(this)">DAR BAIXA</button>
-                </div>
-                <div class="
+    <div class="window-card">
+        <h2>🏥 Clínicas em Recife</h2>
+        <div style="background:#e8f0fe; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
+            <strong>Hospital Vet. Recife</strong><br>
+            <small>📞 (81) 3355-8179</small>
+            <button class="btn btn-login" style="margin-top:10px; padding: 5px;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=-8.064,-34.919')">TRAÇAR ROTA</button>
+        </div>
+        <div style="background:#e8f0fe; padding: 15px; border-radius: 10px;">
+            <strong>Hospital Vet. UFRPE</strong><br>
+            <small>📞 (81) 3320-6410</small>
+            <button class="btn btn-login" style="margin-top:10px; padding: 5px;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=-8.016,-34.950')">TRAÇAR ROTA</button>
+        </div>
+    </div>
+
+</div>
+
+<div id="status-msg">Mensagem de status</div>
+
+<script>
+    // Função de Notificação Visual
+    function notificar(texto) {
+        const box = document.getElementById('status-msg');
+        box.innerText = texto;
+        box.style.display = 'block';
+        setTimeout(() => { box.style.display = 'none'; }, 3000);
+    }
+
+    // Mostrar/Esconder Senha
+    function togglePass() {
+        const p = document.getElementById('pass');
+        p.type = p.type === 'password' ? 'text' : 'password';
+    }
+
+    // Função de Dar Baixa (Remover com efeito)
+    function darBaixa(botao) {
+        const item = botao.closest('.med-item');
+        item.style.transition = "0.5s";
+        item.style.opacity = "0";
+        item.style.transform = "scale(0.8)";
+        
+        notificar("Item retirado do estoque!");
+        
+        setTimeout(() => {
+            item.remove();
+        }, 500);
+    }
+
+    // Log de inicialização no console para você testar
+    console.log("Sistema Farmacura Pet Carregado com Sucesso.");
+</script>
+
+</body>
+</html>
