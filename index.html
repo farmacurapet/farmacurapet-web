@@ -11,14 +11,12 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             padding: 0;
-            /* Papel de parede com overlay para destaque */
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
                         url('https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=2071&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
         }
 
-        /* Barra de Busca Superior (Estilo Chrome) */
         .chrome-header {
             background: #ffffff;
             height: 60px;
@@ -51,7 +49,6 @@
             margin-left: 10px;
         }
 
-        /* Container de Cartões Flutuantes */
         .main-container {
             max-width: 1200px;
             margin: 40px auto;
@@ -75,10 +72,8 @@
 
         h2 { color: #1a73e8; margin-top: 0; font-size: 20px; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; }
 
-        /* Estilo dos Inputs */
         .input-item { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
 
-        /* Botões */
         .btn {
             width: 100%;
             padding: 12px;
@@ -97,12 +92,10 @@
 
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* Estoque */
         .inventory-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .med-item { background: #f8f9fa; border: 1px solid #eee; padding: 10px; border-radius: 12px; text-align: center; }
         .med-item img { width: 40px; margin-bottom: 5px; }
 
-        /* Feedback na tela */
         #status-msg {
             position: fixed;
             bottom: 20px;
@@ -137,24 +130,26 @@
             <input type="password" id="pass" class="input-item" placeholder="Senha">
             <button onclick="togglePass()" style="position:absolute; right:10px; top:18px; border:none; background:none; cursor:pointer;">👁️</button>
         </div>
-        <button class="btn btn-login" onclick="notificar('Acessando conta...')">ENTRAR</button>
-        <button class="btn btn-signup" onclick="notificar('Abrindo formulário de cadastro...')">CADASTRAR</button>
+        <button class="btn btn-login" onclick="fazerLogin()">ENTRAR</button>
+        <button class="btn btn-signup" onclick="fazerCadastro()">CADASTRAR USUÁRIO</button>
     </div>
 
     <div class="window-card" style="flex: 2;">
         <h2>📦 Estoque Virtual</h2>
-        <div class="inventory-list">
+        <div class="inventory-list" id="lista-estoque">
             <div class="med-item">
                 <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
                 <p><b>Cefalexina</b><br><small>Val: 12/2026</small></p>
                 <button class="btn btn-delete" onclick="darBaixa(this)">DAR BAIXA</button>
             </div>
-            <div class="med-item">
-                <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
-                <p><b>Meloxicam</b><br><small>Val: 06/2027</small></p>
-                <button class="btn btn-delete" onclick="darBaixa(this)">DAR BAIXA</button>
-            </div>
         </div>
+        
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+        
+        <h3>➕ Cadastrar Medicamento</h3>
+        <input type="text" id="med-nome" class="input-item" placeholder="Nome do Remédio">
+        <input type="text" id="med-val" class="input-item" placeholder="Validade (ex: 10/2027)">
+        <button class="btn btn-signup" onclick="adicionarMedicamento()">ADICIONAR AO ESTOQUE</button>
     </div>
 
     <div class="window-card">
@@ -162,12 +157,7 @@
         <div style="background:#e8f0fe; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
             <strong>Hospital Vet. Recife</strong><br>
             <small>📞 (81) 3355-8179</small>
-            <button class="btn btn-login" style="margin-top:10px; padding: 5px;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=-8.064,-34.919')">TRAÇAR ROTA</button>
-        </div>
-        <div style="background:#e8f0fe; padding: 15px; border-radius: 10px;">
-            <strong>Hospital Vet. UFRPE</strong><br>
-            <small>📞 (81) 3320-6410</small>
-            <button class="btn btn-login" style="margin-top:10px; padding: 5px;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=-8.016,-34.950')">TRAÇAR ROTA</button>
+            <button class="btn btn-login" style="margin-top:10px; padding: 5px;" onclick="window.open('https://www.google.com/maps/search/Hospital+Veterinário+Recife')">TRAÇAR ROTA</button>
         </div>
     </div>
 
@@ -176,7 +166,7 @@
 <div id="status-msg">Mensagem de status</div>
 
 <script>
-    // Função de Notificação Visual
+    // Função para exibir alertas rápidos
     function notificar(texto) {
         const box = document.getElementById('status-msg');
         box.innerText = texto;
@@ -184,28 +174,73 @@
         setTimeout(() => { box.style.display = 'none'; }, 3000);
     }
 
-    // Mostrar/Esconder Senha
+    // 1. LÓGICA DE LOGIN
+    function fazerLogin() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+
+        if(u === "" || p === "") {
+            notificar("❌ Preencha todos os campos!");
+        } else {
+            notificar("✅ Bem-vindo, " + u + "!");
+        }
+    }
+
+    // 2. LÓGICA DE CADASTRO DE USUÁRIO
+    function fazerCadastro() {
+        const u = document.getElementById('user').value;
+        if(u === "") {
+            notificar("❌ Digite um nome de usuário para cadastrar.");
+        } else {
+            notificar("🎉 Usuário " + u + " cadastrado com sucesso!");
+        }
+    }
+
+    // 3. LÓGICA DE CADASTRAR MEDICAMENTO
+    function adicionarMedicamento() {
+        const nome = document.getElementById('med-nome').value;
+        const val = document.getElementById('med-val').value;
+
+        if(nome === "" || val === "") {
+            notificar("❌ Informe o nome e a validade do remédio.");
+            return;
+        }
+
+        const lista = document.getElementById('lista-estoque');
+        
+        // Criar o elemento visual do novo remédio
+        const novoItem = document.createElement('div');
+        novoItem.className = 'med-item';
+        novoItem.innerHTML = `
+            <img src="https://cdn-icons-png.flaticon.com/512/822/822143.png" alt="med">
+            <p><b>${nome}</b><br><small>Val: ${val}</small></p>
+            <button class="btn btn-delete" onclick="darBaixa(this)">DAR BAIXA</button>
+        `;
+
+        lista.appendChild(novoItem);
+        notificar("📦 " + nome + " adicionado!");
+        
+        // Limpar campos
+        document.getElementById('med-nome').value = "";
+        document.getElementById('med-val').value = "";
+    }
+
     function togglePass() {
         const p = document.getElementById('pass');
         p.type = p.type === 'password' ? 'text' : 'password';
     }
 
-    // Função de Dar Baixa (Remover com efeito)
     function darBaixa(botao) {
         const item = botao.closest('.med-item');
         item.style.transition = "0.5s";
         item.style.opacity = "0";
         item.style.transform = "scale(0.8)";
         
-        notificar("Item retirado do estoque!");
-        
         setTimeout(() => {
             item.remove();
+            notificar("Item removido!");
         }, 500);
     }
-
-    // Log de inicialização no console para você testar
-    console.log("Sistema Farmacura Pet Carregado com Sucesso.");
 </script>
 
 </body>
