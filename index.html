@@ -2,45 +2,57 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Farmacura Pet</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<!-- ✅ CDN CORRETA -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <style>
 body { font-family: Arial; background:#f0f2f5; display:flex; justify-content:center; padding:20px; }
 .container { background:white; padding:20px; border-radius:10px; width:100%; max-width:400px; }
 input, button { width:100%; padding:10px; margin:5px 0; }
-button { background:#27ae60; color:white; border:none; }
+button { background:#27ae60; color:white; border:none; cursor:pointer; }
 .secondary { background:#3498db; }
 #cadastro, #sistema { display:none; }
 .card { background:#fafafa; padding:10px; margin-top:10px; }
 img { max-width:100%; }
 </style>
-</head>
 
+</head>
 <body>
 
 <div class="container">
 
+<!-- LOGIN -->
 <div id="login">
 <h2>Login</h2>
-<input id="loginEmail" placeholder="Email">
-<input type="password" id="loginSenha" placeholder="Senha">
-<button onclick="toggleSenha()">👁</button>
-<button onclick="login()">Entrar</button>
+
+<form onsubmit="loginUser(event)">
+<input id="loginEmail" type="email" placeholder="Email" required>
+<input id="loginSenha" type="password" placeholder="Senha" required>
+
+<button type="button" onclick="toggleSenha()">👁 Mostrar senha</button>
+<button type="submit">Entrar</button>
+</form>
+
 <button class="secondary" onclick="mostrarCadastro()">Cadastrar</button>
 </div>
 
+<!-- CADASTRO -->
 <div id="cadastro">
 <h2>Cadastro</h2>
+
 <input id="nome" placeholder="Nome">
 <input id="email" placeholder="Email">
 <input id="whatsapp" placeholder="WhatsApp">
-<input type="password" id="senha" placeholder="Senha">
+<input id="senha" type="password" placeholder="Senha">
+
 <button onclick="cadastrar()">Cadastrar</button>
-<button onclick="voltarLogin()">Voltar</button>
+<button onclick="voltarLogin()" class="secondary">Voltar</button>
 </div>
 
+<!-- SISTEMA -->
 <div id="sistema">
 <h2>Painel</h2>
 
@@ -52,18 +64,26 @@ img { max-width:100%; }
 
 <div id="lista"></div>
 
-<button onclick="logout()">Sair</button>
+<button onclick="logout()" class="secondary">Sair</button>
 </div>
 
 </div>
 
 <script>
 
-// 🔗 CONEXÃO SUPABASE
-const supabase = window.supabase.createClient(
-    "https://SEU-PROJETO.supabase.co",
-    "SUA_ANON_KEY"
-);
+// 🔥 COLOQUE SUA URL E KEY AQUI
+const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
+const SUPABASE_KEY = "SUA_ANON_KEY";
+
+let supabase;
+
+// 🔐 INICIALIZAÇÃO SEGURA
+try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch (e) {
+    alert("Erro ao conectar Supabase. Verifique a chave.");
+    console.error(e);
+}
 
 // 👁 SENHA
 function toggleSenha(){
@@ -73,103 +93,124 @@ function toggleSenha(){
 
 // TELAS
 function mostrarCadastro(){
-    login.style.display="none";
-    cadastro.style.display="block";
+    document.getElementById("login").style.display="none";
+    document.getElementById("cadastro").style.display="block";
 }
 
 function voltarLogin(){
-    cadastro.style.display="none";
-    login.style.display="block";
+    document.getElementById("cadastro").style.display="none";
+    document.getElementById("login").style.display="block";
 }
 
 // CADASTRO
 async function cadastrar(){
-    const user = {
-        nome: nome.value,
-        email: email.value,
-        whatsapp: whatsapp.value,
-        senha: senha.value
-    };
-
-    const { error } = await supabase.from("usuarios").insert([user]);
-
-    if(error){
-        alert("Erro: "+error.message);
-    }else{
-        alert("Cadastrado!");
-        voltarLogin();
-    }
-}
-
-// LOGIN
-async function login(){
-    const { data, error } = await supabase
-        .from("usuarios")
-        .select("*")
-        .eq("email", loginEmail.value)
-        .eq("senha", loginSenha.value)
-        .single();
-
-    if(error || !data){
-        alert("Login inválido!");
-    }else{
-        localStorage.setItem("user", JSON.stringify(data));
-        login.style.display="none";
-        sistema.style.display="block";
-        carregar();
-    }
-}
-
-// DOAÇÃO
-async function doar(){
-    let user = JSON.parse(localStorage.getItem("user"));
-
-    let file = foto.files[0];
-
-    let reader = new FileReader();
-    reader.onload = async function(){
-
-        let medicamento = {
-            nome: medNome.value,
-            validade: validade.value,
-            foto: reader.result,
-            doador: user.nome,
-            whatsapp: user.whatsapp
+    try {
+        let user = {
+            nome: document.getElementById("nome").value,
+            email: document.getElementById("email").value,
+            whatsapp: document.getElementById("whatsapp").value,
+            senha: document.getElementById("senha").value
         };
 
-        await supabase.from("medicamentos").insert([medicamento]);
+        const { error } = await supabase.from("usuarios").insert([user]);
 
-        carregar();
+        if(error) throw error;
+
+        alert("Cadastrado!");
+        voltarLogin();
+
+    } catch(err){
+        alert("Erro: " + err.message);
+        console.error(err);
     }
-
-    reader.readAsDataURL(file);
 }
 
-// CARREGAR
+// LOGIN (AGORA FUNCIONA COM ENTER)
+async function loginUser(e){
+    e.preventDefault();
+
+    try {
+        let email = document.getElementById("loginEmail").value;
+        let senha = document.getElementById("loginSenha").value;
+
+        const { data, error } = await supabase
+            .from("usuarios")
+            .select("*")
+            .eq("email", email)
+            .eq("senha", senha)
+            .single();
+
+        if(error || !data) throw new Error("Login inválido");
+
+        localStorage.setItem("user", JSON.stringify(data));
+
+        document.getElementById("login").style.display="none";
+        document.getElementById("sistema").style.display="block";
+
+        carregar();
+
+    } catch(err){
+        alert(err.message);
+        console.error(err);
+    }
+}
+
+// DOAR
+async function doar(){
+    try {
+        let user = JSON.parse(localStorage.getItem("user"));
+        let file = document.getElementById("foto").files[0];
+
+        if(!file) throw new Error("Escolha uma imagem");
+
+        let reader = new FileReader();
+
+        reader.onload = async function(){
+            let medicamento = {
+                nome: document.getElementById("medNome").value,
+                validade: document.getElementById("validade").value,
+                foto: reader.result,
+                doador: user.nome,
+                whatsapp: user.whatsapp
+            };
+
+            await supabase.from("medicamentos").insert([medicamento]);
+            carregar();
+        };
+
+        reader.readAsDataURL(file);
+
+    } catch(err){
+        alert(err.message);
+    }
+}
+
+// LISTAR
 async function carregar(){
-    const { data } = await supabase
-        .from("medicamentos")
-        .select("*");
+    const { data } = await supabase.from("medicamentos").select("*");
 
     let div = document.getElementById("lista");
-    div.innerHTML="";
+    div.innerHTML = "";
 
     data.forEach(m=>{
-        div.innerHTML+=`
+        div.innerHTML += `
         <div class="card">
             <h3>${m.nome}</h3>
             <p>${m.validade}</p>
             <img src="${m.foto}">
             <p>${m.doador}</p>
-            <p>${m.whatsapp}</p>
+            <button onclick="window.open('https://wa.me/55${m.whatsapp}')">
+            WhatsApp
+            </button>
         </div>`;
     });
 }
 
 // LOGOUT
 function logout(){
-    sistema.style.display="none";
-    login.style.display="block";
+    localStorage.removeItem("user");
+    document.getElementById("sistema").style.display="none";
+    document.getElementById("login").style.display="block";
 }
 
 </script>
