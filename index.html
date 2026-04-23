@@ -2,119 +2,184 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmacuraPet - Login</title>
+    <title>Farmacura Pet - Interface</title>
     <style>
-        /* CSS Integrado */
+        /* Estilização da Matriz */
         body {
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: url('seu-fundo-pet.jpg') no-repeat center center fixed;
+            background-size: cover;
             margin: 0;
+            padding: 20px;
         }
 
-        .login-card {
-            background: #ffffff;
-            padding: 40px;
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 350px;
+            width: 320px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 25px;
+        .password-wrapper {
+            position: relative;
+            margin: 10px 0;
         }
 
-        input {
-            display: block;
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 12px;
+        .password-wrapper input {
+            width: 85%;
+            padding: 10px;
             border-radius: 8px;
-            border: 1px solid #ddd;
-            box-sizing: border-box; /* Garante que o padding não aumente a largura */
+            border: 1px solid #ccc;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            top: 10px;
             cursor: pointer;
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
         }
 
-        button:hover {
-            background-color: #219150;
+        .btn-entrar { background: #4CAF50; color: white; border: none; padding: 10px; border-radius: 20px; cursor: pointer; width: 48%; }
+        .btn-cadastrar { background: #2196F3; color: white; border: none; padding: 10px; border-radius: 20px; cursor: pointer; width: 48%; }
+
+        /* Clínicas e Rotas */
+        .clinica-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #ff9800;
         }
 
-        .social-container {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        /* O SEU CÓDIGO CORRIGIDO AQUI */
-        .social-links {
-            color: #2c3e50; /* Cor escura para contrastar com o fundo claro */
-            margin: 0 15px;
-            font-size: 28px;
-            text-decoration: none;
-            transition: 0.3s;
+        .btn-rota {
             display: inline-block;
+            padding: 5px 10px;
+            background: #db4437;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
         }
 
-        .social-links:hover {
-            color: #27ae60;
-            transform: translateY(-3px);
+        /* Estoque Virtual */
+        #estoque {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        /* Se quiser que o link seja branco em um fundo escuro, mude para white */
+        .card-medicamento {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 150px;
+            text-align: center;
+            transition: 0.5s;
+        }
+
+        .card-medicamento img { width: 100%; border-radius: 5px; }
+
+        /* Mural e Anúncios */
+        .interacao {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .ads-banner {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffff00;
+            text-align: center;
+            height: 30px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h2>FarmacuraPet</h2>
-        
-        <div id="login-form">
-            <input type="email" id="email" placeholder="E-mail" required>
-            <input type="password" id="senha" placeholder="Senha" required>
-            
-            <button onclick="autenticar()">Entrar</button>
-        </div>
+<div class="login-container">
+    <input type="email" placeholder="Usuário">
+    <div class="password-wrapper">
+        <input type="password" id="pass" placeholder="Senha">
+        <span class="eye-icon" onclick="togglePass()">👁️</span>
+    </div>
+    <button class="btn-entrar">Entrar</button>
+    <button class="btn-cadastrar">Cadastrar Usuário</button>
+    <button class="btn-cadastrar">Cadastrar</button>
+</div>
 
-        <div class="social-container">
-            <a href="#" class="social-links">f</a>
-            <a href="#" class="social-links">in</a>
-        </div>
+<div class="clinica-box">
+    <strong>Hospital Veterinário do Recife (Cordeiro)</strong><br>
+    📞 (81) 3355-8179<br>
+    <a href="https://www.google.com/maps/dir//Hospital+Veterinário+do+Recife" class="btn-rota" target="_blank">📍 Ver Rota</a>
+</div>
+
+<div class="clinica-box">
+    <strong>Hospital Veterinário da UFRPE (Dois Irmãos)</strong><br>
+    📞 (81) 3320-6410<br>
+    <a href="https://www.google.com/maps/dir//Hospital+Veterinário+UFRPE" class="btn-rota" target="_blank">📍 Ver Rota</a>
+</div>
+
+<h3>📦 Estoque Virtual</h3>
+<section id="estoque">
+    <h3>Estoque Virtual de Medicamentos</h3>
+    <div class="card-medicamento">
+        <img src="placeholder-remedio.jpg" alt="Foto do Medicamento">
+        <p>Validade: 12/2026</p>
+        <button onclick="removerDoEstoque(this)">Dar Baixa (Doação Recebida)</button>
+        <img src="https://via.placeholder.com/100" alt="Remédio">
+        <p>Validade: 05/2027</p>
+        <button onclick="removerDoEstoque(this)">Dar Baixa</button>
+    </div>
+</section>
+
+<section class="interacao">
+    <div class="ads-banner">
+        <p id="msg-rotativa">Novidade: Confira as novas parcerias!</p>
+        <p id="msg-rotativa">Bem-vindo ao Farmacura Pet!</p>
     </div>
 
-    <script>
-        // JAVASCRIPT Integrado
-        function autenticar() {
-            const email = document.getElementById('email').value;
-            const senha = document.getElementById('senha').value;
+    <div class="links-externos">
+        <a href="https://www.jogos360.com.br" target="_blank">🎮 Abrir Jogos 360</a>
+    <div style="margin: 15px 0;">
+        <a href="https://www.jogos360.com.br" target="_blank" style="color: #00ecff;">🎮 Abrir Jogos 360</a>
+    </div>
 
-            // Lógica de redirecionamento
-            if (email !== "" && senha !== "") {
-                // Aqui você coloca o nome exato do seu arquivo de destino
-                // Se o arquivo for "cadastro.html", mude abaixo:
-                window.location.href = "cadastro-medicamentos.html";
-            } else {
-                alert("Preencha os campos para prosseguir!");
-            }
-        }
-    </script>
+    <iframe src="https://www.google.com/search?q=pet+care&igu=1" width="100%" height="300px"></iframe>
+    <iframe src="https://www.bing.com/search?q=saude+animal" width="100%" height="200px" style="border-radius: 10px; border: none;"></iframe>
+</section>
+
+<script>
+    // Função do Olho (Senha)
+    function togglePass() {
+        const passInput = document.getElementById('pass');
+        passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    }
+
+    // Remover do Estoque
+    function removerDoEstoque(botao) {
+        const card = botao.parentElement;
+        card.style.transform = "scale(0)";
+        setTimeout(() => { card.remove(); }, 500);
+    }
+
+    // Mensagens Rotativas
+    const msgs = [
+        "Doe medicamentos vencendo!", 
+        "Apoie a causa animal em Recife.", 
+        "Verifique as rotas das clínicas acima.",
+        "Farmacura Pet: Saúde para todos."
+    ];
+    let i = 0;
+    setInterval(() => {
+        document.getElementById('msg-rotativa').textContent = msgs[i];
+        i = (i + 1) % msgs.length;
+    }, 3000);
+</script>
 
 </body>
 </html>
