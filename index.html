@@ -3,323 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Farmacura Pet | Recife</title>
+    <title>Farmacura Pet | Oficial</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        :root { --primary: #2ecc71; --secondary: #27ae60; --dark: #2c3e50; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--dark); }
-
-        .nav-menu { background: var(--dark); position: fixed; z-index: 1000; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; border-top: 3px solid var(--primary); }
-        .nav-menu i { color: #fff; font-size: 1.5rem; cursor: pointer; opacity: 0.7; padding: 10px; }
-        .nav-menu i.active { color: var(--primary); opacity: 1; }
-
-        .main-content { margin-bottom: 90px; padding: 15px; }
-        header { background: #fff; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 900; }
-        
-        .card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #eee; }
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1.5px solid #ebebeb; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
-        
-        /* Container da Senha com Olhinho */
-        .password-container { position: relative; }
-        .password-container i { position: absolute; right: 15px; top: 25px; cursor: pointer; color: #999; }
-
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: none; border: 1.5px solid var(--primary); color: var(--primary); margin-top: 10px; }
-        
-        /* Estilo para Hospitais/ONGs */
-        .info-card { border-left: 5px solid var(--primary); margin-bottom: 15px; }
-        .info-card h4 { margin: 0 0 5px 0; color: var(--dark); }
-        .info-card p { margin: 3px 0; font-size: 0.85rem; color: #666; }
-        .btn-group { display: flex; gap: 5px; margin-top: 10px; }
-        .btn-small { padding: 8px; font-size: 0.75rem; flex: 1; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; }
-        .btn-call { background: #3498db; color: white; }
-        .btn-map { background: #e67e22; color: white; }
-
+        :root { --brand: #00d2ff; --brand-dark: #3a7bd5; --bg-glass: rgba(255, 255, 255, 0.96); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=2069&auto=format&fit=crop') center/cover fixed; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: -1; }
+        header { padding: 30px; text-align: center; color: white; }
+        .main-content { max-width: 480px; margin: 0 auto 100px auto; padding: 0 20px; }
+        .product-card { background: var(--bg-glass); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; }
+        .btn-modern { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; }
+        .btn-outline { background: none; border: 2px solid var(--brand-dark); color: var(--brand-dark); padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .nav-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e272e; padding: 12px 30px; border-radius: 50px; display: flex; gap: 25px; z-index: 1000; }
+        .nav-dock i { color: white; font-size: 1.3rem; cursor: pointer; opacity: 0.5; }
+        .nav-dock i.active { opacity: 1; color: var(--brand); }
         .hidden { display: none !important; }
-        .row { display: flex; gap: 10px; }
-        .label-foto { display: block; background: #f0f2f5; border: 2px dashed #ccc; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer; margin: 10px 0; }
+        .item-mural { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .item-mural:last-child { border: none; }
+        .badge-clinica { background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
+        .pass-container { position: relative; }
+        .pass-container i { position: absolute; right: 15px; top: 25px; cursor: pointer; color: #999; }
     </style>
 </head>
 <body>
+<div class="overlay"></div>
+<header>
+    <h1 style="margin:0; font-weight:800;">Farma<span style="color:var(--brand)">cura</span> Pet</h1>
+</header>
 
-<nav class="nav-menu">
-    <i class="fas fa-home" onclick="mostrarSecao('section-app')" title="Início"></i>
-    <i class="fas fa-plus-circle" onclick="irParaDoar()" title="Doar"></i>
-    <i class="fas fa-hospital" onclick="mostrarSecao('section-ajuda')" title="Hospitais e ONGs"></i>
-    <i class="fas fa-user-edit" id="btn-config" style="display:none;" onclick="mostrarSecao('section-perfil')" title="Perfil"></i>
-    <i class="fas fa-sign-out-alt" onclick="deslogar()"></i>
+<main class="main-content">
+    <section id="section-auth" class="product-card">
+        <h3 id="auth-title" style="text-align:center">Entrar no Sistema</h3>
+        <input type="email" id="email" placeholder="Seu e-mail">
+        <div class="pass-container">
+            <input type="password" id="password" placeholder="Sua senha">
+            <i class="fas fa-eye" id="togglePass" onclick="togglePassword()"></i>
+        </div>
+        <div id="campos-cadastro" class="hidden">
+            <input type="text" id="reg-nome" placeholder="Seu nome">
+            <input type="tel" id="reg-zap" placeholder="Seu WhatsApp">
+            <input type="text" id="reg-bairro" placeholder="Seu Bairro (Recife)">
+        </div>
+        <button class="btn-modern" onclick="handleAuth()">Confirmar</button>
+        <div style="text-align: center; margin-top: 15px; font-size: 0.85rem;">
+            <span id="link-modo" style="color:var(--brand-dark); cursor:pointer; font-weight:600" onclick="mudarModo()">Criar nova conta</span>
+            <br><br>
+            <span style="color:#999; cursor:pointer" onclick="esqueciSenha()">Esqueci minha senha</span>
+        </div>
+    </section>
+
+    <section id="section-app" class="hidden">
+        <input type="text" id="search-input" placeholder="🔍 Buscar medicamento..." onkeyup="buscar()" style="border-radius: 50px; background: white;">
+        <div id="mural" class="product-card" style="margin-top: 20px;"></div>
+    </section>
+
+    <section id="section-apoio" class="hidden">
+        <div class="product-card">
+            <h3 style="text-align:center; margin-top:0"><i class="fas fa-hospital"></i> Clínicas e Hospitais</h3>
+            
+            <div class="item-mural">
+                <span class="badge-clinica">RECIFE - CORDEIRO</span>
+                <h4 style="margin:5px 0">Hospital Veterinário do Recife (HVR)</h4>
+                <p style="font-size:0.75rem; color:#666">Av. Professor Estevão F. da Costa, S/N - Cordeiro, Recife - PE</p>
+                <button class="btn-modern" onclick="window.open('tel:8132244000')"><i class="fas fa-phone"></i> Ligar para Agendar</button>
+                <button class="btn-outline" onclick="abrirRota('-8.0505', '-34.9221')"><i class="fas fa-map-marker-alt"></i> Ver Rota no Mapa</button>
+            </div>
+
+            <div class="item-mural">
+                <span class="badge-clinica">RECIFE - DOIS IRMÃOS</span>
+                <h4 style="margin:5px 0">Hospital Veterinário da UFRPE</h4>
+                <p style="font-size:0.75rem; color:#666">Rua Dom Manoel de Medeiros, S/N - Dois Irmãos, Recife - PE</p>
+                <button class="btn-modern" onclick="window.open('tel:8133206410')"><i class="fas fa-phone"></i> Ligar para Informações</button>
+                <button class="btn-outline" onclick="abrirRota('-8.0163', '-34.9504')"><i class="fas fa-map-marker-alt"></i> Ver Rota no Mapa</button>
+            </div>
+
+            <h3 style="text-align:center; margin-top:30px"><i class="fas fa-paw"></i> ONGs e Protetores</h3>
+            
+            <div class="item-mural">
+                <h4 style="margin:5px 0">Adote um Focinho Recife</h4>
+                <p style="font-size:0.75rem; color:#666">ONG focada em resgates e feiras de adoção.</p>
+                <button class="btn-outline" style="color:#e91e63; border-color:#e91e63" onclick="window.open('https://www.instagram.com/adoteumfocinhorecife/')">
+                    <i class="fab fa-instagram"></i> Contato via Instagram
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="section-doar" class="hidden">
+        <div class="product-card">
+            <h3 style="text-align:center">Anunciar Medicamento</h3>
+            <input type="text" id="med-nome" placeholder="Nome do Remédio">
+            <input type="text" id="med-marca" placeholder="Laboratório">
+            <div style="display:flex; gap:10px">
+                <input type="text" id="med-mg" placeholder="Dose (mg)">
+                <input type="month" id="med-val">
+            </div>
+            <textarea id="med-obs" placeholder="Detalhes (Ex: Caixa aberta, faltam 2 comprimidos...)"></textarea>
+            <button class="btn-modern" onclick="salvarMed()">Publicar Agora</button>
+        </div>
+    </section>
+</main>
+
+<nav class="nav-dock">
+    <i class="fas fa-search active" onclick="irPara('section-app')" id="icon-app"></i>
+    <i class="fas fa-hospital" onclick="irPara('section-apoio')" id="icon-apoio"></i>
+    <i class="fas fa-plus-circle" onclick="irPara('section-doar')" id="icon-doar"></i>
+    <i class="fas fa-sign-out-alt" onclick="sair()"></i>
 </nav>
-
-<div class="main-content">
-    <header>
-        <h1 style="margin:0; font-size: 1.3rem;">FARMACURA PET 🐾</h1>
-        <div id="status-user" style="font-size: 0.8rem; color: var(--secondary);"></div>
-    </header>
-
-    <div class="container" style="max-width: 600px; margin: auto;">
-        
-        <section id="section-auth" class="card">
-            <h2 id="auth-title">Bem-vindo</h2>
-            <input type="email" id="email" placeholder="Seu e-mail">
-            <div class="password-container">
-                <input type="password" id="password" placeholder="Sua senha">
-                <i class="fas fa-eye" id="togglePassword" onclick="toggleSenha('password', 'togglePassword')"></i>
-            </div>
-
-            <div id="campos-cadastro" class="hidden">
-                <input type="text" id="reg-nome" placeholder="Nome Completo">
-                <input type="tel" id="reg-zap" placeholder="WhatsApp (DDD + Número)">
-                <input type="text" id="reg-cep" placeholder="CEP" maxlength="8" onblur="buscarCEP('reg-cep','reg-rua','reg-bairro')">
-                <input type="text" id="reg-rua" placeholder="Rua" readonly>
-                <div class="row">
-                    <input type="text" id="reg-num" placeholder="Nº">
-                    <input type="text" id="reg-bairro" placeholder="Bairro" readonly style="flex:2">
-                </div>
-            </div>
-
-            <button class="btn btn-primary" id="btn-auth" onclick="executarAuth()">Entrar</button>
-            <button onclick="toggleAuthModo()" class="btn btn-outline">Criar conta / Voltar</button>
-        </section>
-
-        <section id="section-app" class="hidden">
-            <div id="top-form" class="card">
-                <h3 style="margin-top:0">Nova Doação</h3>
-                <select id="item-categoria" onchange="ajustarCampos()">
-                    <option value="medicamento">💊 Medicamento</option>
-                    <option value="acessorio">🎾 Acessório / Outros</option>
-                </select>
-                <input type="text" id="med-nome" placeholder="Nome do item">
-                
-                <div id="campos-remedio">
-                    <div class="row">
-                        <input type="text" id="med-dose" placeholder="Dose (ex: 10mg)">
-                        <input type="month" id="med-val">
-                    </div>
-                    <select id="med-bula">
-                        <option value="Com bula">Com bula</option>
-                        <option value="Sem bula">Sem bula</option>
-                    </select>
-                </div>
-
-                <div class="row">
-                    <input type="number" id="med-qtd" placeholder="Qtd">
-                    <select id="med-tipo"><option value="Comp">Comp.</option><option value="Unid">Unid.</option></select>
-                </div>
-
-                <label for="foto-item" class="label-foto"><i class="fas fa-camera"></i> <span id="txt-foto">Anexar Foto</span></label>
-                <input type="file" id="foto-item" accept="image/*" class="hidden" onchange="document.getElementById('txt-foto').innerText = 'Foto Selecionada'">
-                
-                <div style="font-size:0.8rem; margin:10px 0;">
-                    <input type="checkbox" id="termos" style="width:auto"> Declaro que a doação é gratuita.
-                </div>
-                <button class="btn btn-primary" onclick="criarPost()">Publicar no Mural</button>
-            </div>
-            <div id="mural"></div>
-        </section>
-
-        <section id="section-ajuda" class="hidden">
-            <div class="card">
-                <h3>Rede de Apoio - Recife</h3>
-                <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">Hospitais públicos e ONGs parceiras.</p>
-                
-                <div class="info-card">
-                    <h4>Hospital Veterinário do Recife (HVR)</h4>
-                    <p>Av. Prof. Estevão F. da Costa, S/N - Cordeiro</p>
-                    <p><strong>Tel:</strong> (81) 3355-8179</p>
-                    <div class="btn-group">
-                        <a href="tel:8133558179" class="btn-small btn-call"><i class="fas fa-phone"></i> Ligar</a>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=-8.0515,-34.9198" target="_blank" class="btn-small btn-map"><i class="fas fa-route"></i> Rota</a>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <h4>Hospital Veterinário da UFRPE</h4>
-                    <p>Rua Dom Manoel de Medeiros, s/n - Dois Irmãos</p>
-                    <p><strong>Tel:</strong> (81) 3320-6410</p>
-                    <div class="btn-group">
-                        <a href="tel:8133206410" class="btn-small btn-call"><i class="fas fa-phone"></i> Ligar</a>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=-8.0165,-34.9505" target="_blank" class="btn-small btn-map"><i class="fas fa-route"></i> Rota</a>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <h4>ONG Prefiro Bicho</h4>
-                    <p>Atuação em Recife e Região Metropolitana</p>
-                    <div class="btn-group">
-                        <a href="https://www.instagram.com/prefirobicho/" target="_blank" class="btn-small btn-call"><i class="fab fa-instagram"></i> Instagram</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="section-perfil" class="card hidden">
-            <h3>Meu Perfil</h3>
-            <input type="text" id="edit-nome" placeholder="Nome">
-            <input type="tel" id="edit-zap" placeholder="WhatsApp">
-            <button class="btn btn-primary" onclick="salvarPerfil()">Atualizar Dados</button>
-        </section>
-
-    </div>
-</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
-        authDomain: "farmacia-solidaria-pet.firebaseapp.com",
-        databaseURL: "https://farmacia-solidaria-pet-default-rtdb.firebaseio.com",
-        projectId: "farmacia-solidaria-pet",
-        storageBucket: "farmacia-solidaria-pet.firebasestorage.app",
-        messagingSenderId: "863177132865",
-        appId: "1:863177132865:web:736861131f7946dc7b2fc0"
-    };
+const firebaseConfig = {
+    apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
+    authDomain: "farmacia-solidaria-pet.firebaseapp.com",
+    databaseURL: "https://farmacia-solidaria-pet-default-rtdb.firebaseio.com",
+    projectId: "farmacia-solidaria-pet",
+    storageBucket: "farmacia-solidaria-pet.firebasestorage.app",
+    messagingSenderId: "863177132865",
+    appId: "1:863177132865:web:736861131f7946dc7b2fc0"
+};
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-    let modoCad = false;
-    let userDados = null;
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+let isCadastro = false;
+let meuPerfil = null;
 
-    // --- FUNÇÃO DO OLHINHO ---
-    function toggleSenha(inputId, iconId) {
-        const input = document.getElementById(inputId);
-        const icon = document.getElementById(iconId);
-        if (input.type === "password") {
-            input.type = "text";
-            icon.classList.replace("fa-eye", "fa-eye-slash");
-        } else {
-            input.type = "password";
-            icon.classList.replace("fa-eye-slash", "fa-eye");
-        }
-    }
+function irPara(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
+    if(id === 'section-app') document.getElementById('icon-app').classList.add('active');
+    if(id === 'section-apoio') document.getElementById('icon-apoio').classList.add('active');
+    if(id === 'section-doar') document.getElementById('icon-doar').classList.add('active');
+}
 
-    // --- NAVEGAÇÃO E UI ---
-    function mostrarSecao(id) {
-        ['section-auth', 'section-app', 'section-ajuda', 'section-perfil'].forEach(s => {
-            document.getElementById(s).classList.add('hidden');
-        });
-        document.getElementById(id).classList.remove('hidden');
-        window.scrollTo(0,0);
-    }
+function abrirRota(lat, lng) {
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
+}
 
-    function irParaDoar() {
-        mostrarSecao('section-app');
-        document.getElementById('top-form').scrollIntoView({behavior: 'smooth'});
-    }
+function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('togglePass');
+    input.type = input.type === "password" ? "text" : "password";
+    icon.classList.toggle('fa-eye-slash');
+}
 
-    function ajustarCampos() {
-        const cat = document.getElementById('item-categoria').value;
-        document.getElementById('campos-remedio').classList.toggle('hidden', cat === 'acessorio');
-    }
+function mudarModo() {
+    isCadastro = !isCadastro;
+    document.getElementById('campos-cadastro').classList.toggle('hidden');
+    document.getElementById('auth-title').innerText = isCadastro ? "Criar Conta" : "Entrar";
+}
 
-    function toggleAuthModo() {
-        modoCad = !modoCad;
-        document.getElementById('campos-cadastro').classList.toggle('hidden', !modoCad);
-        document.getElementById('btn-auth').innerText = modoCad ? "Criar Minha Conta" : "Entrar";
-        document.getElementById('auth-title').innerText = modoCad ? "Cadastro" : "Bem-vindo";
-    }
-
-    // --- LOGICA CORE ---
-    async function buscarCEP(c, r, b) {
-        const cep = document.getElementById(c).value.replace(/\D/g, '');
-        if (cep.length !== 8) return;
-        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await res.json();
-        if(!data.erro) {
-            document.getElementById(r).value = data.logradouro;
-            document.getElementById(b).value = data.bairro + " - " + data.localidade;
-        }
-    }
-
-    function executarAuth() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
-        if(modoCad) {
-            auth.createUserWithEmailAndPassword(email, pass).then(u => {
-                db.ref('usuarios/' + u.user.uid).set({
-                    nome: document.getElementById('reg-nome').value,
-                    whatsapp: document.getElementById('reg-zap').value,
-                    bairro: document.getElementById('reg-bairro').value,
-                    rua: document.getElementById('reg-rua').value
-                });
-            }).catch(e => alert("Erro: " + e.message));
-        } else {
-            auth.signInWithEmailAndPassword(email, pass).catch(e => alert("Erro: " + e.message));
-        }
-    }
-
-    auth.onAuthStateChanged(user => {
-        if(user) {
-            db.ref('usuarios/' + user.uid).on('value', s => { 
-                userDados = s.val();
-                if(userDados) document.getElementById('status-user').innerText = "Olá, " + userDados.nome;
+function handleAuth() {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+    if(isCadastro) {
+        auth.createUserWithEmailAndPassword(email, pass).then(res => {
+            db.ref('usuarios/' + res.user.uid).set({
+                nome: document.getElementById('reg-nome').value,
+                zap: document.getElementById('reg-zap').value,
+                bairro: document.getElementById('reg-bairro').value
             });
-            document.getElementById('btn-config').style.display = "block";
-            mostrarSecao('section-app');
+        }).catch(e => Swal.fire('Erro', e.message, 'error'));
+    } else {
+        auth.signInWithEmailAndPassword(email, pass).catch(e => Swal.fire('Erro', 'Verifique os dados', 'error'));
+    }
+}
+
+function esqueciSenha() {
+    const email = document.getElementById('email').value;
+    if(!email) return Swal.fire('Aviso', 'Preencha o e-mail', 'info');
+    auth.sendPasswordResetEmail(email).then(() => Swal.fire('Sucesso', 'E-mail enviado', 'success'));
+}
+
+function sair() { auth.signOut(); }
+
+auth.onAuthStateChanged(user => {
+    if(user) {
+        db.ref('usuarios/' + user.uid).on('value', snap => {
+            meuPerfil = snap.val();
+            irPara('section-app');
             carregarMural();
-        } else {
-            document.getElementById('btn-config').style.display = "none";
-            mostrarSecao('section-auth');
-        }
+        });
+    } else {
+        irPara('section-auth');
+    }
+});
+
+function salvarMed() {
+    const med = {
+        nome: document.getElementById('med-nome').value,
+        val: document.getElementById('med-val').value,
+        zap: meuPerfil ? meuPerfil.zap : "",
+        bairro: meuPerfil ? meuPerfil.bairro : "Recife"
+    };
+    if(!med.nome || !med.val) return Swal.fire('Erro', 'Nome e Validade são obrigatórios', 'error');
+    db.ref('estoque_virtual').push(med).then(() => {
+        Swal.fire('Sucesso', 'Anunciado!', 'success');
+        irPara('section-app');
     });
+}
 
-    function criarPost() {
-        if(!document.getElementById('termos').checked) return alert("Aceite os termos!");
-        
-        const cat = document.getElementById('item-categoria').value;
-        const dados = {
-            categoria: cat,
-            nome: document.getElementById('med-nome').value,
-            qtd: document.getElementById('med-qtd').value,
-            tipo: document.getElementById('med-tipo').value,
-            doador_uid: auth.currentUser.uid,
-            doador_nome: userDados.nome,
-            doador_zap: userDados.whatsapp,
-            bairro: userDados.bairro || "Recife",
-            timestamp: firebase.database.ServerValue.TIMESTAMP
-        };
-
-        if(cat === 'medicamento') {
-            dados.dose = document.getElementById('med-dose').value;
-            dados.validade = document.getElementById('med-val').value;
-            dados.bula = document.getElementById('med-bula').value;
-        }
-
-        db.ref('estoque_virtual').push(dados).then(() => {
-            alert("Publicado com sucesso!");
-            document.getElementById('med-nome').value = "";
+function carregarMural() {
+    db.ref('estoque_virtual').on('value', snap => {
+        const div = document.getElementById('mural');
+        div.innerHTML = "";
+        snap.forEach(item => {
+            const d = item.val();
+            div.innerHTML += `<div class="item-mural">
+                <h4>${d.nome}</h4>
+                <p>Val: ${d.val} | Bairro: ${d.bairro}</p>
+                <button class="btn-modern" style="padding:10px" onclick="window.open('https://wa.me/55${d.zap}')">Quero o Remédio</button>
+            </div>`;
         });
-    }
+    });
+}
 
-    function carregarMural() {
-        db.ref('estoque_virtual').orderByChild('timestamp').on('value', snap => {
-            const mural = document.getElementById('mural');
-            mural.innerHTML = "<h3 style='margin-top:20px'>Disponíveis para Doação</h3>";
-            snap.forEach(item => {
-                const d = item.val();
-                const isEu = d.doador_uid === auth.currentUser.uid;
-                mural.innerHTML += `
-                    <div class="card">
-                        <div style="display:flex; justify-content:space-between">
-                            <strong>${d.nome}</strong>
-                            <span style="font-size:0.7rem; background:#eee; padding:2px 8px; border-radius:10px">${d.categoria}</span>
-                        </div>
-                        <p style="font-size:0.8rem; margin:5px 0;">${d.qtd} ${d.tipo} | ${d.bairro}</p>
-                        <button class="btn" style="padding:10px; background:${isEu ? '#e74c3c' : '#2ecc71'}; color:white;" 
-                        onclick="${isEu ? `darBaixa('${item.key}')` : `solicitar('${d.doador_zap}','${d.nome}')`}">
-                        ${isEu ? 'Remover Meu Post' : '<i class="fab fa-whatsapp"></i> Tenho Interesse'}</button>
-                    </div>`;
-            });
-        });
-    }
-
-    function solicitar(z, m) { window.open(`https://wa.me/55${z.replace(/\D/g,'')}?text=Olá! Vi no Farmacura Pet que você está doando ${m}. Ainda está disponível?`); }
-    function darBaixa(id) { if(confirm("Deseja remover esta doação?")) db.ref('estoque_virtual/' + id).remove(); }
-    function deslogar() { if(confirm("Sair do app?")) auth.signOut().then(() => location.reload()); }
+function buscar() {
+    const termo = document.getElementById('search-input').value.toLowerCase();
+    const itens = document.querySelectorAll('.item-mural');
+    itens.forEach(item => {
+        item.style.display = item.innerText.toLowerCase().includes(termo) ? "block" : "none";
+    });
+}
 </script>
 </body>
 </html>
