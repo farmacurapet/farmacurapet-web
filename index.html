@@ -1,47 +1,292 @@
-<style>
-  .container-mobile {
-    max-width: 400px; /* Simula a largura do celular */
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
-    background-color: #fff;
-  }
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Farmácia Solidária Pet | Doação Segura</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #2ecc71; --secondary: #27ae60; --dark: #2c3e50; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--dark); }
 
-  .search-bar {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 10px;
-    color: #999;
-  }
+        /* --- NAVEGAÇÃO MOBILE --- */
+        .nav-menu { background: var(--dark); position: fixed; z-index: 1000; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; border-top: 3px solid var(--primary); box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .nav-menu i { color: #fff; font-size: 1.5rem; cursor: pointer; opacity: 0.7; padding: 10px; }
+        .nav-menu i:active { opacity: 1; transform: scale(1.2); color: var(--primary); }
+        .main-content { margin-bottom: 90px; padding: 15px; }
 
-  .grid-marcas {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 10px;
-  }
+        /* --- ESTILOS VISUAIS --- */
+        header { background: #fff; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 900; }
+        .card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #eee; }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1.5px solid #ebebeb; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
 
-  .card {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
+        .label-foto { display: block; background: #f0f2f5; border: 2px dashed #ccc; padding: 15px; text-align: center; border-radius: 12px; margin: 10px 0; cursor: pointer; color: #666; font-weight: bold; }
 
-  .card img {
-    width: 100%;
-    display: block;
-  }
-</style>
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-whatsapp { background: #25D366; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 20px auto; width: auto; padding: 12px 25px; }
+        .btn-outline { background: none; border: 1.5px solid var(--primary); color: var(--primary); margin-top: 10px; padding: 10px; }
 
-<div class="container-mobile">
-  <div class="search-bar">Busca por código, nome ou marca</div>
-  
-  <div style="background:#ccc; height: 150px; text-align:center; padding: 20px;">
-    <h2>OFERTAS</h2>
-  </div>
+        .social-links { margin: 20px 0; }
+        .social-links a { font-size: 2rem; margin: 0 15px; display: inline-block; }
+        .insta { color: #E4405F; }
+        .face { color: #1877F2; }
+        .yt { color: #FF0000; }
 
-  <div class="grid-marcas">
-    <div class="card"><img src="logo1.jpg" alt="Marca 1"></div>
-    <div class="card"><img src="logo2.jpg" alt="Marca 2"></div>
-  </div>
+        .row { display: flex; gap: 10px; }
+        .hidden { display: none !important; }
+        .text-link { color: var(--secondary); font-weight: bold; cursor: pointer; text-align: center; display: block; margin: 10px 0; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<nav class="nav-menu">
+    <i class="fas fa-home" onclick="mostrarSecao('section-app')" title="Início"></i>
+    <i class="fas fa-plus-circle" onclick="irParaDoar()" title="Doar"></i>
+    <i class="fas fa-user-edit" id="btn-config" style="display:none;" onclick="mostrarSecao('section-perfil')" title="Perfil"></i>
+    <i class="fas fa-sign-out-alt" onclick="deslogar()" title="Sair"></i>
+</nav>
+
+<div class="main-content">
+    <header>
+        <h1 style="margin:0; font-size: 1.5rem;">FARMÁCIA SOLIDÁRIA PET 🐾</h1>
+        <div id="status-user" style="font-size: 0.8rem; margin-top: 4px; color: var(--secondary); font-weight: bold;"></div>
+    </header>
+
+    <div class="container" style="max-width: 600px; margin: auto;">
+        
+        <section id="section-auth" class="card">
+            <h2 id="auth-title" style="margin-top:0">Acesso</h2>
+            <input type="email" id="email" placeholder="E-mail">
+            <input type="password" id="password" placeholder="Senha">
+
+            <div id="campos-cadastro" class="hidden">
+                <input type="text" id="reg-nome" placeholder="Nome Completo">
+                <input type="tel" id="reg-zap" placeholder="WhatsApp (ex: 81999998888)">
+                <p style="margin: 15px 0 5px; font-weight: bold; font-size: 0.8rem;">Endereço de Retirada:</p>
+                <input type="text" id="reg-cep" placeholder="CEP" maxlength="8" onblur="buscarCEP('reg-cep','reg-rua','reg-bairro')">
+                <input type="text" id="reg-rua" placeholder="Rua (Automático)" readonly>
+                <div class="row">
+                    <input type="text" id="reg-num" placeholder="Nº">
+                    <input type="text" id="reg-comp" placeholder="Compl.">
+                </div>
+                <input type="text" id="reg-bairro" placeholder="Bairro (Automático)" readonly>
+            </div>
+
+            <button class="btn btn-primary" id="btn-auth" onclick="executarAuth()">Entrar</button>
+            <span class="text-link" id="link-esqueci" onclick="recuperarSenha()">Esqueci minha senha</span>
+            <button onclick="toggleAuth()" class="btn btn-outline">Criar uma conta / Voltar</button>
+        </section>
+
+        <section id="section-perfil" class="card hidden">
+            <h3 style="margin-top:0">Meu Perfil</h3>
+            <input type="text" id="edit-nome" placeholder="Nome Completo">
+            <input type="tel" id="edit-zap" placeholder="WhatsApp">
+            <p style="margin: 15px 0 5px; font-weight: bold; font-size: 0.8rem;">Atualizar Endereço:</p>
+            <input type="text" id="edit-cep" placeholder="CEP" maxlength="8" onblur="buscarCEP('edit-cep','edit-rua','edit-bairro')">
+            <input type="text" id="edit-rua" placeholder="Rua" readonly>
+            <div class="row">
+                <input type="text" id="edit-num" placeholder="Nº">
+                <input type="text" id="edit-comp" placeholder="Compl.">
+            </div>
+            <input type="text" id="edit-bairro" placeholder="Bairro" readonly>
+            <button class="btn btn-primary" onclick="salvarPerfil()">Salvar Alterações</button>
+            <button class="btn btn-outline" onclick="mostrarSecao('section-app')">Cancelar</button>
+        </section>
+
+        <section id="section-app" class="hidden">
+            <div id="top-form" class="card">
+                <h3 style="margin-top:0">O que você vai doar?</h3>
+                <select id="item-categoria" onchange="ajustarFormulario()">
+                    <option value="medicamento">💊 Medicamento</option>
+                    <option value="acessorio">🎾 Acessório / Outros</option>
+                </select>
+                <input type="text" id="med-nome" placeholder="Nome do item">
+                <div id="campos-remedio">
+                    <div class="row"><input type="text" id="med-dose" placeholder="Dose"><input type="month" id="med-val"></div>
+                    <select id="med-bula">
+                        <option value="">Tem a bula?</option>
+                        <option value="Com bula original">Sim, tem bula</option>
+                        <option value="Sem bula">Não tem bula</option>
+                    </select>
+                </div>
+                <div id="campos-acessorio" class="hidden">
+                    <select id="med-estado"><option value="Novo">Novo</option><option value="Usado">Usado</option></select>
+                </div>
+                <div class="row"><input type="number" id="med-qtd" placeholder="Qtd"><select id="med-tipo"><option value="Unid">Unid</option><option value="Comp">Comp</option></select></div>
+                <label for="foto-item" class="label-foto"><i class="fas fa-camera"></i> <span id="txt-foto">Anexar Foto</span></label>
+                <input type="file" id="foto-item" accept="image/*" class="hidden" onchange="document.getElementById('txt-foto').innerText = 'Foto Pronta ✅'">
+                <div style="background:#fffbe6; padding:12px; border-radius:10px; margin:15px 0; font-size:0.8rem; border:1px solid #ffe58f;">
+                    <input type="checkbox" id="termosEtica" style="width:auto;"> Declaro doação gratuita.
+                </div>
+                <button class="btn btn-primary" onclick="criarPost()">Publicar</button>
+            </div>
+            <div id="mural"></div>
+        </section>
+
+        <footer style="text-align: center; padding: 40px 0;">
+            <div class="social-links">
+                <a href="https://instagram.com/farmaciasolidariapet" target="_blank" class="insta"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com/farmaciasolidariapet" target="_blank" class="face"><i class="fab fa-facebook"></i></a>
+            </div>
+            <button class="btn btn-whatsapp" onclick="window.open('https://wa.me/5581993057487?text=Olá! Feedback sobre a Farmácia Solidária Pet.')">
+                <i class="fab fa-whatsapp"></i> Feedback / Suporte
+            </button>
+            <p style="margin-top: 20px; opacity: 0.5; font-size: 0.75rem;">© 2026 Farmácia Solidária Pet - Recife/PE</p>
+        </footer>
+    </div>
 </div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
+        authDomain: "farmacia-solidaria-pet.firebaseapp.com",
+        databaseURL: "https://farmacia-solidaria-pet-default-rtdb.firebaseio.com",
+        projectId: "farmacia-solidaria-pet",
+        storageBucket: "farmacia-solidaria-pet.firebasestorage.app",
+        messagingSenderId: "863177132865",
+        appId: "1:863177132865:web:736861131f7946dc7b2fc0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    let modoCad = false;
+    let userDados = null;
+
+    // --- CORREÇÃO DOS BOTÕES ---
+    function irParaDoar() {
+        mostrarSecao('section-app');
+        document.getElementById('top-form').scrollIntoView({behavior: 'smooth'});
+    }
+
+    function deslogar() {
+        if(confirm("Deseja sair da conta?")) {
+            auth.signOut().then(() => {
+                location.reload(); // Recarrega para limpar os estados
+            });
+        }
+    }
+
+    function mostrarSecao(id) {
+        document.getElementById('section-auth').classList.add('hidden');
+        document.getElementById('section-app').classList.add('hidden');
+        document.getElementById('section-perfil').classList.add('hidden');
+        document.getElementById(id).classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
+
+    // --- RESTANTE DAS FUNÇÕES (MANTIDAS) ---
+    async function buscarCEP(c, r, b) {
+        const cep = document.getElementById(c).value.replace(/\D/g, '');
+        if (cep.length !== 8) return;
+        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await res.json();
+        if(!data.erro) {
+            document.getElementById(r).value = data.logradouro;
+            document.getElementById(b).value = data.bairro + " - " + data.localidade;
+        }
+    }
+
+    function toggleAuth() {
+        modoCad = !modoCad;
+        document.getElementById('campos-cadastro').classList.toggle('hidden', !modoCad);
+        document.getElementById('btn-auth').innerText = modoCad ? "Cadastrar" : "Entrar";
+    }
+
+    function executarAuth() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        if(modoCad) {
+            auth.createUserWithEmailAndPassword(email, pass).then(u => {
+                db.ref('usuarios/' + u.user.uid).set({
+                    nome: document.getElementById('reg-nome').value,
+                    whatsapp: document.getElementById('reg-zap').value,
+                    bairro: document.getElementById('reg-bairro').value,
+                    cep: document.getElementById('reg-cep').value,
+                    rua: document.getElementById('reg-rua').value,
+                    numero: document.getElementById('reg-num').value
+                });
+            }).catch(e => alert(e.message));
+        } else {
+            auth.signInWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+        }
+    }
+
+    auth.onAuthStateChanged(user => {
+        if(user) {
+            db.ref('usuarios/' + user.uid).on('value', s => { 
+                userDados = s.val();
+                if(userDados) {
+                    document.getElementById('status-user').innerText = "Olá, " + userDados.nome;
+                    document.getElementById('edit-nome').value = userDados.nome;
+                    document.getElementById('edit-zap').value = userDados.whatsapp;
+                }
+            });
+            document.getElementById('btn-config').style.display = "block";
+            mostrarSecao('section-app');
+            carregarMural();
+        } else {
+            document.getElementById('btn-config').style.display = "none";
+            mostrarSecao('section-auth');
+        }
+    });
+
+    function salvarPerfil() {
+        db.ref('usuarios/' + auth.currentUser.uid).update({
+            nome: document.getElementById('edit-nome').value,
+            whatsapp: document.getElementById('edit-zap').value,
+            cep: document.getElementById('edit-cep').value,
+            rua: document.getElementById('edit-rua').value,
+            bairro: document.getElementById('edit-bairro').value
+        }).then(() => { alert("Atualizado!"); mostrarSecao('section-app'); });
+    }
+
+    function ajustarFormulario() {
+        const cat = document.getElementById('item-categoria').value;
+        document.getElementById('campos-remedio').classList.toggle('hidden', cat === 'acessorio');
+        document.getElementById('campos-acessorio').classList.toggle('hidden', cat === 'medicamento');
+    }
+
+    function criarPost() {
+        if(!document.getElementById('termosEtica').checked) return alert("Aceite os termos!");
+        db.ref('estoque_virtual').push({
+            categoria: document.getElementById('item-categoria').value,
+            nome: document.getElementById('med-nome').value,
+            qtd: document.getElementById('med-qtd').value,
+            doador_uid: auth.currentUser.uid,
+            doador_nome: userDados.nome,
+            doador_zap: userDados.whatsapp,
+            bairro: userDados.bairro || "Recife",
+            bula: document.getElementById('med-bula').value,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        }).then(() => { alert("Postado!"); limparForm(); });
+    }
+
+    function carregarMural() {
+        db.ref('estoque_virtual').orderByChild('timestamp').on('value', snap => {
+            const mural = document.getElementById('mural');
+            mural.innerHTML = "<h3>Doações</h3>";
+            snap.forEach(item => {
+                const d = item.val();
+                const isEu = d.doador_uid === auth.currentUser.uid;
+                mural.innerHTML += `<div class="card">
+                    <strong>${d.nome}</strong><br><small>${d.bairro}</small><br>
+                    <button class="btn" style="padding:10px; background:${isEu ? '#e74c3c' : '#2ecc71'}; color:white; margin-top:10px;" 
+                    onclick="${isEu ? `darBaixa('${item.key}')` : `solicitar('${d.doador_zap}','${d.nome}')`}">
+                    ${isEu ? 'Excluir' : 'Solicitar'}</button></div>`;
+            });
+        });
+    }
+
+    function solicitar(z, m) { window.open(`https://wa.me/55${z.replace(/\D/g,'')}?text=Interesse em: ${m}`); }
+    function darBaixa(id) { if(confirm("Remover?")) db.ref('estoque_virtual/' + id).remove(); }
+    function recuperarSenha() { const e = document.getElementById('email').value; if(e) auth.sendPasswordResetEmail(e).then(()=>alert("E-mail enviado!")); }
+    function limparForm() { document.getElementById('med-nome').value = ""; document.getElementById('txt-foto').innerText = "Anexar Foto"; }
+</script>
+</body>
+</html>
