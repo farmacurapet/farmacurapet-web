@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Farmacura Pet | Oficial</title>
+    <title>Farmacia Solidaria Pet | Oficial</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -76,7 +76,7 @@
             <input type="text" id="up-nome">
             <label style="font-size: 0.8rem; color: #666;">WhatsApp:</label>
             <input type="tel" id="up-zap">
-            <label style="font-size: 0.8rem; color: #666;">Bairro:</label>
+            <label style="font-size: 0.8rem; color: #666;">Ender:</label>
             <input type="text" id="up-bairro">
             <button class="btn-modern" onclick="atualizarPerfil()">Salvar Alterações</button>
         </div>
@@ -92,7 +92,7 @@
             <input type="text" id="doar-nome" placeholder="Nome do Item">
             
             <div id="campos-med">
-                <input type="text" id="doar-marca" placeholder="Laboratório/Marca">
+                <input type="text" id="doar-marca" placeholder="Tem Búla">
                 <div style="display:flex; gap:10px">
                     <input type="text" id="doar-mg" placeholder="Dose (mg)">
                     <input type="month" id="doar-val">
@@ -185,7 +185,7 @@ function abrirPerfil() {
     if(meuPerfil) {
         document.getElementById('up-nome').value = meuPerfil.nome;
         document.getElementById('up-zap').value = meuPerfil.zap;
-        document.getElementById('up-bairro').value = meuPerfil.bairro;
+        document.getElementById('up-endereço').value = meuPerfil.bairro;
         irPara('section-perfil');
     }
 }
