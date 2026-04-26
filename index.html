@@ -19,14 +19,14 @@
         input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; font-family: inherit; }
         .btn-modern { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-delete { background: var(--danger); width: 50px; flex: none !important; }
-        .btn-outline { background: none; border: 2px solid var(--brand-dark); color: var(--brand-dark); padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .nav-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e272e; padding: 12px 30px; border-radius: 50px; display: flex; gap: 25px; z-index: 1000; }
         .nav-dock i { color: white; font-size: 1.3rem; cursor: pointer; opacity: 0.5; }
         .nav-dock i.active { opacity: 1; color: var(--brand); }
         .hidden { display: none !important; }
         .item-mural { border-bottom: 1px solid #eee; padding: 15px 0; }
-        .item-mural:last-child { border: none; }
-        .badge-clinica { background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
+        .badge-tipo { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+        .badge-med { background: #e3f2fd; color: #1976d2; }
+        .badge-acc { background: #f3e5f5; color: #7b1fa2; }
         .pass-container { position: relative; }
         .pass-container i { position: absolute; right: 15px; top: 25px; cursor: pointer; color: #999; }
     </style>
@@ -47,56 +47,46 @@
         </div>
         <div id="campos-cadastro" class="hidden">
             <input type="text" id="reg-nome" placeholder="Seu nome">
-            <input type="tel" id="reg-zap" placeholder="Seu WhatsApp (com DDD)">
-            <input type="text" id="reg-bairro" placeholder="Seu Bairro (Recife)">
+            <input type="tel" id="reg-zap" placeholder="WhatsApp (Ex: 81999998888)">
+            <input type="text" id="reg-bairro" placeholder="Seu Bairro">
         </div>
         <button class="btn-modern" onclick="handleAuth()">Confirmar</button>
         <div style="text-align: center; margin-top: 15px; font-size: 0.85rem;">
             <span id="link-modo" style="color:var(--brand-dark); cursor:pointer; font-weight:600" onclick="mudarModo()">Criar nova conta</span>
-            <br><br>
-            <span style="color:#999; cursor:pointer" onclick="esqueciSenha()">Esqueci minha senha</span>
         </div>
     </section>
 
     <section id="section-app" class="hidden">
-        <input type="text" id="search-input" placeholder="🔍 Buscar medicamento..." onkeyup="buscar()" style="border-radius: 50px; background: white;">
+        <input type="text" id="search-input" placeholder="🔍 Buscar remédio ou acessório..." onkeyup="buscar()" style="border-radius: 50px; background: white;">
         <div id="mural" class="product-card" style="margin-top: 20px;"></div>
-    </section>
-
-    <section id="section-apoio" class="hidden">
-        <div class="product-card">
-            <h3 style="text-align:center; margin-top:0"><i class="fas fa-hospital"></i> Clínicas e Hospitais</h3>
-            <div class="item-mural">
-                <span class="badge-clinica">RECIFE - CORDEIRO</span>
-                <h4 style="margin:5px 0">Hospital Veterinário do Recife (HVR)</h4>
-                <button class="btn-modern" onclick="window.open('tel:8132244000')"><i class="fas fa-phone"></i> Ligar</button>
-            </div>
-            <div class="item-mural">
-                <span class="badge-clinica">RECIFE - DOIS IRMÃOS</span>
-                <h4 style="margin:5px 0">Hospital Veterinário da UFRPE</h4>
-                <button class="btn-modern" onclick="window.open('tel:8133206410')"><i class="fas fa-phone"></i> Ligar</button>
-            </div>
-        </div>
     </section>
 
     <section id="section-doar" class="hidden">
         <div class="product-card">
-            <h3 style="text-align:center">Anunciar Medicamento</h3>
-            <input type="text" id="med-nome" placeholder="Nome do Remédio">
-            <input type="text" id="med-marca" placeholder="Laboratório">
-            <div style="display:flex; gap:10px">
-                <input type="text" id="med-mg" placeholder="Dose (mg)">
-                <input type="month" id="med-val">
+            <h3 style="text-align:center">O que deseja doar?</h3>
+            <select id="doar-tipo" onchange="ajustarFormDoacao()">
+                <option value="medicamento">💊 Medicamento</option>
+                <option value="acessorio">🧶 Acessório (Coleira, Pote, Cama...)</option>
+            </select>
+
+            <input type="text" id="doar-nome" placeholder="Nome do Item">
+            
+            <div id="campos-med">
+                <input type="text" id="doar-marca" placeholder="Laboratório/Marca">
+                <div style="display:flex; gap:10px">
+                    <input type="text" id="doar-mg" placeholder="Dose (mg)">
+                    <input type="month" id="doar-val">
+                </div>
             </div>
-            <textarea id="med-obs" placeholder="Detalhes (Ex: Caixa aberta, faltam 2 comprimidos...)"></textarea>
-            <button class="btn-modern" onclick="salvarMed()">Publicar Agora</button>
+
+            <textarea id="doar-obs" placeholder="Detalhes do estado do item (Ex: Novo, Usado, faltam comprimidos...)"></textarea>
+            <button class="btn-modern" onclick="salvarDoacao()">Publicar Agora</button>
         </div>
     </section>
 </main>
 
 <nav class="nav-dock">
     <i class="fas fa-search active" onclick="irPara('section-app')" id="icon-app"></i>
-    <i class="fas fa-hospital" onclick="irPara('section-apoio')" id="icon-apoio"></i>
     <i class="fas fa-plus-circle" onclick="irPara('section-doar')" id="icon-doar"></i>
     <i class="fas fa-sign-out-alt" onclick="sair()"></i>
 </nav>
@@ -106,7 +96,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
 <script>
-// Configuração Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
     authDomain: "farmacia-solidaria-pet.firebaseapp.com",
@@ -123,20 +112,12 @@ const db = firebase.database();
 let isCadastro = false;
 let meuPerfil = null;
 
-// Navegação
 function irPara(id) {
     document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
     document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
     const iconId = 'icon-' + id.replace('section-', '');
     if(document.getElementById(iconId)) document.getElementById(iconId).classList.add('active');
-}
-
-function togglePassword() {
-    const input = document.getElementById('password');
-    const icon = document.getElementById('togglePass');
-    input.type = input.type === "password" ? "text" : "password";
-    icon.classList.toggle('fa-eye-slash');
 }
 
 function mudarModo() {
@@ -146,11 +127,9 @@ function mudarModo() {
     document.getElementById('link-modo').innerText = isCadastro ? "Já tenho conta" : "Criar nova conta";
 }
 
-// Autenticação
 function handleAuth() {
     const email = document.getElementById('email').value;
     const pass = document.getElementById('password').value;
-    
     if(isCadastro) {
         auth.createUserWithEmailAndPassword(email, pass).then(res => {
             db.ref('usuarios/' + res.user.uid).set({
@@ -160,7 +139,7 @@ function handleAuth() {
             });
         }).catch(e => Swal.fire('Erro', e.message, 'error'));
     } else {
-        auth.signInWithEmailAndPassword(email, pass).catch(e => Swal.fire('Erro', 'E-mail ou senha inválidos', 'error'));
+        auth.signInWithEmailAndPassword(email, pass).catch(e => Swal.fire('Erro', 'Verifique os dados', 'error'));
     }
 }
 
@@ -178,23 +157,30 @@ auth.onAuthStateChanged(user => {
     }
 });
 
-// Lógica de Medicamentos
-function salvarMed() {
-    const med = {
-        nome: document.getElementById('med-nome').value,
-        marca: document.getElementById('med-marca').value,
-        mg: document.getElementById('med-mg').value,
-        val: document.getElementById('med-val').value,
-        obs: document.getElementById('med-obs').value,
+function ajustarFormDoacao() {
+    const tipo = document.getElementById('doar-tipo').value;
+    document.getElementById('campos-med').className = tipo === 'acessorio' ? 'hidden' : '';
+}
+
+function salvarDoacao() {
+    const tipo = document.getElementById('doar-tipo').value;
+    const item = {
+        tipo: tipo,
+        nome: document.getElementById('doar-nome').value,
+        marca: document.getElementById('doar-marca').value,
+        mg: document.getElementById('doar-mg').value,
+        val: document.getElementById('doar-val').value,
+        obs: document.getElementById('doar-obs').value,
         zap: meuPerfil ? meuPerfil.zap : "",
         bairro: meuPerfil ? meuPerfil.bairro : "Recife",
-        owner: auth.currentUser.uid // Salva quem postou
+        owner: auth.currentUser.uid
     };
     
-    if(!med.nome || !med.val) return Swal.fire('Erro', 'Nome e Validade são obrigatórios', 'error');
+    if(!item.nome) return Swal.fire('Erro', 'O nome do item é obrigatório', 'error');
+    if(tipo === 'medicamento' && !item.val) return Swal.fire('Erro', 'Validade é obrigatória para remédios', 'error');
     
-    db.ref('estoque_virtual').push(med).then(() => {
-        Swal.fire('Sucesso', 'Anunciado com sucesso!', 'success');
+    db.ref('estoque_virtual').push(item).then(() => {
+        Swal.fire('Sucesso', 'Doação publicada!', 'success');
         document.querySelectorAll('#section-doar input, #section-doar textarea').forEach(i => i.value = "");
         irPara('section-app');
     });
@@ -206,58 +192,61 @@ function carregarMural() {
         div.innerHTML = "";
         const currentUid = auth.currentUser ? auth.currentUser.uid : null;
 
-        snap.forEach(item => {
-            const d = item.val();
-            const key = item.key;
+        snap.forEach(snapItem => {
+            const d = snapItem.val();
             const isOwner = d.owner === currentUid;
+            const badgeClass = d.tipo === 'medicamento' ? 'badge-med' : 'badge-acc';
+            const icone = d.tipo === 'medicamento' ? '💊' : '🧶';
 
             div.innerHTML += `
                 <div class="item-mural">
-                    <h4 style="margin:0">${d.nome} ${d.mg ? '('+d.mg+'mg)' : ''}</h4>
+                    <span class="badge-tipo ${badgeClass}">${d.tipo}</span>
+                    <h4 style="margin:5px 0">${icone} ${d.nome} ${d.mg ? '('+d.mg+'mg)' : ''}</h4>
                     <p style="font-size:0.8rem; color:#666; margin:5px 0">
-                        Val: ${d.val} | Bairro: ${d.bairro}<br>
-                        ${d.obs ? '<i>' + d.obs + '</i>' : ''}
+                        ${d.tipo === 'medicamento' ? '<b>Val:</b> '+d.val : '<b>Acessório</b>'} | <b>Bairro:</b> ${d.bairro}<br>
+                        <i>${d.obs || ''}</i>
                     </p>
-                    <div style="display:flex; gap:8px">
+                    <div style="display:flex; gap:8px; margin-top:10px">
                         <button class="btn-modern" style="padding:10px; flex:1" onclick="window.open('https://wa.me/55${d.zap}')">
-                            <i class="fab fa-whatsapp"></i> Tenho Interesse
+                            <i class="fab fa-whatsapp"></i> Quero este item
                         </button>
                         ${isOwner ? `
-                            <button class="btn-modern btn-delete" onclick="removerItem('${key}')">
+                            <button class="btn-modern btn-delete" onclick="removerItem('${snapItem.key}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         ` : ''}
                     </div>
                 </div>`;
         });
-        if(div.innerHTML === "") div.innerHTML = "<p style='text-align:center; color:#999'>Nenhum remédio disponível no momento.</p>";
     });
 }
 
 function removerItem(key) {
     Swal.fire({
         title: 'Remover anúncio?',
-        text: "O item será excluído permanentemente do mural.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ff4757',
-        confirmButtonText: 'Sim, remover',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: 'Sim, remover'
     }).then((result) => {
         if (result.isConfirmed) {
-            db.ref('estoque_virtual/' + key).remove().then(() => {
-                Swal.fire('Deletado!', 'O item foi removido.', 'success');
-            });
+            db.ref('estoque_virtual/' + key).remove();
         }
     });
 }
 
 function buscar() {
     const termo = document.getElementById('search-input').value.toLowerCase();
-    const itens = document.querySelectorAll('.item-mural');
-    itens.forEach(item => {
+    document.querySelectorAll('.item-mural').forEach(item => {
         item.style.display = item.innerText.toLowerCase().includes(termo) ? "block" : "none";
     });
+}
+
+function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('togglePass');
+    input.type = input.type === "password" ? "text" : "password";
+    icon.classList.toggle('fa-eye-slash');
 }
 </script>
 </body>
