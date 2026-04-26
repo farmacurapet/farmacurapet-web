@@ -1,9 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Farmacura Pet | Oficial</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root { --brand: #00d2ff; --brand-dark: #3a7bd5; --bg-glass: rgba(255, 255, 255, 0.96); --danger: #ff4757; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=2069&auto=format&fit=crop') center/cover fixed; overflow-x: hidden; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: -1; }
+        header { padding: 25px; text-align: center; color: white; }
+        .main-content { max-width: 480px; margin: 0 auto 100px auto; padding: 0 20px; }
+        .product-card { background: var(--bg-glass); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; font-family: inherit; font-size: 1rem; }
+        .btn-modern { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .btn-modern:active { transform: scale(0.98); }
+        .btn-delete { background: var(--danger); width: 50px; flex: none !important; }
+        .nav-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e272e; padding: 12px 30px; border-radius: 50px; display: flex; gap: 25px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .nav-dock i { color: white; font-size: 1.3rem; cursor: pointer; opacity: 0.4; transition: 0.3s; }
+        .nav-dock i.active { opacity: 1; color: var(--brand); transform: scale(1.2); }
+        .hidden { display: none !important; }
+        .item-mural { border-bottom: 1px solid #eee; padding: 15px 0; position: relative; }
+        .badge-tipo { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+        .badge-med { background: #e3f2fd; color: #1976d2; }
+        .badge-acc { background: #f3e5f5; color: #7b1fa2; }
+        .pass-container { position: relative; }
+        .pass-container i { position: absolute; right: 15px; top: 25px; cursor: pointer; color: #999; }
+        .text-link { color: var(--brand-dark); cursor: pointer; font-weight: 600; font-size: 0.85rem; display: block; margin-top: 12px; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="overlay"></div>
+<header>
+    <h1 style="margin:0; font-weight:800; letter-spacing: -1px;">Farma<span style="color:var(--brand)">cura</span> Pet</h1>
+</header>
+
+<main class="main-content">
+    <section id="section-auth" class="product-card">
+        <h3 id="auth-title" style="text-align:center; margin-top:0;">Entrar no Sistema</h3>
+        
+        <input type="email" id="email" placeholder="Seu e-mail">
+        <div class="pass-container">
+            <input type="password" id="password" placeholder="Sua senha">
+            <i class="fas fa-eye" id="togglePass" onclick="togglePassword()"></i>
+        </div>
+        
+        <div id="campos-cadastro" class="hidden">
+            <input type="text" id="reg-nome" placeholder="Nome completo">
+            <input type="tel" id="reg-zap" placeholder="WhatsApp (DDD + Número)">
+            <input type="text" id="reg-cep" placeholder="CEP (Apenas números)" maxlength="8" onblur="buscarCEP(this.value)">
+            <input type="text" id="reg-rua" placeholder="Rua/Logradouro" readonly style="background: #f9f9f9;">
+            <input type="text" id="reg-bairro" placeholder="Bairro" readonly style="background: #f9f9f9;">
+            <input type="text" id="reg-complemento" placeholder="Número e Complemento">
+        </div>
+
+        <button class="btn-modern" onclick="handleAuth()">Confirmar</button>
+        
+        <span id="link-modo" class="text-link" onclick="mudarModo()">Criar nova conta</span>
+        <span id="link-senha" class="text-link" style="color:#999; font-weight:400" onclick="esqueciSenha()">Esqueci minha senha</span>
+    </section>
+
+    <section id="section-app" class="hidden">
+        <input type="text" id="search-input" placeholder="🔍 Buscar remédio ou acessório..." onkeyup="buscar()" style="border-radius: 50px; background: white; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div id="mural" class="product-card" style="margin-top: 20px; min-height: 200px;"></div>
+    </section>
+
+    <section id="section-perfil" class="hidden">
+        <div class="product-card">
+            <h3 style="text-align:center; margin-top:0;">Meu Cadastro</h3>
+            <label style="font-size: 0.8rem; color: #666;">Nome:</label>
+            <input type="text" id="up-nome">
+            <label style="font-size: 0.8rem; color: #666;">WhatsApp:</label>
+            <input type="tel" id="up-zap">
+            <label style="font-size: 0.8rem; color: #666;">Bairro:</label>
+            <input type="text" id="up-bairro">
+            <button class="btn-modern" onclick="atualizarPerfil()">Salvar Alterações</button>
+        </div>
+    </section>
+
+    <section id="section-doar" class="hidden">
+        <div class="product-card">
+            <h3 style="text-align:center; margin-top:0;">Nova Doação</h3>
+            <select id="doar-tipo" onchange="ajustarFormDoacao()">
+                <option value="medicamento">💊 Medicamento</option>
+                <option value="acessorio">🧶 Acessório (Coleira, Pote, etc)</option>
+            </select>
+            <input type="text" id="doar-nome" placeholder="Nome do Item">
+            
+            <div id="campos-med">
+                <input type="text" id="doar-marca" placeholder="Laboratório/Marca">
+                <div style="display:flex; gap:10px">
+                    <input type="text" id="doar-mg" placeholder="Dose (mg)">
+                    <input type="month" id="doar-val">
+                </div>
+            </div>
+            
+            <textarea id="doar-obs" placeholder="Detalhes (Ex: Estado de conservação, quantidade...)"></textarea>
+            <button class="btn-modern" onclick="salvarDoacao()">Publicar Agora</button>
+        </div>
+    </section>
+</main>
+
+<nav class="nav-dock">
+    <i class="fas fa-search active" onclick="irPara('section-app')" id="icon-app"></i>
+    <i class="fas fa-plus-circle" onclick="irPara('section-doar')" id="icon-doar"></i>
+    <i class="fas fa-user-edit" onclick="abrirPerfil()" id="icon-perfil"></i>
+    <i class="fas fa-sign-out-alt" onclick="sair()"></i>
+</nav>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<script>
+// CONFIGURAÇÃO DO SEU PROJETO
+const firebaseConfig = {
+    apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
+    authDomain: "farmacia-solidaria-pet.firebaseapp.com",
+    databaseURL: "https://farmacia-solidaria-pet-default-rtdb.firebaseio.com",
+    projectId: "farmacia-solidaria-pet",
+    storageBucket: "farmacia-solidaria-pet.firebasestorage.app",
+    messagingSenderId: "863177132865",
+    appId: "1:863177132865:web:736861131f7946dc7b2fc0"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+let isCadastro = false;
+let meuPerfil = null;
+
+// BUSCA CEP AUTOMÁTICA
+async function buscarCEP(cep) {
+    const value = cep.replace(/\D/g, '');
+    if (value.length !== 8) return;
+    
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${value}/json/`);
+        const data = await response.json();
+        if(!data.erro) {
+            document.getElementById('reg-rua').value = data.logradouro;
+            document.getElementById('reg-bairro').value = data.bairro;
+            document.getElementById('reg-complemento').focus();
+        } else {
+            Swal.fire('CEP não encontrado', '', 'error');
+        }
+    } catch(e) { console.error("Erro CEP"); }
+}
+
+// RECUPERAR SENHA
+function esqueciSenha() {
+    const email = document.getElementById('email').value;
+    if(!email) return Swal.fire('Aviso', 'Digite seu e-mail no campo acima primeiro.', 'info');
+    auth.sendPasswordResetEmail(email)
+        .then(() => Swal.fire('E-mail enviado!', 'Verifique sua caixa de entrada.', 'success'))
+        .catch(e => Swal.fire('Erro', 'Usuário não encontrado.', 'error'));
+}
+
+// LOGIN E CADASTRO
+function handleAuth() {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+    
+    if(isCadastro) {
+        auth.createUserWithEmailAndPassword(email, pass).then(res => {
+            db.ref('usuarios/' + res.user.uid).set({
+                nome: document.getElementById('reg-nome').value,
+                zap: document.getElementById('reg-zap').value,
+                bairro: document.getElementById('reg-bairro').value,
+                endereco: document.getElementById('reg-rua').value + ", " + document.getElementById('reg-complemento').value
+            });
+        }).catch(e => Swal.fire('Erro no Cadastro', e.message, 'error'));
+    } else {
+        auth.signInWithEmailAndPassword(email, pass).catch(e => Swal.fire('Erro', 'E-mail ou senha incorretos.', 'error'));
+    }
+}
+
+// ATUALIZAR DADOS DO USUÁRIO
+function abrirPerfil() {
+    if(meuPerfil) {
+        document.getElementById('up-nome').value = meuPerfil.nome;
+        document.getElementById('up-zap').value = meuPerfil.zap;
+        document.getElementById('up-bairro').value = meuPerfil.bairro;
+        irPara('section-perfil');
+    }
+}
+
+function atualizarPerfil() {
+    const user = auth.currentUser;
+    if(!user) return;
+    db.ref('usuarios/' + user.uid).update({
+        nome: document.getElementById('up-nome').value,
+        zap: document.getElementById('up-zap').value,
+        bairro: document.getElementById('up-bairro').value
+    }).then(() => {
+        Swal.fire('Sucesso', 'Cadastro atualizado!', 'success');
+        irPara('section-app');
+    });
+}
+
+// LÓGICA DE DOAÇÃO
+function ajustarFormDoacao() {
+    const tipo = document.getElementById('doar-tipo').value;
+    document.getElementById('campos-med').classList.toggle('hidden', tipo === 'acessorio');
+}
+
+function salvarDoacao() {
+    const tipo = document.getElementById('doar-tipo').value;
+    const novaDoacao = {
+        tipo: tipo,
+        nome: document.getElementById('doar-nome').value,
+        marca: document.getElementById('doar-marca').value || "",
+        mg: document.getElementById('doar-mg').value || "",
+        val: document.getElementById('doar-val').value || "",
+        obs: document.getElementById('doar-obs').value,
+        zap: meuPerfil ? meuPerfil.zap : "",
+        bairro: meuPerfil ? meuPerfil.bairro : "",
+        owner: auth.currentUser.uid,
+        timestamp: Date.now()
+    };
+    
+    if(!novaDoacao.nome) return Swal.fire('Erro', 'O nome do item é obrigatório.', 'error');
+    
+    db.ref('estoque_virtual').push(novaDoacao).then(() => {
+        Swal.fire('Oba!', 'Sua doação foi publicada.', 'success');
+        document.querySelectorAll('#section-doar input, #section-doar textarea').forEach(i => i.value = "");
+        irPara('section-app');
+    });
+}
+
+// CARREGAR MURAL
+function carregarMural() {
+    db.ref('estoque_virtual').orderByChild('timestamp').on('value', snap => {
+        const div = document.getElementById('mural');
+        div.innerHTML = "";
+        const currentUid = auth.currentUser ? auth.currentUser.uid : null;
+
+        snap.forEach(item => {
+            const d = item.val();
+            const key = item.key;
+            const isOwner = d.owner === currentUid;
+            const icone = d.tipo === 'medicamento' ? '💊' : '🧶';
+
+            div.innerHTML = `
+                <div class="item-mural">
+                    <span class="badge-tipo ${d.tipo === 'medicamento' ? 'badge-med' : 'badge-acc'}">${d.tipo}</span>
+                    <h4 style="margin:8px 0">${icone} ${d.nome} ${d.mg ? '('+d.mg+'mg)' : ''}</h4>
+                    <p style="font-size:0.85rem; color:#555; margin-bottom: 12px;">
+                        ${d.val ? '<b>Validade:</b> '+d.val+'<br>' : ''}
+                        <b>Bairro:</b> ${d.bairro}<br>
+                        <i style="color:#888">${d.obs || ''}</i>
+                    </p>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-modern" style="padding:10px; flex:1; font-size:0.8rem;" onclick="window.open('https://wa.me/55${d.zap}')">
+                            <i class="fab fa-whatsapp"></i> Tenho Interesse
+                        </button>
+                        ${isOwner ? `
+                            <button class="btn-modern btn-delete" onclick="removerItem('${key}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>` + div.innerHTML;
+        });
+        if(div.innerHTML === "") div.innerHTML = "<p style='text-align:center; color:#999;'>Nenhuma doação encontrada.</p>";
+    });
+}
+
+function removerItem(key) {
     Swal.fire({
         title: 'Remover anúncio?',
+        text: "Essa ação não pode ser desfeita.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ff4757',
-        confirmButtonText: 'Sim, remover'
+        confirmButtonText: 'Sim, remover',
+        cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
             db.ref('estoque_virtual/' + key).remove();
@@ -11,19 +287,48 @@
     });
 }
 
-function buscar() {
-    const termo = document.getElementById('search-input').value.toLowerCase();
-    document.querySelectorAll('.item-mural').forEach(item => {
-        item.style.display = item.innerText.toLowerCase().includes(termo) ? "block" : "none";
-    });
+// UTILITÁRIOS
+function irPara(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
+    const iconId = 'icon-' + id.replace('section-', '');
+    if(document.getElementById(iconId)) document.getElementById(iconId).classList.add('active');
+}
+
+function mudarModo() {
+    isCadastro = !isCadastro;
+    document.getElementById('campos-cadastro').classList.toggle('hidden');
+    document.getElementById('auth-title').innerText = isCadastro ? "Criar Conta" : "Entrar no Sistema";
+    document.getElementById('link-modo').innerText = isCadastro ? "Já tenho conta" : "Criar nova conta";
+    document.getElementById('link-senha').classList.toggle('hidden', isCadastro);
 }
 
 function togglePassword() {
     const input = document.getElementById('password');
-    const icon = document.getElementById('togglePass');
     input.type = input.type === "password" ? "text" : "password";
-    icon.classList.toggle('fa-eye-slash');
 }
+
+function sair() { auth.signOut(); }
+
+function buscar() {
+    const termo = document.getElementById('search-input').value.toLowerCase();
+    document.querySelectorAll('.item-mural').forEach(i => {
+        i.style.display = i.innerText.toLowerCase().includes(termo) ? "block" : "none";
+    });
+}
+
+auth.onAuthStateChanged(user => {
+    if(user) {
+        db.ref('usuarios/' + user.uid).on('value', snap => {
+            meuPerfil = snap.val();
+            irPara('section-app');
+            carregarMural();
+        });
+    } else {
+        irPara('section-auth');
+    }
+});
 </script>
 </body>
-</html>
+                </html>
