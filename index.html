@@ -10,14 +10,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        :root { --brand: #00d2ff; --brand-dark: #3a7bd5; --bg-glass: rgba(255, 255, 255, 0.96); }
+        :root { --brand: #00d2ff; --brand-dark: #3a7bd5; --bg-glass: rgba(255, 255, 255, 0.96); --danger: #ff4757; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=2069&auto=format&fit=crop') center/cover fixed; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: -1; }
         header { padding: 30px; text-align: center; color: white; }
         .main-content { max-width: 480px; margin: 0 auto 100px auto; padding: 0 20px; }
         .product-card { background: var(--bg-glass); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; }
-        .btn-modern { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; }
+        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; font-family: inherit; }
+        .btn-modern { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-delete { background: var(--danger); width: 50px; flex: none !important; }
         .btn-outline { background: none; border: 2px solid var(--brand-dark); color: var(--brand-dark); padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .nav-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e272e; padding: 12px 30px; border-radius: 50px; display: flex; gap: 25px; z-index: 1000; }
         .nav-dock i { color: white; font-size: 1.3rem; cursor: pointer; opacity: 0.5; }
@@ -46,7 +47,7 @@
         </div>
         <div id="campos-cadastro" class="hidden">
             <input type="text" id="reg-nome" placeholder="Seu nome">
-            <input type="tel" id="reg-zap" placeholder="Seu WhatsApp">
+            <input type="tel" id="reg-zap" placeholder="Seu WhatsApp (com DDD)">
             <input type="text" id="reg-bairro" placeholder="Seu Bairro (Recife)">
         </div>
         <button class="btn-modern" onclick="handleAuth()">Confirmar</button>
@@ -65,31 +66,15 @@
     <section id="section-apoio" class="hidden">
         <div class="product-card">
             <h3 style="text-align:center; margin-top:0"><i class="fas fa-hospital"></i> Clínicas e Hospitais</h3>
-            
             <div class="item-mural">
                 <span class="badge-clinica">RECIFE - CORDEIRO</span>
                 <h4 style="margin:5px 0">Hospital Veterinário do Recife (HVR)</h4>
-                <p style="font-size:0.75rem; color:#666">Av. Professor Estevão F. da Costa, S/N - Cordeiro, Recife - PE</p>
-                <button class="btn-modern" onclick="window.open('tel:8132244000')"><i class="fas fa-phone"></i> Ligar para Agendar</button>
-                <button class="btn-outline" onclick="abrirRota('-8.0505', '-34.9221')"><i class="fas fa-map-marker-alt"></i> Ver Rota no Mapa</button>
+                <button class="btn-modern" onclick="window.open('tel:8132244000')"><i class="fas fa-phone"></i> Ligar</button>
             </div>
-
             <div class="item-mural">
                 <span class="badge-clinica">RECIFE - DOIS IRMÃOS</span>
                 <h4 style="margin:5px 0">Hospital Veterinário da UFRPE</h4>
-                <p style="font-size:0.75rem; color:#666">Rua Dom Manoel de Medeiros, S/N - Dois Irmãos, Recife - PE</p>
-                <button class="btn-modern" onclick="window.open('tel:8133206410')"><i class="fas fa-phone"></i> Ligar para Informações</button>
-                <button class="btn-outline" onclick="abrirRota('-8.0163', '-34.9504')"><i class="fas fa-map-marker-alt"></i> Ver Rota no Mapa</button>
-            </div>
-
-            <h3 style="text-align:center; margin-top:30px"><i class="fas fa-paw"></i> ONGs e Protetores</h3>
-            
-            <div class="item-mural">
-                <h4 style="margin:5px 0">Adote um Focinho Recife</h4>
-                <p style="font-size:0.75rem; color:#666">ONG focada em resgates e feiras de adoção.</p>
-                <button class="btn-outline" style="color:#e91e63; border-color:#e91e63" onclick="window.open('https://www.instagram.com/adoteumfocinhorecife/')">
-                    <i class="fab fa-instagram"></i> Contato via Instagram
-                </button>
+                <button class="btn-modern" onclick="window.open('tel:8133206410')"><i class="fas fa-phone"></i> Ligar</button>
             </div>
         </div>
     </section>
@@ -121,6 +106,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
 <script>
+// Configuração Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
     authDomain: "farmacia-solidaria-pet.firebaseapp.com",
@@ -137,17 +123,13 @@ const db = firebase.database();
 let isCadastro = false;
 let meuPerfil = null;
 
+// Navegação
 function irPara(id) {
     document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
     document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
-    if(id === 'section-app') document.getElementById('icon-app').classList.add('active');
-    if(id === 'section-apoio') document.getElementById('icon-apoio').classList.add('active');
-    if(id === 'section-doar') document.getElementById('icon-doar').classList.add('active');
-}
-
-function abrirRota(lat, lng) {
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
+    const iconId = 'icon-' + id.replace('section-', '');
+    if(document.getElementById(iconId)) document.getElementById(iconId).classList.add('active');
 }
 
 function togglePassword() {
@@ -160,12 +142,15 @@ function togglePassword() {
 function mudarModo() {
     isCadastro = !isCadastro;
     document.getElementById('campos-cadastro').classList.toggle('hidden');
-    document.getElementById('auth-title').innerText = isCadastro ? "Criar Conta" : "Entrar";
+    document.getElementById('auth-title').innerText = isCadastro ? "Criar Conta" : "Entrar no Sistema";
+    document.getElementById('link-modo').innerText = isCadastro ? "Já tenho conta" : "Criar nova conta";
 }
 
+// Autenticação
 function handleAuth() {
     const email = document.getElementById('email').value;
     const pass = document.getElementById('password').value;
+    
     if(isCadastro) {
         auth.createUserWithEmailAndPassword(email, pass).then(res => {
             db.ref('usuarios/' + res.user.uid).set({
@@ -175,14 +160,8 @@ function handleAuth() {
             });
         }).catch(e => Swal.fire('Erro', e.message, 'error'));
     } else {
-        auth.signInWithEmailAndPassword(email, pass).catch(e => Swal.fire('Erro', 'Verifique os dados', 'error'));
+        auth.signInWithEmailAndPassword(email, pass).catch(e => Swal.fire('Erro', 'E-mail ou senha inválidos', 'error'));
     }
-}
-
-function esqueciSenha() {
-    const email = document.getElementById('email').value;
-    if(!email) return Swal.fire('Aviso', 'Preencha o e-mail', 'info');
-    auth.sendPasswordResetEmail(email).then(() => Swal.fire('Sucesso', 'E-mail enviado', 'success'));
 }
 
 function sair() { auth.signOut(); }
@@ -199,16 +178,24 @@ auth.onAuthStateChanged(user => {
     }
 });
 
+// Lógica de Medicamentos
 function salvarMed() {
     const med = {
         nome: document.getElementById('med-nome').value,
+        marca: document.getElementById('med-marca').value,
+        mg: document.getElementById('med-mg').value,
         val: document.getElementById('med-val').value,
+        obs: document.getElementById('med-obs').value,
         zap: meuPerfil ? meuPerfil.zap : "",
-        bairro: meuPerfil ? meuPerfil.bairro : "Recife"
+        bairro: meuPerfil ? meuPerfil.bairro : "Recife",
+        owner: auth.currentUser.uid // Salva quem postou
     };
+    
     if(!med.nome || !med.val) return Swal.fire('Erro', 'Nome e Validade são obrigatórios', 'error');
+    
     db.ref('estoque_virtual').push(med).then(() => {
-        Swal.fire('Sucesso', 'Anunciado!', 'success');
+        Swal.fire('Sucesso', 'Anunciado com sucesso!', 'success');
+        document.querySelectorAll('#section-doar input, #section-doar textarea').forEach(i => i.value = "");
         irPara('section-app');
     });
 }
@@ -217,14 +204,51 @@ function carregarMural() {
     db.ref('estoque_virtual').on('value', snap => {
         const div = document.getElementById('mural');
         div.innerHTML = "";
+        const currentUid = auth.currentUser ? auth.currentUser.uid : null;
+
         snap.forEach(item => {
             const d = item.val();
-            div.innerHTML += `<div class="item-mural">
-                <h4>${d.nome}</h4>
-                <p>Val: ${d.val} | Bairro: ${d.bairro}</p>
-                <button class="btn-modern" style="padding:10px" onclick="window.open('https://wa.me/55${d.zap}')">Quero o Remédio</button>
-            </div>`;
+            const key = item.key;
+            const isOwner = d.owner === currentUid;
+
+            div.innerHTML += `
+                <div class="item-mural">
+                    <h4 style="margin:0">${d.nome} ${d.mg ? '('+d.mg+'mg)' : ''}</h4>
+                    <p style="font-size:0.8rem; color:#666; margin:5px 0">
+                        Val: ${d.val} | Bairro: ${d.bairro}<br>
+                        ${d.obs ? '<i>' + d.obs + '</i>' : ''}
+                    </p>
+                    <div style="display:flex; gap:8px">
+                        <button class="btn-modern" style="padding:10px; flex:1" onclick="window.open('https://wa.me/55${d.zap}')">
+                            <i class="fab fa-whatsapp"></i> Tenho Interesse
+                        </button>
+                        ${isOwner ? `
+                            <button class="btn-modern btn-delete" onclick="removerItem('${key}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>`;
         });
+        if(div.innerHTML === "") div.innerHTML = "<p style='text-align:center; color:#999'>Nenhum remédio disponível no momento.</p>";
+    });
+}
+
+function removerItem(key) {
+    Swal.fire({
+        title: 'Remover anúncio?',
+        text: "O item será excluído permanentemente do mural.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ff4757',
+        confirmButtonText: 'Sim, remover',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            db.ref('estoque_virtual/' + key).remove().then(() => {
+                Swal.fire('Deletado!', 'O item foi removido.', 'success');
+            });
+        }
     });
 }
 
