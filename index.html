@@ -3,121 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Farmacia Solidaria Pet | Oficial</title>
+    <title>FarmaCura Pet | Oficial</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        :root { --brand: #00d2ff; --brand-dark: #3a7bd5; --bg-glass: rgba(255, 255, 255, 0.96); --danger: #ff4757; --success: #2ed573; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=2069&auto=format&fit=crop') center/cover fixed; overflow-x: hidden; }
+        :root { 
+            --brand: #00d2ff; 
+            --brand-dark: #3a7bd5; 
+            --bg-glass: rgba(255, 255, 255, 0.98); 
+            --text-main: #2f3542;
+            --perdido: #ff4757;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; 
+            background: url('https://wallpapercave.com/wp/wp2447015.jpg') center/cover fixed; 
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: -1; }
-        header { padding: 25px; text-align: center; color: white; }
-        .main-content { max-width: 480px; margin: 0 auto 100px auto; padding: 0 20px; }
-        .product-card { background: var(--bg-glass); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; font-family: inherit; font-size: 1rem; }
-        .btn-modern { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; text-decoration: none; }
-        .btn-modern:active { transform: scale(0.98); }
-        .btn-outline { background: transparent; border: 2px solid var(--brand-dark); color: var(--brand-dark); margin-top: 5px; }
-        .nav-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e272e; padding: 12px 25px; border-radius: 50px; display: flex; gap: 20px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        .nav-dock i { color: white; font-size: 1.3rem; cursor: pointer; opacity: 0.4; transition: 0.3s; }
-        .nav-dock i.active { opacity: 1; color: var(--brand); transform: scale(1.2); }
+        
+        header { padding: 30px 20px; text-align: center; color: white; }
+        
+        .main-content { max-width: 450px; margin: 0 auto 160px auto; padding: 0 15px; box-sizing: border-box; }
+
+        .product-card { 
+            background: var(--bg-glass); 
+            border-radius: 28px; padding: 25px; margin-bottom: 20px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); width: 100%; box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input, select, textarea { 
+            width: 100%; padding: 15px; margin: 8px 0; border: 2px solid #edf2f7; 
+            border-radius: 14px; box-sizing: border-box; font-family: inherit; background: #f8fafc;
+        }
+        
+        input:disabled { background: #e2e8f0; cursor: not-allowed; opacity: 0.8; }
+
+        .btn-modern { 
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark)); 
+            color: white; border: none; padding: 16px; border-radius: 14px; 
+            font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; 
+            margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        .nav-dock { 
+            position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); 
+            background: #1e272e; padding: 12px 28px; border-radius: 50px; 
+            display: flex; gap: 22px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .nav-dock i { color: white; font-size: 1.4rem; cursor: pointer; opacity: 0.3; transition: 0.3s; }
+        .nav-dock i.active { opacity: 1; color: var(--brand); }
+
         .hidden { display: none !important; }
-        .info-box { background: #e3f2fd; padding: 15px; border-radius: 12px; font-size: 0.9rem; color: #0d47a1; margin-bottom: 15px; border-left: 5px solid var(--brand); }
+        .password-container { position: relative; }
+        .password-container i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #a4b0be; }
+        .trash-btn { color: #ff4757; cursor: pointer; }
+        .text-link { display:block; text-align:center; margin-top:15px; cursor:pointer; font-weight: 600; color: var(--brand-dark); }
+        .aviso-rolante {
+    background: #fff; /* Fundo branco para destacar */
+    color: var(--perdido); /* Cor vermelha para chamar atenção */
+    padding: 8px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--brand); /* Linha azul embaixo */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 99;
+}
+
+.aviso-rolante marquee {
+    display: block;
+}
     </style>
 </head>
 <body>
+
 <div class="overlay"></div>
+
 <header>
-    <h1 style="margin:0; font-weight:800; letter-spacing: -1px;">Farma<span style="color:var(--brand)">cura</span> Pet</h1>
+    <h1 style="margin:0; font-weight:800;">Farma<span style="color:var(--brand)">cura</span> Pet</h1>
 </header>
 
 <main class="main-content">
-    <!-- SEÇÃO LOGIN -->
+    
+    <!-- SEÇÃO AUTH (LOGIN/CADASTRO) -->
     <section id="section-auth" class="product-card">
-        <h3 id="auth-title" style="text-align:center; margin-top:0;">Entrar no Sistema</h3>
-        <input type="email" id="email" placeholder="Seu e-mail">
-        <input type="password" id="password" placeholder="Sua senha">
+        <h3 id="auth-title" style="text-align:center; margin-top:0;">Entrar</h3>
+        <input type="email" id="email" placeholder="E-mail">
+        <div class="password-container">
+            <input type="password" id="password" placeholder="Senha">
+            <i class="fas fa-eye" id="togglePassword" onclick="toggleSenha()"></i>
+        </div>
+        
         <div id="campos-cadastro" class="hidden">
-            <input type="text" id="reg-nome" placeholder="Nome completo">
-            <input type="tel" id="reg-zap" placeholder="WhatsApp (DDD + Número)">
-            <input type="text" id="reg-bairro" placeholder="Bairro em Recife/Região">
+            <input type="text" id="reg-nome" placeholder="Nome Completo">
+            <input type="tel" id="reg-zap" placeholder="WhatsApp">
+            <input type="number" id="reg-cep" placeholder="CEP" onblur="buscaCEP(this.value, 'reg')">
+            <input type="text" id="reg-rua" placeholder="Rua" disabled>
+            <input type="text" id="reg-bairro" placeholder="Bairro" disabled>
+            <input type="text" id="reg-numero" placeholder="Número / Complemento">
         </div>
+
         <button class="btn-modern" onclick="handleAuth()">Confirmar</button>
-        <span id="link-modo" class="text-link" style="display:block; text-align:center; margin-top:15px; cursor:pointer; color:var(--brand-dark)" onclick="mudarModo()">Criar nova conta</span>
+        <span id="link-modo" class="text-link" onclick="mudarModo()">Criar nova conta</span>
+        <span class="text-link" style="color:#777; font-weight:400; font-size: 0.9rem;" onclick="esqueciSenha()">Esqueci minha senha</span>
     </section>
 
-    <!-- SEÇÃO MURAL / PESQUISA -->
+    <!-- MURAL PRINCIPAL -->
     <section id="section-app" class="hidden">
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i> <b>Dica Google:</b> Nunca medique seu pet sem orientação técnica. O uso indevido de remédios humanos em animais pode ser fatal.
-        </div>
-        <input type="text" id="search-input" placeholder="🔍 Buscar remédio ou acessório..." onkeyup="buscar()" style="border-radius: 50px; background: white; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <div id="mural" class="product-card" style="margin-top: 20px;"></div>
+        <input type="text" id="search-input" placeholder="🔍 Buscar remédio ou bairro..." onkeyup="buscar()">
+        <div id="mural" style="margin-top: 10px;"></div>
     </section>
 
-    <!-- SEÇÃO PERFIL -->
-    <section id="section-perfil" class="hidden">
-        <div class="product-card">
-            <h3 style="text-align:center; margin-top:0;">Meu Perfil</h3>
-            <input type="text" id="up-nome" placeholder="Nome">
-            <input type="tel" id="up-zap" placeholder="WhatsApp">
-            <input type="text" id="up-bairro" placeholder="Bairro">
-            <button class="btn-modern" onclick="atualizarPerfil()">Salvar Alterações</button>
+    <!-- PETS PERDIDOS -->
+    <section id="section-perdidos" class="hidden">
+        <div class="product-card" style="border: 2px solid var(--perdido); background: #fff5f5;">
+            <h3 style="color:var(--perdido); text-align:center;">Pets Perdidos</h3>
+            <input type="text" id="perdido-nome" placeholder="Nome do Pet">
+            <input type="text" id="perdido-local" placeholder="Onde foi visto?">
+            <textarea id="perdido-obs" placeholder="Características..."></textarea>
+            <button class="btn-modern" style="background:var(--perdido)" onclick="publicarPerdido()">Alertar Comunidade</button>
         </div>
+        <div id="mural-perdidos"></div>
     </section>
 
-    <!-- SEÇÃO DOAÇÃO -->
+    <!-- NOVA DOAÇÃO -->
     <section id="section-doar" class="hidden">
         <div class="product-card">
-            <h3 style="text-align:center; margin-top:0;">Nova Doação</h3>
+            <h3>Nova Doação</h3>
             <select id="doar-tipo">
                 <option value="medicamento">💊 Medicamento</option>
                 <option value="acessorio">🧶 Acessório</option>
             </select>
             <input type="text" id="doar-nome" placeholder="Nome do Item">
-            <textarea id="doar-obs" placeholder="Detalhes (Validade, estado, etc)"></textarea>
+            <textarea id="doar-obs" placeholder="Validade e detalhes"></textarea>
             <button class="btn-modern" onclick="salvarDoacao()">Publicar Agora</button>
         </div>
     </section>
 
-    <!-- SEÇÃO CLÍNICAS (NOVA) -->
-    <section id="section-clinicas" class="hidden">
+    <!-- PERFIL -->
+    <section id="section-perfil" class="hidden">
         <div class="product-card">
-            <h3 style="text-align:center; margin-top:0;">Assistência em Recife</h3>
-            
-            <div style="margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
-                <h4 style="color:var(--brand-dark); margin-bottom:5px;">Hospital Veterinário da UFRPE</h4>
-                <p style="font-size: 0.9rem; color: #666;">Atendimento público e especializado da Universidade Federal Rural.</p>
-                <a href="tel:8133206410" class="btn-modern"><i class="fas fa-phone"></i> (81) 3320-6410</a>
-                <a href="https://maps.google.com/?q=UFRPE+Hospital+Veterinario" target="_blank" class="btn-modern btn-outline"><i class="fas fa-map-marker-alt"></i> Ver Endereço</a>
-            </div>
-
-            <div>
-                <h4 style="color:var(--brand-dark); margin-bottom:5px;">Hospital Veterinário do Recife (HVR)</h4>
-                <p style="font-size: 0.9rem; color: #666;">Unidade da Prefeitura localizada no bairro do Cordeiro.</p>
-                <a href="tel:8132244001" class="btn-modern"><i class="fas fa-phone"></i> (81) 3446-9167</a>
-                <a href="https://maps.google.com/?q=Hospital+Veterinario+do+Recife" target="_blank" class="btn-modern btn-outline"><i class="fas fa-map-marker-alt"></i> Ver Endereço</a>
-            </div>
+            <h3>Meu Perfil</h3>
+            <input type="text" id="up-nome" placeholder="Nome">
+            <input type="tel" id="up-zap" placeholder="WhatsApp">
+            <input type="number" id="up-cep" placeholder="CEP" onblur="buscaCEP(this.value, 'up')">
+            <input type="text" id="up-rua" placeholder="Rua" disabled>
+            <input type="text" id="up-bairro" placeholder="Bairro" disabled>
+            <input type="text" id="up-numero" placeholder="Número">
+            <button class="btn-modern" onclick="atualizarPerfil()">Salvar Alterações</button>
         </div>
     </section>
+
 </main>
 
-<nav class="nav-dock">
+<nav class="nav-dock hidden" id="main-nav">
     <i class="fas fa-search active" onclick="irPara('section-app')" id="icon-app"></i>
+    <i class="fas fa-bullhorn" onclick="irPara('section-perdidos')" id="icon-perdidos"></i>
     <i class="fas fa-plus-circle" onclick="irPara('section-doar')" id="icon-doar"></i>
-    <i class="fas fa-hospital" onclick="irPara('section-clinicas')" id="icon-clinicas"></i>
     <i class="fas fa-user-circle" onclick="abrirPerfil()" id="icon-perfil"></i>
-    <i class="fas fa-sign-out-alt" onclick="sair()"></i>
+    <i class="fas fa-sign-out-alt" onclick="auth.signOut()"></i>
 </nav>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
+<!-- AVISO ROLANTE -->
+<div class="aviso-rolante">
+    <marquee behavior="scroll" direction="left">
+        ⚠️ <strong>AVISO IMPORTANTE:</strong> Doe apenas medicamentos dentro da validade. A saúde dos pets agradece! | 🐾 <strong>DICA:</strong> Mantenha seu cadastro atualizado para facilitar o contato.
+    </marquee>
+</div>
 <script>
-// CONFIGURAÇÃO DO FIREBASE (MANTIDA DO SEU ORIGINAL)
+// CONFIGURAÇÃO FIREBASE
 const firebaseConfig = {
     apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
     authDomain: "farmacia-solidaria-pet.firebaseapp.com",
@@ -131,75 +195,115 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
-let isCadastro = false;
 let meuPerfil = null;
+let isCadastro = false;
 
-// NAVEGAÇÃO CORRIGIDA
+// NAVEGAÇÃO
 function irPara(id) {
     document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
-    
     document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
     const iconId = 'icon-' + id.replace('section-', '');
     if(document.getElementById(iconId)) document.getElementById(iconId).classList.add('active');
 }
 
-function abrirPerfil() {
-    if(meuPerfil) {
-        document.getElementById('up-nome').value = meuPerfil.nome || "";
-        document.getElementById('up-zap').value = meuPerfil.zap || "";
-        document.getElementById('up-bairro').value = meuPerfil.bairro || "";
-    }
-    irPara('section-perfil');
+// BUSCA CEP (PREENCHE RUA E BAIRRO)
+async function buscaCEP(cep, prefix) {
+    if(cep.length !== 8) return;
+    try {
+        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await res.json();
+        if(!data.erro) {
+            document.getElementById(`${prefix}-rua`).value = data.logradouro;
+            document.getElementById(`${prefix}-bairro`).value = data.bairro;
+        } else {
+            Swal.fire('CEP não encontrado', '', 'warning');
+        }
+    } catch (e) { console.error("Erro ao buscar CEP"); }
 }
 
-// FUNÇÃO DE LOGIN / REGISTRO
+// AUTH E SENHA
+function toggleSenha() {
+    const p = document.getElementById('password');
+    const i = document.getElementById('togglePassword');
+    p.type = p.type === 'password' ? 'text' : 'password';
+    i.classList.toggle('fa-eye-slash');
+}
+
+function esqueciSenha() {
+    const email = document.getElementById('email').value;
+    if (!email) return Swal.fire('Atenção', 'Digite seu e-mail para recuperar a senha.', 'info');
+    auth.sendPasswordResetEmail(email).then(() => {
+        Swal.fire('Enviado!', 'Link enviado para seu e-mail.', 'success');
+    }).catch(e => Swal.fire('Erro', 'E-mail não cadastrado.', 'error'));
+}
+
 function handleAuth() {
     const email = document.getElementById('email').value;
     const pass = document.getElementById('password').value;
-    
     if(isCadastro) {
         auth.createUserWithEmailAndPassword(email, pass).then(res => {
             db.ref('usuarios/' + res.user.uid).set({
                 nome: document.getElementById('reg-nome').value,
                 zap: document.getElementById('reg-zap').value,
-                bairro: document.getElementById('reg-bairro').value
+                cep: document.getElementById('reg-cep').value,
+                rua: document.getElementById('reg-rua').value,
+                bairro: document.getElementById('reg-bairro').value,
+                numero: document.getElementById('reg-numero').value
             });
         }).catch(e => Swal.fire('Erro', e.message, 'error'));
     } else {
-        auth.signInWithEmailAndPassword(email, pass).catch(e => Swal.fire('Erro', 'Dados incorretos', 'error'));
+        auth.signInWithEmailAndPassword(email, pass).catch(() => Swal.fire('Erro', 'Login inválido.', 'error'));
+    }
+}
+
+// PERFIL
+function abrirPerfil() {
+    if(meuPerfil) {
+        document.getElementById('up-nome').value = meuPerfil.nome || "";
+        document.getElementById('up-zap').value = meuPerfil.zap || "";
+        document.getElementById('up-cep').value = meuPerfil.cep || "";
+        document.getElementById('up-rua').value = meuPerfil.rua || "";
+        document.getElementById('up-bairro').value = meuPerfil.bairro || "";
+        document.getElementById('up-numero').value = meuPerfil.numero || "";
+        irPara('section-perfil');
     }
 }
 
 function atualizarPerfil() {
-    const user = auth.currentUser;
-    db.ref('usuarios/' + user.uid).update({
+    db.ref('usuarios/' + auth.currentUser.uid).update({
         nome: document.getElementById('up-nome').value,
         zap: document.getElementById('up-zap').value,
-        bairro: document.getElementById('up-bairro').value
+        cep: document.getElementById('up-cep').value,
+        rua: document.getElementById('up-rua').value,
+        bairro: document.getElementById('up-bairro').value,
+        numero: document.getElementById('up-numero').value
     }).then(() => {
-        Swal.fire('Sucesso', 'Perfil atualizado!', 'success');
+        Swal.fire('Sucesso', 'Perfil Atualizado!', 'success');
         irPara('section-app');
     });
 }
 
+// MURAL E BUSCA
+function buscar() {
+    const t = document.getElementById('search-input').value.toLowerCase();
+    document.querySelectorAll('#mural .product-card').forEach(c => {
+        c.style.display = c.innerText.toLowerCase().includes(t) ? 'block' : 'none';
+    });
+}
+
 function salvarDoacao() {
-    const user = auth.currentUser;
-    if(!meuPerfil) return Swal.fire('Erro', 'Complete seu perfil primeiro', 'error');
-
-    const item = {
-        tipo: document.getElementById('doar-tipo').value,
-        nome: document.getElementById('doar-nome').value,
+    const nome = document.getElementById('doar-nome').value;
+    if(!nome) return Swal.fire('Ops', 'Informe o nome do item.', 'info');
+    db.ref('estoque_virtual').push({
+        nome, tipo: document.getElementById('doar-tipo').value,
         obs: document.getElementById('doar-obs').value,
-        zap: meuPerfil.zap,
-        bairro: meuPerfil.bairro,
-        owner: user.uid,
-        timestamp: Date.now()
-    };
-
-    db.ref('estoque_virtual').push(item).then(() => {
-        Swal.fire('Sucesso', 'Doação publicada!', 'success');
-        irPara('section-app');
+        zap: meuPerfil.zap, vendedor: meuPerfil.nome, bairro: meuPerfil.bairro,
+        uid: auth.currentUser.uid, timestamp: Date.now()
+    }).then(() => { 
+        Swal.fire('Sucesso!', 'Item publicado!', 'success'); 
+        document.getElementById('doar-nome').value = "";
+        irPara('section-app'); 
     });
 }
 
@@ -207,15 +311,54 @@ function carregarMural() {
     db.ref('estoque_virtual').on('value', snap => {
         const div = document.getElementById('mural');
         div.innerHTML = "";
-        snap.forEach(child => {
-            const d = child.val();
+        snap.forEach(c => {
+            const d = c.val();
             div.innerHTML += `
-                <div style="border-bottom:1px solid #eee; padding:10px 0;">
-                    <strong>${d.tipo === 'medicamento' ? '💊' : '🧶'} ${d.nome}</strong><br>
-                    <small>📍 ${d.bairro}</small><br>
-                    <button class="btn-modern" style="padding:5px; font-size:0.8rem;" onclick="window.open('https://wa.me/55${d.zap}')">Chamar no Whats</button>
-                </div>
-            `;
+                <div class="product-card">
+                    <div style="display:flex; justify-content:space-between">
+                        <small style="color:var(--brand-dark); font-weight:bold;">${d.tipo.toUpperCase()}</small>
+                        ${d.uid === auth.currentUser.uid ? `<i class="fas fa-trash trash-btn" onclick="db.ref('estoque_virtual/${c.key}').remove()"></i>` : ''}
+                    </div>
+                    <h4 style="margin:10px 0;">${d.nome}</h4>
+                    <p style="font-size:0.9rem">${d.obs}</p>
+                    <small>📍 ${d.bairro}</small>
+                    <button class="btn-modern" onclick="window.open('https://wa.me/55${d.zap.replace(/\D/g,'')}')">
+                        <i class="fab fa-whatsapp"></i> Tenho Interesse
+                    </button>
+                </div>`;
+        });
+    });
+}
+
+// PETS PERDIDOS
+function publicarPerdido() {
+    const local = document.getElementById('perdido-local').value;
+    if(!local) return Swal.fire('Atenção', 'Informe onde o pet foi visto.', 'info');
+    db.ref('pets_perdidos').push({
+        nome: document.getElementById('perdido-nome').value || "Desconhecido",
+        local, obs: document.getElementById('perdido-obs').value,
+        zap: meuPerfil.zap, uid: auth.currentUser.uid, timestamp: Date.now()
+    }).then(() => {
+        Swal.fire('Alerta Publicado!', 'A comunidade está de olho.', 'success');
+        document.getElementById('perdido-nome').value = "";
+        document.getElementById('perdido-local').value = "";
+        irPara('section-app');
+    });
+}
+
+function carregarPerdidos() {
+    db.ref('pets_perdidos').on('value', snap => {
+        const div = document.getElementById('mural-perdidos');
+        div.innerHTML = "";
+        snap.forEach(c => {
+            const d = c.val();
+            div.innerHTML += `
+            <div class="product-card" style="border-left:5px solid var(--perdido)">
+                <h4 style="margin:0">${d.nome}</h4>
+                <p style="font-size:0.9rem"><b>Visto em:</b> ${d.local}</p>
+                <p style="font-size:0.8rem">${d.obs}</p>
+                <button class="btn-modern" style="background:var(--perdido)" onclick="window.open('https://wa.me/55${d.zap.replace(/\D/g,'')}')">Eu vi esse pet!</button>
+            </div>`;
         });
     });
 }
@@ -223,20 +366,38 @@ function carregarMural() {
 function mudarModo() {
     isCadastro = !isCadastro;
     document.getElementById('campos-cadastro').classList.toggle('hidden');
-    document.getElementById('auth-title').innerText = isCadastro ? "Criar Conta" : "Entrar no Sistema";
+    document.getElementById('auth-title').innerText = isCadastro ? "Criar Conta" : "Entrar";
+    document.getElementById('link-modo').innerText = isCadastro ? "Já tenho conta" : "Criar nova conta";
 }
 
-function sair() { auth.signOut(); window.location.reload(); }
-
-// MONITOR DE ESTADO
+// MONITOR DE LOGIN
 auth.onAuthStateChanged(user => {
     if(user) {
         db.ref('usuarios/' + user.uid).on('value', snap => {
             meuPerfil = snap.val();
+            document.getElementById('main-nav').classList.remove('hidden');
             irPara('section-app');
             carregarMural();
+            carregarPerdidos();
         });
     } else {
+        document.getElementById('main-nav').classList.add('hidden');
+        irPara('section-auth');
+    }
+});
+auth.onAuthStateChanged(user => {
+    if(user) {
+        // ... (suas outras funções de perfil e mural)
+        
+        // MOSTRA O AVISO ROLANTE
+        document.getElementById('aviso-topo').classList.remove('hidden');
+        
+        irPara('section-app');
+    } else {
+        // ESCONDE O AVISO SE DESLOGAR
+        document.getElementById('aviso-topo').classList.add('hidden');
+        
+        document.getElementById('main-nav').classList.add('hidden');
         irPara('section-auth');
     }
 });
