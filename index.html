@@ -1,407 +1,77 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Farmacia Solidaria Pet | Oficial</title>
+import firebase_admin
+from firebase_admin import credentials, firestore
+from flask import Flask, render_template, request, redirect, url_for, flash
+
+app = Flask(__name__)
+app.secret_key = 'uma_chave_secreta_qualquer' # Necessário para usar flash messages
+
+# --- CONFIGURAÇÃO DO FIREBASE ---
+# Inicializamos fora das funções para que 'db' seja global
+try:
+    if not firebase_admin._apps:
+        cred = credentials.Certificate("chave.json")
+        firebase_admin.initialize_app(cred)
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <style>
-        :root { 
-             background: url('https://wallpapercave.com/wp/wp2447015.jpg') center/cover fixed; 
-            --brand: #00d2ff; 
-            --brand-dark: #3a7bd5; 
-            --bg-glass: rgba(255, 255, 255, 0.98); 
-            --text-main: #2f3542;
-            --perdido: #ff4757;
-        }
+    # ESTA LINHA É A CHAVE: Criamos a variável db aqui fora
+    db = firestore.client()
+    print("✅ Conexão com Firebase estabelecida com sucesso!")
+except Exception as e:
+    db = None
+    print(f"❌ Erro crítico ao conectar no Firebase: {e}")
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; 
-            background: url('https://wallpapercave.com/wp/wp2447015.jpg') center/cover fixed; 
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
+# --- ROTAS ---
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: -1; }
-        
-        header { padding: 30px 20px; text-align: center; color: white; }
-        
-        .main-content { max-width: 450px; margin: 0 auto 160px auto; padding: 0 15px; box-sizing: border-box; }
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-        .product-card { 
-            background: var(--bg-glass); 
-            border-radius: 28px; padding: 25px; margin-bottom: 20px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15); width: 100%; box-sizing: border-box;
-            transition: 0.3s;
-        }
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        senha = request.form.get('senha')
 
-        input, select, textarea { 
-            width: 100%; padding: 15px; margin: 8px 0; border: 2px solid #edf2f7; 
-            border-radius: 14px; box-sizing: border-box; font-family: inherit; background: #f8fafc;
-        }
-        
-        input:disabled { background: #e2e8f0; cursor: not-allowed; opacity: 0.8; }
+        if db is None:
+            return "Erro: O banco de dados não foi inicializado corretamente.", 500
 
-        .btn-modern { 
-            background: linear-gradient(135deg, var(--brand), var(--brand-dark)); 
-            color: white; border: none; padding: 16px; border-radius: 14px; 
-            font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; 
-            margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        try:
+            # Agora o 'db' está definido e pode ser usado aqui
+            user_ref = db.collection('usuarios').document(email).get()
+            
+            if user_ref.exists:
+                user_data = user_ref.to_dict()
+                if user_data.get('senha') == senha:
+                    return f"Login realizado com sucesso! Bem-vindo, {user_data.get('nome')}."
+                else:
+                    return "Senha incorreta.", 401
+            else:
+                return "Usuário não encontrado.", 404
+        except Exception as e:
+            return f"Erro na consulta ao banco: {e}", 500
 
-        .nav-dock { 
-            position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); 
-            background: #1e272e; padding: 12px 28px; border-radius: 50px; 
-            display: flex; gap: 22px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .nav-dock i { color: white; font-size: 1.4rem; cursor: pointer; opacity: 0.3; transition: 0.3s; }
-        .nav-dock i.active { opacity: 1; color: var(--brand); }
+    return render_template('login.html')
 
-        .hidden { display: none !important; }
-        .password-container { position: relative; }
-        .password-container i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #a4b0be; }
-        .trash-btn { color: #ff4757; cursor: pointer; }
-        .text-link { display:block; text-align:center; margin-top:15px; cursor:pointer; font-weight: 600; color: var(--brand-dark); }
-        .aviso-rolante {
-    background: #fff; /* Fundo branco para destacar */
-    color: var(--perdido); /* Cor vermelha para chamar atenção */
-    padding: 8px 0;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border-bottom: 2px solid var(--brand); /* Linha azul embaixo */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    z-index: 99;
-}
+@app.route('/cadastro', methods=['GET', 'POST'])
+def cadastro():
+    if request.method == 'POST':
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        senha = request.form.get('senha')
 
-.aviso-rolante marquee {
-    display: block;
-}
-    </style>
-</head>
-<body>
+        if db is None:
+            return "Erro: Banco de dados offline.", 500
 
-<div class="overlay"></div>
+        try:
+            db.collection('usuarios').document(email).set({
+                'nome': nome,
+                'email': email,
+                'senha': senha
+            })
+            return redirect(url_for('login'))
+        except Exception as e:
+            return f"Erro ao cadastrar: {e}", 500
 
-<header>
-    <h1 style="margin:0; font-weight:800;">Farma<span style="color:var(--brand)">cura</span> Pet</h1>
-</header>
+    return render_template('cadastro.html')
 
-<main class="main-content">
-    
-    <!-- SEÇÃO AUTH (LOGIN/CADASTRO) -->
-    <section id="section-auth" class="product-card">
-        <h3 id="auth-title" style="text-align:center; margin-top:0;">Entrar</h3>
-        <input type="email" id="email" placeholder="E-mail">
-        <div class="password-container">
-            <input type="password" id="password" placeholder="Senha">
-            <i class="fas fa-eye" id="togglePassword" onclick="toggleSenha()"></i>
-        </div>
-        
-        <div id="campos-cadastro" class="hidden">
-            <input type="text" id="reg-nome" placeholder="Nome Completo">
-            <input type="tel" id="reg-zap" placeholder="WhatsApp">
-            <input type="number" id="reg-cep" placeholder="CEP" onblur="buscaCEP(this.value, 'reg')">
-            <input type="text" id="reg-rua" placeholder="Rua" disabled>
-            <input type="text" id="reg-bairro" placeholder="Bairro" disabled>
-            <input type="text" id="reg-numero" placeholder="Número / Complemento">
-        </div>
-
-        <button class="btn-modern" onclick="handleAuth()">Confirmar</button>
-        <span id="link-modo" class="text-link" onclick="mudarModo()">Criar nova conta</span>
-        <span class="text-link" style="color:#777; font-weight:400; font-size: 0.9rem;" onclick="esqueciSenha()">Esqueci minha senha</span>
-    </section>
-
-    <!-- MURAL PRINCIPAL -->
-    <section id="section-app" class="hidden">
-        <input type="text" id="search-input" placeholder="🔍 Buscar remédio ou bairro..." onkeyup="buscar()">
-        <div id="mural" style="margin-top: 10px;"></div>
-    </section>
-
-    <!-- PETS PERDIDOS -->
-    <section id="section-perdidos" class="hidden">
-        <div class="product-card" style="border: 2px solid var(--perdido); background: #fff5f5;">
-            <h3 style="color:var(--perdido); text-align:center;">Pets Perdidos</h3>
-            <input type="text" id="perdido-nome" placeholder="Nome do Pet">
-            <input type="text" id="perdido-local" placeholder="Onde foi visto?">
-            <textarea id="perdido-obs" placeholder="Características..."></textarea>
-            <button class="btn-modern" style="background:var(--perdido)" onclick="publicarPerdido()">Alertar Comunidade</button>
-        </div>
-        <div id="mural-perdidos"></div>
-    </section>
-
-    <!-- NOVA DOAÇÃO -->
-    <section id="section-doar" class="hidden">
-        <div class="product-card">
-            <h3>Nova Doação</h3>
-            <select id="doar-tipo">
-                <option value="medicamento">💊 Medicamento</option>
-                <option value="acessorio">🧶 Acessório</option>
-            </select>
-            <input type="text" id="doar-nome" placeholder="Nome do Item">
-            <textarea id="doar-obs" placeholder="Validade e detalhes"></textarea>
-            <button class="btn-modern" onclick="salvarDoacao()">Publicar Agora</button>
-        </div>
-    </section>
-
-    <!-- PERFIL -->
-    <section id="section-perfil" class="hidden">
-        <div class="product-card">
-            <h3>Meu Perfil</h3>
-            <input type="text" id="up-nome" placeholder="Nome">
-            <input type="tel" id="up-zap" placeholder="WhatsApp">
-            <input type="number" id="up-cep" placeholder="CEP" onblur="buscaCEP(this.value, 'up')">
-            <input type="text" id="up-rua" placeholder="Rua" disabled>
-            <input type="text" id="up-bairro" placeholder="Bairro" disabled>
-            <input type="text" id="up-numero" placeholder="Número">
-            <button class="btn-modern" onclick="atualizarPerfil()">Salvar Alterações</button>
-        </div>
-    </section>
-
-</main>
-
-<nav class="nav-dock hidden" id="main-nav">
-    <i class="fas fa-search active" onclick="irPara('section-app')" id="icon-app"></i>
-    <i class="fas fa-bullhorn" onclick="irPara('section-perdidos')" id="icon-perdidos"></i>
-    <i class="fas fa-plus-circle" onclick="irPara('section-doar')" id="icon-doar"></i>
-    <i class="fas fa-user-circle" onclick="abrirPerfil()" id="icon-perfil"></i>
-    <i class="fas fa-sign-out-alt" onclick="auth.signOut()"></i>
-</nav>
-
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-<!-- AVISO ROLANTE -->
-<div class="aviso-rolante">
-    <marquee behavior="scroll" direction="left">
-        ⚠️ <strong>AVISO IMPORTANTE:</strong> Doe apenas medicamentos dentro da validade. A saúde dos pets agradece! | 🐾 <strong>DICA:</strong> Mantenha seu cadastro atualizado para facilitar o contato.
-    </marquee>
-</div>
-<script>
-// CONFIGURAÇÃO FIREBASE
-const firebaseConfig = {
-    apiKey: "AIzaSyDAT9VZZ4FdxJuhn3qCI0KuLSdfIGF_fcc",
-    authDomain: "farmacia-solidaria-pet.firebaseapp.com",
-    databaseURL: "https://farmacia-solidaria-pet-default-rtdb.firebaseio.com",
-    projectId: "farmacia-solidaria-pet",
-    storageBucket: "farmacia-solidaria-pet.firebasestorage.app",
-    messagingSenderId: "863177132865",
-    appId: "1:863177132865:web:736861131f7946dc7b2fc0"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
-let meuPerfil = null;
-let isCadastro = false;
-
-// NAVEGAÇÃO
-function irPara(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
-    const iconId = 'icon-' + id.replace('section-', '');
-    if(document.getElementById(iconId)) document.getElementById(iconId).classList.add('active');
-}
-
-// BUSCA CEP (PREENCHE RUA E BAIRRO)
-async function buscaCEP(cep, prefix) {
-    if(cep.length !== 8) return;
-    try {
-        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await res.json();
-        if(!data.erro) {
-            document.getElementById(`${prefix}-rua`).value = data.logradouro;
-            document.getElementById(`${prefix}-bairro`).value = data.bairro;
-        } else {
-            Swal.fire('CEP não encontrado', '', 'warning');
-        }
-    } catch (e) { console.error("Erro ao buscar CEP"); }
-}
-
-// AUTH E SENHA
-function toggleSenha() {
-    const p = document.getElementById('password');
-    const i = document.getElementById('togglePassword');
-    p.type = p.type === 'password' ? 'text' : 'password';
-    i.classList.toggle('fa-eye-slash');
-}
-
-function esqueciSenha() {
-    const email = document.getElementById('email').value;
-    if (!email) return Swal.fire('Atenção', 'Digite seu e-mail para recuperar a senha.', 'info');
-    auth.sendPasswordResetEmail(email).then(() => {
-        Swal.fire('Enviado!', 'Link enviado para seu e-mail.', 'success');
-    }).catch(e => Swal.fire('Erro', 'E-mail não cadastrado.', 'error'));
-}
-
-function handleAuth() {
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('password').value;
-    if(isCadastro) {
-        auth.createUserWithEmailAndPassword(email, pass).then(res => {
-            db.ref('usuarios/' + res.user.uid).set({
-                nome: document.getElementById('reg-nome').value,
-                zap: document.getElementById('reg-zap').value,
-                cep: document.getElementById('reg-cep').value,
-                rua: document.getElementById('reg-rua').value,
-                bairro: document.getElementById('reg-bairro').value,
-                numero: document.getElementById('reg-numero').value
-            });
-        }).catch(e => Swal.fire('Erro', e.message, 'error'));
-    } else {
-        auth.signInWithEmailAndPassword(email, pass).catch(() => Swal.fire('Erro', 'Login inválido.', 'error'));
-    }
-}
-
-// PERFIL
-function abrirPerfil() {
-    if(meuPerfil) {
-        document.getElementById('up-nome').value = meuPerfil.nome || "";
-        document.getElementById('up-zap').value = meuPerfil.zap || "";
-        document.getElementById('up-cep').value = meuPerfil.cep || "";
-        document.getElementById('up-rua').value = meuPerfil.rua || "";
-        document.getElementById('up-bairro').value = meuPerfil.bairro || "";
-        document.getElementById('up-numero').value = meuPerfil.numero || "";
-        irPara('section-perfil');
-    }
-}
-
-function atualizarPerfil() {
-    db.ref('usuarios/' + auth.currentUser.uid).update({
-        nome: document.getElementById('up-nome').value,
-        zap: document.getElementById('up-zap').value,
-        cep: document.getElementById('up-cep').value,
-        rua: document.getElementById('up-rua').value,
-        bairro: document.getElementById('up-bairro').value,
-        numero: document.getElementById('up-numero').value
-    }).then(() => {
-        Swal.fire('Sucesso', 'Perfil Atualizado!', 'success');
-        irPara('section-app');
-    });
-}
-
-// MURAL E BUSCA
-function buscar() {
-    const t = document.getElementById('search-input').value.toLowerCase();
-    document.querySelectorAll('#mural .product-card').forEach(c => {
-        c.style.display = c.innerText.toLowerCase().includes(t) ? 'block' : 'none';
-    });
-}
-
-function salvarDoacao() {
-    const nome = document.getElementById('doar-nome').value;
-    if(!nome) return Swal.fire('Ops', 'Informe o nome do item.', 'info');
-    db.ref('estoque_virtual').push({
-        nome, tipo: document.getElementById('doar-tipo').value,
-        obs: document.getElementById('doar-obs').value,
-        zap: meuPerfil.zap, vendedor: meuPerfil.nome, bairro: meuPerfil.bairro,
-        uid: auth.currentUser.uid, timestamp: Date.now()
-    }).then(() => { 
-        Swal.fire('Sucesso!', 'Item publicado!', 'success'); 
-        document.getElementById('doar-nome').value = "";
-        irPara('section-app'); 
-    });
-}
-
-function carregarMural() {
-    db.ref('estoque_virtual').on('value', snap => {
-        const div = document.getElementById('mural');
-        div.innerHTML = "";
-        snap.forEach(c => {
-            const d = c.val();
-            div.innerHTML += `
-                <div class="product-card">
-                    <div style="display:flex; justify-content:space-between">
-                        <small style="color:var(--brand-dark); font-weight:bold;">${d.tipo.toUpperCase()}</small>
-                        ${d.uid === auth.currentUser.uid ? `<i class="fas fa-trash trash-btn" onclick="db.ref('estoque_virtual/${c.key}').remove()"></i>` : ''}
-                    </div>
-                    <h4 style="margin:10px 0;">${d.nome}</h4>
-                    <p style="font-size:0.9rem">${d.obs}</p>
-                    <small>📍 ${d.bairro}</small>
-                    <button class="btn-modern" onclick="window.open('https://wa.me/55${d.zap.replace(/\D/g,'')}')">
-                        <i class="fab fa-whatsapp"></i> Tenho Interesse
-                    </button>
-                </div>`;
-        });
-    });
-}
-
-// PETS PERDIDOS
-function publicarPerdido() {
-    const local = document.getElementById('perdido-local').value;
-    if(!local) return Swal.fire('Atenção', 'Informe onde o pet foi visto.', 'info');
-    db.ref('pets_perdidos').push({
-        nome: document.getElementById('perdido-nome').value || "Desconhecido",
-        local, obs: document.getElementById('perdido-obs').value,
-        zap: meuPerfil.zap, uid: auth.currentUser.uid, timestamp: Date.now()
-    }).then(() => {
-        Swal.fire('Alerta Publicado!', 'A comunidade está de olho.', 'success');
-        document.getElementById('perdido-nome').value = "";
-        document.getElementById('perdido-local').value = "";
-        irPara('section-app');
-    });
-}
-
-function carregarPerdidos() {
-    db.ref('pets_perdidos').on('value', snap => {
-        const div = document.getElementById('mural-perdidos');
-        div.innerHTML = "";
-        snap.forEach(c => {
-            const d = c.val();
-            div.innerHTML += `
-            <div class="product-card" style="border-left:5px solid var(--perdido)">
-                <h4 style="margin:0">${d.nome}</h4>
-                <p style="font-size:0.9rem"><b>Visto em:</b> ${d.local}</p>
-                <p style="font-size:0.8rem">${d.obs}</p>
-                <button class="btn-modern" style="background:var(--perdido)" onclick="window.open('https://wa.me/55${d.zap.replace(/\D/g,'')}')">Eu vi esse pet!</button>
-            </div>`;
-        });
-    });
-}
-
-function mudarModo() {
-    isCadastro = !isCadastro;
-    document.getElementById('campos-cadastro').classList.toggle('hidden');
-    document.getElementById('auth-title').innerText = isCadastro ? "Criar Conta" : "Entrar";
-    document.getElementById('link-modo').innerText = isCadastro ? "Já tenho conta" : "Criar nova conta";
-}
-
-// MONITOR DE LOGIN
-auth.onAuthStateChanged(user => {
-    if(user) {
-        db.ref('usuarios/' + user.uid).on('value', snap => {
-            meuPerfil = snap.val();
-            document.getElementById('main-nav').classList.remove('hidden');
-            irPara('section-app');
-            carregarMural();
-            carregarPerdidos();
-        });
-    } else {
-        document.getElementById('main-nav').classList.add('hidden');
-        irPara('section-auth');
-    }
-});
-auth.onAuthStateChanged(user => {
-    if(user) {
-        // ... (suas outras funções de perfil e mural)
-        
-        // MOSTRA O AVISO ROLANTE
-        document.getElementById('aviso-topo').classList.remove('hidden');
-        
-        irPara('section-app');
-    } else {
-        // ESCONDE O AVISO SE DESLOGAR
-        document.getElementById('aviso-topo').classList.add('hidden');
-        
-        document.getElementById('main-nav').classList.add('hidden');
-        irPara('section-auth');
-    }
-});
-</script>
-</body>
-</html>
+if __name__ == '__main__':
+    app.run(debug=True)
