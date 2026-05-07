@@ -1,109 +1,60 @@
 ﻿import { supabase } from './api/supabase.js';
 
-// 1. Proteção de Rota: Se não estiver logado, volta pro login
-async function checkSession() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-        window.location.href = '../auth/login.html';
-    }
-}
+console.log("Arquivo dashboard.js carregado com sucesso!");
 
-// 2. Função para buscar e exibir os itens do banco
-async function carregarFeed() {
-    const feed = document.getElementById('feedConteudo');
+document.addEventListener('DOMContentLoaded', () => {
+    const formPublicar = document.getElementById('formPublicar');
     
-    const { data: posts, error } = await supabase
-        .from('posts')
-        .select('*')
-        .order('created_at', { ascending: false });
+    if (formPublicar) {
+        console.log("Formulário de publicação encontrado!");
+        formPublicar.onsubmit = async (e) => {
+            e.preventDefault();
+            console.log("Botão clicado, iniciando processo...");
+            
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
 
-    if (error) {
-        console.error('Erro ao buscar dados:', error);
-        feed.innerHTML = '<p>Erro ao carregar doações. Verifique sua conexão.</p>';
-        return;
-    }
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                const arquivo = document.getElementById('fotoInput').files[0];
+                let urlFinal = '';
 
-    if (posts.length === 0) {
-        feed.innerHTML = '<p>Nenhuma doação ou pedido encontrado no momento.</p>';
-        return;
-    }
+                if (arquivo) {
+                    const nomeArquivo = `${Date.now()}-${arquivo.name}`;
+                    const { error: uploadError } = await supabase.storage
+                        .from('fotos')
+                        .upload(nomeArquivo, arquivo);
 
-    // Limpa o "Carregando..." e monta os cards
-    feed.innerHTML = '';
-    posts.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = \
-            <div style="display: flex; justify-content: space-between;">
-                <span style="background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">
-                    \
-                </span>
-                <small style="color: #999;">\</small>
-            </div>
-            <h3 style="margin-top: 10px;">\</h3>
-            <p style="color: #666; margin: 10px 0;">\</p>
-            <button style="background: #25d366; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                Chamar no WhatsApp
-            </button>
-        \;
-        feed.appendChild(card);
-    });
-}
+                    if (uploadError) throw uploadError;
 
-// Inicializa a página
-checkSession();
-carregarFeed();
-// Lógica do Modal
-const modal = document.getElementById('modalCadastro');
-const btnNovo = document.querySelector('button'); // O botão verde de "+ Nova Doação"
-const btnFechar = document.getElementById('fecharModal');
-const formPublicar = document.getElementById('formPublicar');
+                    const { data: publicData } = supabase.storage
+                        .from('fotos')
+                        .getPublicUrl(nomeArquivo);
+                    
+                    urlFinal = publicData.publicUrl;
+                }
 
-if(btnNovo) btnNovo.onclick = () => modal.style.display = 'flex';
-if(btnFechar) btnFechar.onclick = () => modal.style.display = 'none';
+                const { error: dbError } = await supabase.from('posts').insert([{
+                    user_id: user.id,
+                    titulo: document.getElementById('titulo').value,
+                    description: document.getElementById('descricao').value,
+                    tipo: document.getElementById('tipo').value,
+                    foto_url: urlFinal
+                }]);
 
-// Função para Salvar no Banco
-if(formPublicar) {
-    formPublicar.onsubmit = async (e) => {
-        e.preventDefault();
-        
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        const novoPost = {
-            user_id: user.id,
-            tipo: document.getElementById('tipo').value,
-            titulo: document.getElementById('titulo').value,
-            descricao: document.getElementById('descricao').value,
+                if (dbError) throw dbError;
+
+                alert('Publicado com sucesso!');
+                location.reload();
+
+            } catch (err) {
+                alert('Erro: ' + err.message);
+                btn.disabled = false;
+                btn.innerText = "Publicar Agora";
+            }
         };
-
-        const { error } = await supabase.from('posts').insert([novoPost]);
-
-        if (error) {
-            alert('Erro ao publicar: ' + error.message);
-        } else {
-            alert('Publicado com sucesso! A Lara ficaria orgulhosa.');
-            modal.style.display = 'none';
-            formPublicar.reset();
-            location.reload(); // Recarrega para mostrar o novo item
-        }
-    };
-}
-async function uploadFoto(arquivo) {
-    const nomeArquivo = \\-\\;
-    const { data, error } = await supabase.storage
-        .from('fotos_lara')
-        .upload(nomeArquivo, arquivo);
-
-    if (error) throw error;
-
-    // Pega a URL pública da foto
-    const { data: { publicUrl } } = supabase.storage
-        .from('fotos_lara')
-        .getPublicUrl(nomeArquivo);
-
-    return publicUrl;
-}
-
-// Atualize sua função formPublicar.onsubmit para incluir:
-// const fotoFile = document.getElementById('fotoInput').files[0];
-// if (fotoFile) novoPost.foto_url = await uploadFoto(fotoFile);
+    } else {
+        console.error("ERRO: O formulário com ID 'formPublicar' não existe nesta página.");
+    }
+});
