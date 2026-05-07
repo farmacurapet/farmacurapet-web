@@ -1,27 +1,40 @@
 ﻿import { supabase } from './api/supabase.js';
 
-console.log("Arquivo dashboard.js carregado com sucesso!");
+console.log("Monitorando botões da Dashboard...");
 
 document.addEventListener('DOMContentLoaded', () => {
-    const formPublicar = document.getElementById('formPublicar');
-    
-    if (formPublicar) {
-        console.log("Formulário de publicação encontrado!");
-        formPublicar.onsubmit = async (e) => {
+    // Procura por qualquer botão que diga "Publicar" ou similar
+    const btn = document.querySelector('button'); 
+
+    if (btn) {
+        console.log("Botão encontrado! Pronto para capturar cliques.");
+        
+        btn.onclick = async (e) => {
             e.preventDefault();
-            console.log("Botão clicado, iniciando processo...");
             
-            const btn = e.target.querySelector('button');
+            // Pega os valores pelos IDs dos campos
+            const titulo = document.getElementById('titulo')?.value;
+            const descricao = document.getElementById('descricao')?.value;
+            const tipo = document.getElementById('tipo')?.value;
+            const fotoInput = document.getElementById('fotoInput');
+
+            if (!titulo || !descricao) {
+                alert("Por favor, preencha o título e a descrição.");
+                return;
+            }
+
             btn.disabled = true;
             btn.innerText = "Enviando...";
 
             try {
                 const { data: { user } } = await supabase.auth.getUser();
-                const arquivo = document.getElementById('fotoInput').files[0];
                 let urlFinal = '';
 
-                if (arquivo) {
+                // Lógica da Foto
+                if (fotoInput && fotoInput.files[0]) {
+                    const arquivo = fotoInput.files[0];
                     const nomeArquivo = `${Date.now()}-${arquivo.name}`;
+                    
                     const { error: uploadError } = await supabase.storage
                         .from('fotos')
                         .upload(nomeArquivo, arquivo);
@@ -35,26 +48,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     urlFinal = publicData.publicUrl;
                 }
 
+                // Salvar no Banco
                 const { error: dbError } = await supabase.from('posts').insert([{
                     user_id: user.id,
-                    titulo: document.getElementById('titulo').value,
-                    description: document.getElementById('descricao').value,
-                    tipo: document.getElementById('tipo').value,
+                    titulo: titulo,
+                    descricao: descricao,
+                    tipo: tipo || 'Geral',
                     foto_url: urlFinal
                 }]);
 
                 if (dbError) throw dbError;
 
-                alert('Publicado com sucesso!');
+                alert('Postagem realizada com sucesso!');
                 location.reload();
 
             } catch (err) {
-                alert('Erro: ' + err.message);
+                console.error(err);
+                alert('Erro ao publicar: ' + err.message);
                 btn.disabled = false;
                 btn.innerText = "Publicar Agora";
             }
         };
     } else {
-        console.error("ERRO: O formulário com ID 'formPublicar' não existe nesta página.");
+        console.error("Nenhum botão foi encontrado na página!");
     }
 });
