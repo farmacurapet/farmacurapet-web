@@ -53,3 +53,38 @@ async function carregarFeed() {
 // Inicializa a página
 checkSession();
 carregarFeed();
+// Lógica do Modal
+const modal = document.getElementById('modalCadastro');
+const btnNovo = document.querySelector('button'); // O botão verde de "+ Nova Doação"
+const btnFechar = document.getElementById('fecharModal');
+const formPublicar = document.getElementById('formPublicar');
+
+if(btnNovo) btnNovo.onclick = () => modal.style.display = 'flex';
+if(btnFechar) btnFechar.onclick = () => modal.style.display = 'none';
+
+// Função para Salvar no Banco
+if(formPublicar) {
+    formPublicar.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        const novoPost = {
+            user_id: user.id,
+            tipo: document.getElementById('tipo').value,
+            titulo: document.getElementById('titulo').value,
+            descricao: document.getElementById('descricao').value,
+        };
+
+        const { error } = await supabase.from('posts').insert([novoPost]);
+
+        if (error) {
+            alert('Erro ao publicar: ' + error.message);
+        } else {
+            alert('Publicado com sucesso! A Lara ficaria orgulhosa.');
+            modal.style.display = 'none';
+            formPublicar.reset();
+            location.reload(); // Recarrega para mostrar o novo item
+        }
+    };
+}
