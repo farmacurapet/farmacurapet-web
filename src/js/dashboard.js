@@ -88,3 +88,22 @@ if(formPublicar) {
         }
     };
 }
+async function uploadFoto(arquivo) {
+    const nomeArquivo = \\-\\;
+    const { data, error } = await supabase.storage
+        .from('fotos_lara')
+        .upload(nomeArquivo, arquivo);
+
+    if (error) throw error;
+
+    // Pega a URL pública da foto
+    const { data: { publicUrl } } = supabase.storage
+        .from('fotos_lara')
+        .getPublicUrl(nomeArquivo);
+
+    return publicUrl;
+}
+
+// Atualize sua função formPublicar.onsubmit para incluir:
+// const fotoFile = document.getElementById('fotoInput').files[0];
+// if (fotoFile) novoPost.foto_url = await uploadFoto(fotoFile);
