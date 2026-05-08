@@ -1,4 +1,4 @@
-i<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -46,10 +46,18 @@ i<!DOCTYPE html>
             box-shadow: 0 25px 50px rgba(0,0,0,0.15); 
         }
 
+        .input-group { position: relative; width: 100%; }
+
         input, textarea { 
             width: 100%; padding: 16px; margin: 10px 0; 
             border: 2px solid #edf2f7; border-radius: 18px; 
             box-sizing: border-box; font-family: inherit; font-size: 1rem;
+        }
+
+        /* Estilo para o ícone do olhinho */
+        .toggle-password {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: #a4b0be; z-index: 10;
         }
 
         .btn-action { 
@@ -57,6 +65,7 @@ i<!DOCTYPE html>
             color: white; border: none; padding: 18px; border-radius: 18px; 
             font-weight: 800; cursor: pointer; width: 100%; 
             text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+            margin-top: 10px;
         }
 
         .nav-dock { 
@@ -73,6 +82,10 @@ i<!DOCTYPE html>
             border-left: 6px solid var(--brand);
         }
 
+        .link-footer {
+            text-align: center; font-size: 0.85rem; cursor: pointer; margin-top: 15px; color: var(--brand-dark);
+        }
+
         .hidden { display: none !important; }
     </style>
 </head>
@@ -85,18 +98,24 @@ i<!DOCTYPE html>
     </header>
 
     <main class="main-content">
-        <!-- LOGIN -->
+        <!-- LOGIN / CADASTRO -->
         <section id="section-auth" class="glass-card">
             <h3 id="auth-title">Entrar</h3>
             <input type="email" id="email" placeholder="E-mail">
-            <input type="password" id="password" placeholder="Senha">
+            
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Senha">
+                <i class="fas fa-eye toggle-password" id="eye-icon" onclick="toggleSenha()"></i>
+            </div>
             
             <div id="campos-cadastro" class="hidden">
-                <input type="text" id="reg-nome" placeholder="Seu Nome">
+                <input type="text" id="reg-nome" placeholder="Seu Nome Completo">
             </div>
 
             <button class="btn-action" onclick="handleAuth()">Confirmar</button>
-            <p onclick="toggleModo()" style="text-align:center; font-size:0.9rem; cursor:pointer; margin-top:20px;">
+            
+            <p id="btn-forgot" class="link-footer" onclick="esqueciSenha()">Esqueci minha senha</p>
+            <p onclick="toggleModo()" class="link-footer" id="toggle-text">
                 Não tem conta? <b>Cadastre-se</b>
             </p>
         </section>
@@ -119,21 +138,72 @@ i<!DOCTYPE html>
                 <button class="btn-action" onclick="salvarDoacao()">Publicar Doação</button>
             </div>
         </section>
+
+        <!-- PERFIL / ATUALIZAR -->
+        <section id="section-perfil" class="hidden">
+            <div class="glass-card">
+                <h3>Meu Perfil</h3>
+                <label><small>Nome de exibição:</small></label>
+                <input type="text" id="perfil-nome" placeholder="Seu nome">
+                <button class="btn-action" onclick="atualizarCadastro()">Atualizar Dados</button>
+            </div>
+        </section>
     </main>
 
     <nav class="nav-dock hidden" id="main-nav">
         <i class="fas fa-home active" onclick="irPara('section-app', this)"></i>
         <i class="fas fa-plus-circle" onclick="irPara('section-doar', this)"></i>
+        <i class="fas fa-user-circle" onclick="irPara('section-perfil', this)"></i>
         <i class="fas fa-power-off" onclick="logout()"></i>
     </nav>
 
     <script>
         // CONFIGURAÇÃO SUPABASE
-        const SUPABASE_URL = 'tkupfowbgykjjdkwfiyr`; // <-- COLOQUE SUA URL AQUI
+        const SUPABASE_URL = 'https://tkupfowbgykjjdkwfiyr.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrdXBmb3diZ3lrampka3dmaXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNjY1OTgsImV4cCI6MjA5MTk0MjU5OH0.yXCbccFrPB9qyVamthjAUdyrK0bqWfbRCG3LR4VAjBY';
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // 1. FUNÇÃO OLHINHO
+        function toggleSenha() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // 2. FUNÇÃO ESQUECI SENHA
+        async function esqueciSenha() {
+            const email = document.getElementById('email').value;
+            if(!email) return Swal.fire('Atenção', 'Digite seu e-mail para recuperar a senha.', 'info');
+
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.href,
+            });
+
+            if(error) Swal.fire('Erro', error.message, 'error');
+            else Swal.fire('Sucesso', 'Link de recuperação enviado para o e-mail!', 'success');
+        }
+
+        // 3. FUNÇÃO ATUALIZAR CADASTRO
+        async function atualizarCadastro() {
+            const nome = document.getElementById('perfil-nome').value;
+            if(!nome) return Swal.fire('Erro', 'O nome não pode estar vazio.', 'warning');
+
+            const { data, error } = await supabase.auth.updateUser({
+                data: { full_name: nome }
+            });
+
+            if(error) Swal.fire('Erro', error.message, 'error');
+            else Swal.fire('Sucesso', 'Perfil atualizado!', 'success');
+        }
+
+        // NAVEGAÇÃO
         function irPara(id, el) {
             document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
@@ -144,22 +214,37 @@ i<!DOCTYPE html>
 
         function toggleModo() {
             const c = document.getElementById('campos-cadastro');
+            const forgot = document.getElementById('btn-forgot');
             c.classList.toggle('hidden');
-            document.getElementById('auth-title').innerText = c.classList.contains('hidden') ? "Entrar" : "Criar Conta";
+            
+            if(c.classList.contains('hidden')) {
+                document.getElementById('auth-title').innerText = "Entrar";
+                document.getElementById('toggle-text').innerHTML = "Não tem conta? <b>Cadastre-se</b>";
+                forgot.classList.remove('hidden');
+            } else {
+                document.getElementById('auth-title').innerText = "Criar Conta";
+                document.getElementById('toggle-text').innerHTML = "Já tem conta? <b>Faça Login</b>";
+                forgot.classList.add('hidden');
+            }
         }
 
         async function handleAuth() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const nome = document.getElementById('reg-nome').value;
             const isCadastro = !document.getElementById('campos-cadastro').classList.contains('hidden');
 
             if(isCadastro) {
-                const { error } = await supabase.auth.signUp({ email, password });
+                const { error } = await supabase.auth.signUp({ 
+                    email, 
+                    password,
+                    options: { data: { full_name: nome } }
+                });
                 if(error) Swal.fire('Erro', error.message, 'error');
-                else Swal.fire('Sucesso', 'Verifique seu e-mail!', 'success');
+                else Swal.fire('Sucesso', 'Conta criada! Verifique seu e-mail.', 'success');
             } else {
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if(error) Swal.fire('Erro', 'Acesso Negado', 'error');
+                if(error) Swal.fire('Erro', 'E-mail ou senha incorretos.', 'error');
             }
         }
 
@@ -170,7 +255,6 @@ i<!DOCTYPE html>
 
             const { data, error } = await query;
             const mural = document.getElementById('mural');
-            
             if(error) { mural.innerHTML = "Erro ao carregar dados."; return; }
 
             mural.innerHTML = data.length ? data.map(m => `
@@ -178,7 +262,7 @@ i<!DOCTYPE html>
                     <strong>${m.nome}</strong><br>
                     <small><i class="fas fa-map-marker-alt"></i> ${m.bairro}</small>
                     <p style="font-size:0.9rem;">${m.descricao}</p>
-                    <button class="btn-action" style="padding:8px; font-size:0.7rem;" onclick="Swal.fire('Interesse','Fale com o doador via chat','info')">Tenho Interesse</button>
+                    <button class="btn-action" style="padding:8px; font-size:0.7rem;" onclick="Swal.fire('Interesse','Contate o doador','info')">Tenho Interesse</button>
                 </div>
             `).join('') : '<p>Nenhum item disponível.</p>';
         }
@@ -193,6 +277,9 @@ i<!DOCTYPE html>
             const { error } = await supabase.from('medicamentos').insert([{ nome, bairro, descricao }]);
             if(!error) {
                 Swal.fire('Parabéns!', 'Doação publicada com sucesso.', 'success');
+                document.getElementById('med-nome').value = '';
+                document.getElementById('med-bairro').value = '';
+                document.getElementById('med-desc').value = '';
                 irPara('section-app');
             }
         }
@@ -203,6 +290,7 @@ i<!DOCTYPE html>
             const nav = document.getElementById('main-nav');
             if (session) {
                 nav.classList.remove('hidden');
+                document.getElementById('perfil-nome').value = session.user.user_metadata.full_name || '';
                 irPara('section-app');
             } else {
                 nav.classList.add('hidden');
@@ -211,4 +299,4 @@ i<!DOCTYPE html>
         });
     </script>
 </body>
-</html>
+                    </html>
