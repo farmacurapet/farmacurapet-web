@@ -1,5 +1,5 @@
 // 1. Definição das chaves (Certifique-se de que estão entre aspas simples)
-const SUPABASE_URL = 'https://tkupfowbgykjjdkwfiyr.supabase.co';
+const SUPABASE_URL = 'https://tkupfowbgykjjdkwfiyr.supabase.com';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrdXBmb3diZ3lrampka3dmaXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNjY1OTgsImV4cCI6MjA5MTk0MjU5OH0.yXCbccFrPB9qyVamthjAUdyrK0bqWfbRCG3LR4VAjBY';
 
 let supabase;
@@ -7,7 +7,7 @@ let supabase;
 // 2. Inicialização protegida
 try {
     if (window.supabase) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        supabase = window.supabase.createClient(sb_publishable_gASBcQLW9iHCtIOQbuQoYw_s0h1C76k);
         console.log("Supabase conectado com sucesso!");
     } else {
         console.error("Erro: A biblioteca do Supabase não foi carregada no HTML.");
