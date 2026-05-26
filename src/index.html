@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Farmacura Pet | Sistema de Doação</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root { 
+            --brand: #00d2ff; 
+            --brand-dark: #3a7bd5; 
+            --bg-glass: rgba(255, 255, 255, 0.9); 
+            --text-main: #1e272e;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; 
+            background: #f0f2f5 url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=2069&auto=format&fit=crop') center/cover fixed; 
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .blur-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: -1; 
+        }
+
+        header { padding: 40px 20px; text-align: center; color: white; }
+        header h1 { font-size: 2.2rem; font-weight: 800; margin: 0; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        .main-content { max-width: 480px; margin: 0 auto 120px auto; padding: 0 20px; }
+
+        .glass-card { 
+            background: var(--bg-glass); 
+            backdrop-filter: blur(15px);
+            border-radius: 28px; 
+            padding: 30px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+            text-align: center;
+        }
+
+        input, textarea { 
+            width: 100%; padding: 15px; margin: 10px 0; 
+            border: 2px solid #e2e8f0; border-radius: 15px; 
+            box-sizing: border-box; font-size: 1rem;
+        }
+
+        .btn-action { 
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark)); 
+            color: white; border: none; padding: 16px; border-radius: 15px; 
+            font-weight: 800; cursor: pointer; width: 100%; 
+            text-transform: uppercase; transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-action:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-action:active { transform: scale(0.98); }
+        .btn-action:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .nav-dock { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+            background: #1e272e; padding: 12px 30px; border-radius: 100px; 
+            display: flex; gap: 25px; z-index: 1000;
+        }
+
+        .nav-dock i { color: white; font-size: 1.4rem; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .nav-dock i.active { opacity: 1; color: var(--brand); }
+
+        .med-card { 
+            background: white; border-radius: 18px; padding: 15px; margin-bottom: 12px;
+            border-left: 5px solid var(--brand); text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .hidden { display: none !important; }
+        .link-footer { cursor: pointer; color: var(--brand-dark); font-size: 0.9rem; margin-top: 15px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="blur-overlay"></div>
+    
+    <header>
+        <h1>Farma<span style="color:var(--brand)">cura</span> Pet</h1>
+        <p>Conectando solidariedade para pets 🐾</p>
+    </header>
+
+    <main class="main-content">
+        <section id="section-auth" class="glass-card">
+            <h3 id="auth-title">Entrar</h3>
+            <input type="email" id="email" placeholder="Seu e-mail">
+            <input type="password" id="password" placeholder="Sua senha">
+            
+            <div id="campos-cadastro" class="hidden">
+                <input type="text" id="reg-nome" placeholder="Nome completo">
+            </div>
+
+            <button class="btn-action" id="btn-auth-submit" onclick="handleAuth()">Entrar</button>
+            <span class="link-footer" onclick="toggleModo()" id="toggle-text">Não tem conta? Cadastre-se</span>
+        </section>
+
+        <section id="section-mural" class="hidden">
+            <div class="glass-card">
+                <h3>Medicamentos Disponíveis</h3>
+                <input type="text" id="search" placeholder="🔍 Buscar por nome..." onkeyup="carregarMural()">
+                <div id="mural-lista" style="margin-top: 20px;"></div>
+            </div>
+        </section>
+
+        <section id="section-doar" class="hidden">
+            <div class="glass-card">
+                <h3>Cadastrar Doação</h3>
+                <input type="text" id="med-nome" placeholder="Nome do Remédio">
+                <input type="text" id="med-bairro" placeholder="Seu Bairro (Ex: Recife Antigo)">
+                <textarea id="med-desc" rows="3" placeholder="Descrição e data de validade..."></textarea>
+                <button class="btn-action" id="btn-salvar-doacao" onclick="salvarDoacao()">Publicar Agora</button>
+            </div>
+        </section>
+    </main>
+
+    <nav class="nav-dock hidden" id="main-nav">
+        <i class="fas fa-home active" onclick="irPara('section-mural', this)"></i>
+        <i class="fas fa-plus-circle" onclick="irPara('section-doar', this)"></i>
+        <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </nav>
+
+    <script>
+        // --- CONFIGURAÇÃO SUPABASE ---
+        const SB_URL = 'https://tkupfowbgykjjdkwfiyr.supabase.co';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrdXBmb3diZ3lrampka3dmaXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNjY1OTgsImV4cCI6MjA5MTk0MjU5OH0.yXCbccFrPB9qyVamthjAUdyrK0bqWfbRCG3LR4VAjBY';
+        
+        const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+
+        // --- FUNÇÕES DE NAVEGAÇÃO ---
+        function irPara(id, el) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            if(el) {
+                document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
+                el.classList.add('active');
+            }
+            if(id === 'section-mural') carregarMural();
+        }
+
+        function toggleModo() {
+            const campos = document.getElementById('campos-cadastro');
+            const btnAuth = document.getElementById('btn-auth-submit');
+            const toggleTxt = document.getElementById('toggle-text');
+            
+            const isLogin = campos.classList.toggle('hidden');
+            
+            document.getElementById('auth-title').innerText = isLogin ? "Entrar" : "Criar Conta";
+            btnAuth.innerText = isLogin ? "Entrar" : "Cadastrar";
+            toggleTxt.innerText = isLogin ? "Não tem conta? Cadastre-se" : "Já tenho conta. Entrar";
+        }
+
+        // --- AUTENTICAÇÃO ---
+        async function handleAuth() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const nome = document.getElementById('reg-nome').value.trim();
+            const isCadastro = !document.getElementById('campos-cadastro').classList.contains('hidden');
+            const btnAuth = document.getElementById('btn-auth-submit');
+
+            if(!email || !password) return Swal.fire('Erro', 'Preencha todos os campos obrigatórios!', 'warning');
+            if(isCadastro && !nome) return Swal.fire('Erro', 'Por favor, informe seu nome completo para o cadastro.', 'warning');
+
+            // Feedback visual de carregamento
+            btnAuth.disabled = true;
+            const originalText = btnAuth.innerText;
+            btnAuth.innerText = isCadastro ? "Cadastrando..." : "Entrando...";
+
+            try {
+                if(isCadastro) {
+                    const { error } = await supabase.auth.signUp({ 
+                        email, 
+                        password, 
+                        options: { data: { full_name: nome } } 
+                    });
+                    if(error) throw error;
+                    Swal.fire('Sucesso', 'Verifique seu e-mail para confirmar a conta antes de entrar!', 'success');
+                    toggleModo(); // Retorna para tela de login por conveniência
+                } else {
+                    const { error } = await supabase.auth.signInWithPassword({ email, password });
+                    if(error) throw error;
+                }
+            } catch (err) {
+                Swal.fire('Erro', err.message, 'error');
+            } finally {
+                btnAuth.disabled = false;
+                btnAuth.innerText = originalText;
+            }
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            location.reload();
+        }
+
+        // --- BANCO DE DADOS ---
+        async function carregarMural() {
+            const busca = document.getElementById('search').value.trim();
+            let query = supabase.from('medicamentos').select('*').order('created_at', { ascending: false });
+            
+            if(busca) query = query.ilike('nome', `%${busca}%`);
+
+            const { data, error } = await query;
+            const container = document.getElementById('mural-lista');
+
+            if(error) return container.innerHTML = "<p style='color:red;'>Erro ao carregar os dados do mural.</p>";
+
+            container.innerHTML = data && data.length ? data.map(m => `
+                <div class="med-card">
+                    <strong>${m.nome}</strong><br>
+                    <small><i class="fas fa-map-marker-alt" style="color:var(--brand-dark)"></i> ${m.bairro}</small>
+                    <p style="margin: 8px 0; font-size: 0.9rem; color: #555; white-space: pre-wrap;">${m.descricao || 'Sem descrição.'}</p>
+                </div>
+            `).join('') : '<p>Nenhum remédio disponível no momento.</p>';
+        }
+
+        async function salvarDoacao() {
+            const nomeInput = document.getElementById('med-nome');
+            const bairroInput = document.getElementById('med-bairro');
+            const descInput = document.getElementById('med-desc');
+            const btnSalvar = document.getElementById('btn-salvar-doacao');
+
+            const nome = nomeInput.value.trim();
+            const bairro = bairroInput.value.trim();
+            const descricao = descInput.value.trim();
+
+            if(!nome || !bairro) return Swal.fire('Atenção', 'Nome do medicamento e Bairro são obrigatórios!', 'warning');
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerText = "Publicando...";
+
+            try {
+                const { error } = await supabase.from('medicamentos').insert([{ nome, bairro, descricao }]);
+                if(error) throw error;
+
+                Swal.fire('Publicado!', 'Sua doação foi registrada com sucesso.', 'success');
+                
+                // Limpa o formulário de cadastro de doações
+                nomeInput.value = '';
+                bairroInput.value = '';
+                descInput.value = '';
+
+                irPara('section-mural', document.querySelector('.fa-home'));
+            } catch (err) {
+                Swal.fire('Erro', err.message, 'error');
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerText = "Publicar Agora";
+            }
+        }
+
+        // --- MONITOR DE ESTADO DE AUTENTICAÇÃO ---
+        supabase.auth.onAuthStateChange((event, session) => {
+            const nav = document.getElementById('main-nav');
+            if (session) {
+                nav.classList.remove('hidden');
+                irPara('section-mural', document.querySelector('.fa-home'));
+            } else {
+                nav.classList.add('hidden');
+                irPara('section-auth');
+            }
+        });
+    </script>
+</body>
+</html>
