@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Farmacura Pet | Sistema de Doação</title>
     
-    <!-- Fontes e Ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Bibliotecas Externas (Essenciais para os botões funcionarem) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -65,6 +63,7 @@
 
         .btn-action:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-action:active { transform: scale(0.98); }
+        .btn-action:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         .nav-dock { 
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
@@ -93,7 +92,6 @@
     </header>
 
     <main class="main-content">
-        <!-- TELA 1: LOGIN -->
         <section id="section-auth" class="glass-card">
             <h3 id="auth-title">Entrar</h3>
             <input type="email" id="email" placeholder="Seu e-mail">
@@ -103,11 +101,10 @@
                 <input type="text" id="reg-nome" placeholder="Nome completo">
             </div>
 
-            <button class="btn-action" onclick="handleAuth()">Entrar</button>
+            <button class="btn-action" id="btn-auth-submit" onclick="handleAuth()">Entrar</button>
             <span class="link-footer" onclick="toggleModo()" id="toggle-text">Não tem conta? Cadastre-se</span>
         </section>
 
-        <!-- TELA 2: MURAL -->
         <section id="section-mural" class="hidden">
             <div class="glass-card">
                 <h3>Medicamentos Disponíveis</h3>
@@ -116,19 +113,17 @@
             </div>
         </section>
 
-        <!-- TELA 3: DOAR -->
         <section id="section-doar" class="hidden">
             <div class="glass-card">
                 <h3>Cadastrar Doação</h3>
                 <input type="text" id="med-nome" placeholder="Nome do Remédio">
                 <input type="text" id="med-bairro" placeholder="Seu Bairro (Ex: Recife Antigo)">
                 <textarea id="med-desc" rows="3" placeholder="Descrição e data de validade..."></textarea>
-                <button class="btn-action" onclick="salvarDoacao()">Publicar Agora</button>
+                <button class="btn-action" id="btn-salvar-doacao" onclick="salvarDoacao()">Publicar Agora</button>
             </div>
         </section>
     </main>
 
-    <!-- MENU DE NAVEGAÇÃO -->
     <nav class="nav-dock hidden" id="main-nav">
         <i class="fas fa-home active" onclick="irPara('section-mural', this)"></i>
         <i class="fas fa-plus-circle" onclick="irPara('section-doar', this)"></i>
@@ -144,7 +139,7 @@
 
         // --- FUNÇÕES DE NAVEGAÇÃO ---
         function irPara(id, el) {
-            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             if(el) {
                 document.querySelectorAll('.nav-dock i').forEach(i => i.classList.remove('active'));
@@ -155,88 +150,9 @@
 
         function toggleModo() {
             const campos = document.getElementById('campos-cadastro');
-            const isLogin = campos.classList.toggle('hidden');
-            document.getElementById('auth-title').innerText = isLogin ? "Entrar" : "Criar Conta";
-            document.getElementById('toggle-text').innerText = isLogin ? "Não tem conta? Cadastre-se" : "Já tenho conta. Entrar";
-        }
-
-        // --- AUTENTICAÇÃO ---
-        async function handleAuth() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const nome = document.getElementById('reg-nome').value;
-            const isCadastro = !document.getElementById('campos-cadastro').classList.contains('hidden');
-
-            if(!email || !password) return Swal.fire('Erro', 'Preencha os campos!', 'warning');
-
-            try {
-                if(isCadastro) {
-                    const { error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: nome } } });
-                    if(error) throw error;
-                    Swal.fire('Sucesso', 'Verifique seu e-mail para confirmar a conta!', 'success');
-                } else {
-                    const { error } = await supabase.auth.signInWithPassword({ email, password });
-                    if(error) throw error;
-                }
-            } catch (err) {
-                Swal.fire('Erro', err.message, 'error');
-            }
-        }
-
-        async function logout() {
-            await supabase.auth.signOut();
-            location.reload();
-        }
-
-        // --- BANCO DE DADOS ---
-        async function carregarMural() {
-            const busca = document.getElementById('search').value;
-            let query = supabase.from('medicamentos').select('*').order('created_at', { ascending: false });
+            const btnAuth = document.getElementById('btn-auth-submit');
+            const toggleTxt = document.getElementById('toggle-text');
             
-            if(busca) query = query.ilike('nome', `%${busca}%`);
-
-            const { data, error } = await query;
-            const container = document.getElementById('mural-lista');
-
-            if(error) return container.innerHTML = "Erro ao carregar dados.";
-
-            container.innerHTML = data.length ? data.map(m => `
-                <div class="med-card">
-                    <strong>${m.nome}</strong><br>
-                    <small><i class="fas fa-map-marker-alt"></i> ${m.bairro}</small>
-                    <p style="margin: 8px 0; font-size: 0.9rem; color: #555;">${m.descricao || 'Sem descrição.'}</p>
-                </div>
-            `).join('') : '<p>Nenhum remédio encontrado.</p>';
-        }
-
-        async function salvarDoacao() {
-            const nome = document.getElementById('med-nome').value;
-            const bairro = document.getElementById('med-bairro').value;
-            const descricao = document.getElementById('med-desc').value;
-
-            if(!nome || !bairro) return Swal.fire('Atenção', 'Nome e Bairro são obrigatórios!', 'warning');
-
-            const { error } = await supabase.from('medicamentos').insert([{ nome, bairro, descricao }]);
-
-            if(error) {
-                Swal.fire('Erro', error.message, 'error');
-            } else {
-                Swal.fire('Publicado!', 'Sua doação está no mural.', 'success');
-                irPara('section-mural', document.querySelector('.fa-home'));
-            }
-        }
-
-        // --- MONITOR DE ESTADO ---
-        supabase.auth.onAuthStateChange((event, session) => {
-            const nav = document.getElementById('main-nav');
-            if (session) {
-                nav.classList.remove('hidden');
-                irPara('section-mural');
-            } else {
-                nav.classList.add('hidden');
-                irPara('section-auth');
-            }
-        });
-    </script>
-</body>
-</html>
+            const isLogin = campos.classList.toggle('hidden');
+            
+            document.getElementById('auth-title').innerText = isLogin ? "Entrar" : "Criar Conta
